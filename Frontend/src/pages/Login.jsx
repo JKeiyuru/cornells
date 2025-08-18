@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react/no-unescaped-entities */
-// pages/Login.jsx
+// pages/Login.jsx (Frontend)
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../redux/apiCalls";

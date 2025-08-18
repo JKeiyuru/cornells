@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/no-unknown-property */
-// App.jsx
+// App.jsx (Frontend)
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Announcements from "./components/Announcements";

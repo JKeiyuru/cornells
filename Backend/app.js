@@ -58,6 +58,8 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:3000',
       'http://localhost:3001', 
+      'http://localhost:5174',
+      'http://localhost:5173',
       'https://cornells-luxury.com',
       'https://www.cornells-luxury.com',
       'https://cornells-beauty.vercel.app'

@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-// App.jsx
+// Admin/src/App.jsx
 import { createBrowserRouter, Outlet, RouterProvider, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Menu from "./components/Menu";
@@ -15,15 +16,57 @@ import Settings from "./pages/Settings";
 import Backups from "./pages/Backups";
 import Charts from "./pages/Charts";
 import Logs from "./pages/Logs";
+import { userRequest } from "./requestMethods";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check for authentication token
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    setIsAuthenticated(!!token);
+    const checkAuth = async () => {
+      try {
+        // Check if we have admin token
+        const adminToken = localStorage.getItem("adminToken");
+        const adminUser = localStorage.getItem("adminUser");
+        
+        if (!adminToken || adminToken !== 'authenticated') {
+          setIsAuthenticated(false);
+          return;
+        }
+
+        if (adminUser) {
+          const userData = JSON.parse(adminUser);
+          
+          // Verify the token is still valid by calling the backend
+          try {
+            const response = await userRequest.get('auth/verify');
+            if (response.data.success && response.data.user.role === 'admin') {
+              setUser(response.data.user);
+              setIsAuthenticated(true);
+            } else {
+              // Invalid token or not admin
+              localStorage.removeItem("adminToken");
+              localStorage.removeItem("adminUser");
+              setIsAuthenticated(false);
+            }
+          } catch (error) {
+            // Token verification failed
+            console.error('Token verification failed:', error);
+            localStorage.removeItem("adminToken");
+            localStorage.removeItem("adminUser");
+            setIsAuthenticated(false);
+          }
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   if (isAuthenticated === null) {
@@ -42,10 +85,24 @@ const ProtectedRoute = ({ children }) => {
 
 // Main Layout Component
 const Layout = () => {
+  const handleLogout = () => {
+    // Clear admin authentication
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+    
+    // Call backend logout endpoint
+    userRequest.post('auth/logout').catch(error => {
+      console.error('Logout error:', error);
+    });
+    
+    // Force reload to clear any cached data
+    window.location.href = '/login';
+  };
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-[#fafafa] via-[#f8f6f3] to-[#f5f2ee]">
       <div className="sticky top-0 h-screen">
-        <Menu />
+        <Menu onLogout={handleLogout} />
       </div>
       <div className="flex-1 overflow-auto">
         <div className="min-h-full">
