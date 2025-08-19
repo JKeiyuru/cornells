@@ -28,7 +28,9 @@ const Banner = () => {
       try {
         setLoading(true);
         const res = await userRequest.get("/banners");
-        setBanners(res.data);
+        // Ensure the response data is an array
+        const bannersData = Array.isArray(res.data) ? res.data : [];
+        setBanners(bannersData);
       } catch (error) {
         console.log(error);
         // Mock data for demonstration
@@ -112,7 +114,7 @@ const Banner = () => {
       setUploadProgress("Banner created successfully!");
       
       // Add new banner to state
-      setBanners(prev => [createRes.data, ...prev]);
+      setBanners(prev => Array.isArray(prev) ? [createRes.data, ...prev] : [createRes.data]);
       
       // Reset form
       clearForm();
@@ -141,7 +143,7 @@ const Banner = () => {
     if (window.confirm('Are you sure you want to delete this banner? This action cannot be undone.')) {
       try {
         await userRequest.delete(`/banners/${id}`);
-        setBanners(banners.filter(banner => banner._id !== id));
+        setBanners(prevBanners => Array.isArray(prevBanners) ? prevBanners.filter(banner => banner._id !== id) : []);
       } catch (error) {
         console.log(error);
         alert('Failed to delete banner. Please try again.');
@@ -151,11 +153,18 @@ const Banner = () => {
 
   const toggleBannerStatus = async (id) => {
     try {
-      const banner = banners.find(b => b._id === id);
+      const safeBanners = Array.isArray(banners) ? banners : [];
+      const banner = safeBanners.find(b => b._id === id);
+      if (!banner) return;
+      
       const updatedBanner = { ...banner, isActive: !banner.isActive };
       
       await userRequest.put(`/banners/${id}`, updatedBanner);
-      setBanners(banners.map(b => b._id === id ? updatedBanner : b));
+      setBanners(prevBanners => 
+        Array.isArray(prevBanners) 
+          ? prevBanners.map(b => b._id === id ? updatedBanner : b)
+          : []
+      );
     } catch (error) {
       console.log(error);
       alert('Failed to update banner status.');
@@ -204,7 +213,11 @@ const Banner = () => {
       };
       
       await userRequest.put(`/banners/${editingBanner._id}`, updatedBanner);
-      setBanners(banners.map(b => b._id === editingBanner._id ? updatedBanner : b));
+      setBanners(prevBanners => 
+        Array.isArray(prevBanners) 
+          ? prevBanners.map(b => b._id === editingBanner._id ? updatedBanner : b)
+          : []
+      );
       
       setUploadProgress("Banner updated successfully!");
       setEditingBanner(null);
@@ -229,9 +242,11 @@ const Banner = () => {
     setUploadProgress("");
   };
 
-  const activeBanners = banners.filter(b => b.isActive);
-  const totalViews = banners.reduce((sum, banner) => sum + (banner.views || 0), 0);
-  const totalClicks = banners.reduce((sum, banner) => sum + (banner.clicks || 0), 0);
+  // Ensure banners is always an array before filtering/processing
+  const safeBanners = Array.isArray(banners) ? banners : [];
+  const activeBanners = safeBanners.filter(b => b.isActive);
+  const totalViews = safeBanners.reduce((sum, banner) => sum + (banner.views || 0), 0);
+  const totalClicks = safeBanners.reduce((sum, banner) => sum + (banner.clicks || 0), 0);
   const avgClickRate = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : 0;
 
   if (loading) {
@@ -263,7 +278,7 @@ const Banner = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Banners</p>
-                <p className="text-3xl font-bold text-[#d4af37]">{banners.length}</p>
+                <p className="text-3xl font-bold text-[#d4af37]">{safeBanners.length}</p>
               </div>
               <div className="p-3 bg-yellow-100 rounded-full">
                 <ImageIcon className="text-xl text-[#d4af37]" />
@@ -315,14 +330,14 @@ const Banner = () => {
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-semibold text-[#8b4513] flex items-center">
                   <Eye className="mr-3 text-[#d4af37]" />
-                  All Banners ({banners.length})
+                  All Banners ({safeBanners.length})
                 </h2>
                 <div className="text-sm text-gray-500">
                   Click on banners to preview
                 </div>
               </div>
               
-              {banners.length === 0 ? (
+              {safeBanners.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="w-24 h-24 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
                     <ImageIcon className="text-4xl text-gray-400" />
@@ -332,7 +347,7 @@ const Banner = () => {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {banners.map((banner) => (
+                  {safeBanners.map((banner) => (
                     <div key={banner._id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300">
                       <div className="md:flex">
                         <div className="md:w-1/3 relative">
@@ -612,7 +627,7 @@ const Banner = () => {
         </div>
 
         {/* Quick Actions */}
-        {banners.length > 0 && (
+        {safeBanners.length > 0 && (
           <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6">
             <h3 className="text-xl font-semibold text-[#8b4513] mb-4">Quick Actions</h3>
             <div className="flex flex-wrap gap-4">

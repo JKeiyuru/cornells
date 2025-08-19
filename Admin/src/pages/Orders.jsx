@@ -202,7 +202,9 @@ const Orders = () => {
       try {
         setLoading(true);
         const res = await userRequest.get("/orders");
-        setOrders(res.data);
+        // Ensure the response data is an array
+        const ordersData = Array.isArray(res.data) ? res.data : [];
+        setOrders(ordersData);
       } catch (error) {
         console.error('Error fetching orders:', error);
         // Fallback mock data for demonstration
@@ -233,7 +235,10 @@ const Orders = () => {
     getOrders();
   }, []);
 
-  const filteredOrders = orders.filter(order => {
+  // Ensure orders is always an array before filtering
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  
+  const filteredOrders = safeOrders.filter(order => {
     const matchesSearch = order.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          order.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          order._id?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -258,11 +263,11 @@ const Orders = () => {
   };
 
   const getOrderStats = () => {
-    const totalOrders = orders.length;
-    const pendingOrders = orders.filter(o => o.status === 0).length;
-    const processingOrders = orders.filter(o => o.status === 1).length;
-    const deliveredOrders = orders.filter(o => o.status === 2).length;
-    const totalRevenue = orders.reduce((sum, order) => sum + (order.amount || 0), 0);
+    const totalOrders = safeOrders.length;
+    const pendingOrders = safeOrders.filter(o => o.status === 0).length;
+    const processingOrders = safeOrders.filter(o => o.status === 1).length;
+    const deliveredOrders = safeOrders.filter(o => o.status === 2).length;
+    const totalRevenue = safeOrders.reduce((sum, order) => sum + (order.amount || 0), 0);
     
     return { totalOrders, pendingOrders, processingOrders, deliveredOrders, totalRevenue };
   };
