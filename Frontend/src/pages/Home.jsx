@@ -1,154 +1,513 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-// pages/Home.jsx
-import { useState, useEffect } from "react";
-import Banner from "../components/Banner";
-import Products from "../components/Products";
-import SliderItem from "../components/Slider";
+// pages/Home.jsx - Rekker Professional Homepage with Video Sync
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { 
+  FaBuilding, FaIndustry, FaTruck, FaGlobe, 
+  FaPen, FaSchool, FaGamepad, FaUtensils, FaLock, 
+  FaHeart, FaBirthdayCake, FaPaintBrush, FaHandsWash, 
+  FaSoap, FaShower, FaSprayCan, FaStarOfLife,
+  FaArrowRight, FaCheckCircle, FaAward, FaUsers
+} from "react-icons/fa";
 
 const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const videoRefs = useRef([]);
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
+  // Hero slides with video paths - UPDATE THESE PATHS TO YOUR VIDEO FILES
+  const heroSlides = [
+    {
+      videoPath: "/videos/rekker-general-showcase.mp4", // Replace with your general company video
+      title: "Quality Products, Trusted Brands",
+      subtitle: "Leading manufacturer and distributor in Kenya",
+      cta: "Explore Our Products"
+    },
+    {
+      videoPath: "/videos/Saffron Aqua Handwash Rotating.mp4", // Replace with your Saffron video
+      title: "Saffron by Rekker",
+      subtitle: "Premium cleaning and personal care solutions",
+      cta: "View Saffron Products"
+    },
+    {
+      videoPath: "/videos/Cornells Lotion Rotating.mp4", // Replace with your Cornells video
+      title: "Cornells Distribution",
+      subtitle: "Exclusive distributor of premium beauty products",
+      cta: "Discover Cornells"
+    }
+  ];
+
+  // Product categories for Rekker
+  const productCategories = [
+    {
+      id: "stationery",
+      name: "Stationery",
+      icon: FaPen,
+      description: "Complete range of office and school supplies",
+      items: ["Rulers", "Pens", "Pencils", "Rubbers", "Math Sets", "Photocopy Papers"],
+      color: "from-blue-500 to-blue-600"
+    },
+    {
+      id: "bags",
+      name: "Bags & Suitcases",
+      icon: FaSchool,
+      description: "Quality school bags and travel suitcases",
+      items: ["School Backpacks", "Travel Suitcases", "Sports Bags", "Laptop Bags"],
+      color: "from-green-500 to-green-600"
+    },
+    {
+      id: "toys",
+      name: "Toys",
+      icon: FaGamepad,
+      description: "Safe and educational toys for children",
+      items: ["Educational Toys", "Action Figures", "Board Games", "Puzzles"],
+      color: "from-purple-500 to-purple-600"
+    },
+    {
+      id: "kitchenware",
+      name: "Kitchenware",
+      icon: FaUtensils,
+      description: "Essential kitchen tools and accessories",
+      items: ["Cooking Utensils", "Storage Containers", "Kitchen Tools", "Tableware"],
+      color: "from-orange-500 to-orange-600"
+    },
+    {
+      id: "padlocks",
+      name: "Padlocks",
+      icon: FaLock,
+      description: "Secure and durable security solutions",
+      items: ["Combination Locks", "Keyed Padlocks", "Heavy Duty Locks", "Security Chains"],
+      color: "from-gray-500 to-gray-600"
+    },
+    {
+      id: "stuffed-toys",
+      name: "Teddy Bears & Stuffed Toys",
+      icon: FaHeart,
+      description: "Soft and cuddly companions for all ages",
+      items: ["Teddy Bears", "Stuffed Animals", "Character Plushies", "Baby Toys"],
+      color: "from-pink-500 to-pink-600"
+    },
+    {
+      id: "party-items",
+      name: "Party Items",
+      icon: FaBirthdayCake,
+      description: "Complete party and celebration supplies",
+      items: ["Paper Cups & Plates", "Cutlery", "Birthday Hats", "Balloons", "Candles"],
+      color: "from-yellow-500 to-yellow-600"
+    },
+    {
+      id: "educational",
+      name: "Educational Items",
+      icon: FaPaintBrush,
+      description: "Art and craft supplies for creativity",
+      items: ["Paintbrushes", "Canvas", "Modeling Clay", "Art Supplies", "Craft Materials"],
+      color: "from-teal-500 to-teal-600"
+    }
+  ];
+
+  // Brand showcase data
+  const brands = [
+    {
+      name: "Saffron",
+      tagline: "Manufactured by Rekker",
+      description: "Premium cleaning and personal care products made in Kenya",
+      products: ["Handwashes", "Dishwashing Soaps", "Detergents", "Shower Gels", "After-Shave"],
+      image: "/api/placeholder/400/300",
+      link: "/brands/saffron",
+      color: "from-orange-500 to-red-500"
+    },
+    {
+      name: "Cornells",
+      tagline: "Distributed by Rekker",
+      description: "Exclusive distributor of premium beauty products by Starling Parfums",
+      products: ["Lotions", "Sunscreens", "Toners", "Beauty Care", "Skincare"],
+      image: "/api/placeholder/400/300",
+      link: "/brands/cornells", 
+      color: "from-purple-500 to-pink-500"
+    }
+  ];
+
+  // Auto-slide functionality synchronized with 6-second videos
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000); // Changed to 6 seconds to match video length
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
+  // Handle video playback when slide changes
+  useEffect(() => {
+    // Pause all videos first
+    videoRefs.current.forEach((video, index) => {
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+
+    // Play the current slide's video
+    const currentVideo = videoRefs.current[currentSlide];
+    if (currentVideo) {
+      currentVideo.play().catch(error => {
+        console.log("Video autoplay failed:", error);
+        // Fallback: video will play when user interacts with page
+      });
+    }
+  }, [currentSlide]);
+
+  // Handle manual slide change
+  const handleSlideChange = (index) => {
+    setCurrentSlide(index);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20 overflow-hidden">
-      {/* Hero Section with Enhanced Visuals */}
-      <div className={`relative transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
-        {/* Floating Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-purple-300/30 to-transparent"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-green-50/10">
+      
+      {/* Hero Section with Professional Carousel and Videos */}
+      <div className={`relative h-screen transition-all duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        {/* Hero Carousel with Videos */}
+        <div className="relative h-full overflow-hidden">
+          {heroSlides.map((slide, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/70 via-blue-900/50 to-transparent z-10"></div>
+              
+              {/* Video Background */}
+              <video
+                ref={el => videoRefs.current[index] = el}
+                className="w-full h-full object-cover"
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                onError={(e) => {
+                  console.log(`Video ${index} failed to load:`, e);
+                  // Hide video element if it fails to load
+                  e.target.style.display = 'none';
+                }}
+              >
+                <source src={slide.videoPath} type="video/mp4" />
+                {/* Fallback image if video fails */}
+                Your browser does not support the video tag.
+              </video>
+
+              {/* Fallback background image (shown if video fails to load) */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url('/api/placeholder/1200/600')`,
+                  zIndex: -1
+                }}
+              ></div>
+
+              <div className="absolute inset-0 flex items-center z-20">
+                <div className="container mx-auto px-6">
+                  <div className="max-w-3xl">
+                    <h1 className="text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                      {slide.title}
+                    </h1>
+                    <p className="text-2xl text-blue-100 mb-8 font-medium drop-shadow-md">
+                      {slide.subtitle}
+                    </p>
+                    <Link
+                      to="/products/all"
+                      className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                    >
+                      <span>{slide.cta}</span>
+                      <FaArrowRight className="w-5 h-5" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        <Banner />
-      </div>
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-30">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleSlideChange(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentSlide 
+                  ? 'bg-white w-8' 
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+            />
+          ))}
+        </div>
 
-      {/* Enhanced Slider Section */}
-      <div className={`relative py-16 transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/5 via-transparent to-pink-900/5"></div>
-        
-        {/* Section Header */}
-        <div className="text-center mb-16 relative z-10">
-          <div className="inline-block">
-            <h2 className="text-5xl font-light text-gray-900 mb-4 tracking-wider relative">
-              FEATURED
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
-            </h2>
+        {/* Video Progress Indicator */}
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-64 bg-white/20 rounded-full h-1 z-30">
+          <div 
+            className="h-full bg-white rounded-full transition-all duration-100 ease-linear"
+            style={{
+              width: `${((Date.now() % 6000) / 6000) * 100}%`
+            }}
+          ></div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 right-8 text-white/70 animate-bounce z-30">
+          <div className="text-center">
+            <div className="w-px h-16 bg-white/30 mx-auto mb-2"></div>
+            <p className="text-sm font-medium">Scroll</p>
           </div>
-          <p className="text-gray-600 text-lg font-light max-w-2xl mx-auto leading-relaxed">
-            Discover our handpicked selection of premium beauty essentials, curated for the most discerning tastes
-          </p>
         </div>
-
-        <SliderItem />
       </div>
 
-      {/* Enhanced Products Section */}
-      <div className={`relative py-16 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
-        {/* Decorative Background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-200 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-pink-200 to-transparent"></div>
-        </div>
+      {/* Company Introduction Section */}
+      <section className={`py-20 bg-white transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-12">
+              <h2 className="text-5xl font-bold text-gray-900 mb-6">Welcome to Rekker</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto mb-8"></div>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Kenya's trusted manufacturer and distributor of quality products. From everyday essentials 
+                to premium branded solutions, we serve retailers, wholesalers, and institutions across the region 
+                with uncompromising quality and reliable service.
+              </p>
+            </div>
 
-        {/* Section Header */}
-        <div className="text-center mb-16 relative z-10">
-          <div className="inline-block">
-            <h2 className="text-5xl font-light text-gray-900 mb-4 tracking-wider relative">
-              COLLECTIONS
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
-            </h2>
+            {/* Key Stats */}
+            <div className="grid md:grid-cols-4 gap-8 mb-16">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaBuilding className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-2">10+</h3>
+                <p className="text-gray-600 font-medium">Years Experience</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaTruck className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-2">500+</h3>
+                <p className="text-gray-600 font-medium">Products</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaUsers className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-2">1000+</h3>
+                <p className="text-gray-600 font-medium">Happy Clients</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaGlobe className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-2">47</h3>
+                <p className="text-gray-600 font-medium">Counties Served</p>
+              </div>
+            </div>
           </div>
-          <p className="text-gray-600 text-lg font-light max-w-2xl mx-auto leading-relaxed">
-            Explore our complete range of luxury beauty products, each crafted with the finest ingredients and uncompromising quality
-          </p>
         </div>
+      </section>
 
-        <Products />
-      </div>
+      {/* Product Categories Section */}
+      <section className={`py-20 bg-gradient-to-br from-gray-50 to-blue-50/30 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Product Categories</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto mb-8"></div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Comprehensive range of quality products serving diverse market needs across Kenya
+            </p>
+          </div>
 
-      {/* Enhanced Newsletter Section */}
-      <div className={`relative py-24 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
-        {/* Background Effects */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+            {productCategories.map((category, index) => (
+              <div
+                key={category.id}
+                className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer delay-${index * 100}`}
+              >
+                <div className="p-8">
+                  <div className={`w-16 h-16 bg-gradient-to-r ${category.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <category.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{category.name}</h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">{category.description}</p>
+                  <div className="space-y-2 mb-6">
+                    {category.items.slice(0, 3).map((item, idx) => (
+                      <div key={idx} className="flex items-center text-sm text-gray-500">
+                        <FaCheckCircle className="w-3 h-3 text-green-500 mr-2" />
+                        {item}
+                      </div>
+                    ))}
+                    {category.items.length > 3 && (
+                      <p className="text-sm text-gray-400">+{category.items.length - 3} more</p>
+                    )}
+                  </div>
+                  <Link
+                    to={`/products/${category.id}`}
+                    className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold group-hover:translate-x-2 transition-transform duration-300"
+                  >
+                    View Products <FaArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <div className="container mx-auto px-6 text-center relative z-10">
+      {/* Our Brands Section */}
+      <section className={`py-20 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-white mb-6">Our Premium Brands</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-green-400 mx-auto mb-8"></div>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              Trusted brands delivering quality and value across Kenya and beyond
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {brands.map((brand, index) => (
+              <div
+                key={brand.name}
+                className={`group bg-white/10 backdrop-blur-sm rounded-3xl overflow-hidden hover:bg-white/15 transition-all duration-500 transform hover:-translate-y-2 delay-${index * 200}`}
+              >
+                <div className="aspect-video relative overflow-hidden">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${brand.color} opacity-80 z-10`}></div>
+                  <img
+                    src={brand.image}
+                    alt={brand.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <div className="text-center text-white">
+                      <h3 className="text-4xl font-bold mb-2">{brand.name}</h3>
+                      <p className="text-lg opacity-90">{brand.tagline}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <p className="text-blue-100 text-lg mb-6 leading-relaxed">
+                    {brand.description}
+                  </p>
+                  
+                  <div className="grid grid-cols-2 gap-2 mb-8">
+                    {brand.products.map((product, idx) => (
+                      <div key={idx} className="flex items-center text-white/80">
+                        <FaCheckCircle className="w-3 h-3 text-green-400 mr-2" />
+                        <span className="text-sm">{product}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <Link
+                    to={brand.link}
+                    className="inline-flex items-center space-x-3 bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform group-hover:scale-105 hover:shadow-xl"
+                  >
+                    <span>Explore {brand.name}</span>
+                    <FaArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* View All Brands CTA */}
+          <div className="text-center mt-16">
+            <Link
+              to="/brands"
+              className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+            >
+              <span>View All Our Brands</span>
+              <FaArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Rekker Section */}
+      <section className={`py-20 bg-white transition-all duration-1000 delay-900 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Why Choose Rekker</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto mb-8"></div>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-12 max-w-5xl mx-auto">
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-blue-200/50 transition-all duration-300 transform group-hover:scale-110">
+                <FaAward className="w-10 h-10 text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Quality Assured</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Rigorous quality control processes ensure every product meets international standards and exceeds customer expectations.
+              </p>
+            </div>
+
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-green-200/50 transition-all duration-300 transform group-hover:scale-110">
+                <FaTruck className="w-10 h-10 text-green-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Reliable Distribution</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Comprehensive distribution network ensuring timely delivery across Kenya with competitive wholesale pricing and minimum order quantities.
+              </p>
+            </div>
+
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-purple-200/50 transition-all duration-300 transform group-hover:scale-110">
+                <FaUsers className="w-10 h-10 text-purple-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Customer First</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Dedicated customer service team providing professional support, from product selection to after-sales service and business partnerships.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className={`py-20 bg-gradient-to-br from-blue-600 via-green-600 to-blue-700 transition-all duration-1000 delay-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+        <div className="container mx-auto px-6 text-center">
           <div className="max-w-4xl mx-auto">
-            <h3 className="text-4xl font-light text-white mb-6 tracking-wider">
-              JOIN THE CORNELLS EXPERIENCE
-            </h3>
-            <div className="w-24 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent mx-auto mb-8"></div>
-            <p className="text-xl text-gray-300 font-light mb-12 leading-relaxed">
-              Be the first to discover our latest collections, exclusive offers, and beauty insights from our expert curators
+            <h2 className="text-4xl font-bold text-white mb-6">Ready to Partner with Rekker?</h2>
+            <p className="text-xl text-blue-100 mb-10 leading-relaxed">
+              Whether you're looking for wholesale opportunities, retail partnerships, or distribution agreements, 
+              we're here to support your business growth with quality products and professional service.
             </p>
 
-            <div className="max-w-md mx-auto">
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="flex-1 px-6 py-4 bg-white/10 border border-white/20 rounded-l-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/20 transition-all duration-300 backdrop-blur-sm"
-                />
-                <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-light tracking-wide uppercase rounded-r-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105">
-                  Subscribe
-                </button>
-              </div>
-              <p className="text-gray-400 text-sm mt-4 font-light">
-                *Unsubscribe at any time. Your privacy is our priority.
+            <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              <Link
+                to="/wholesale-request"
+                className="bg-white text-blue-700 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+              >
+                Request Wholesale Pricing
+              </Link>
+              <Link
+                to="/contact"
+                className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-white hover:text-blue-700"
+              >
+                Contact Our Team
+              </Link>
+            </div>
+
+            <div className="mt-8 text-blue-100">
+              <p className="text-sm">
+                *Minimum order quantities apply. Contact us for detailed pricing and terms.
               </p>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Luxury Features Section */}
-      <div className={`py-20 bg-white/50 backdrop-blur-sm transition-all duration-1000 delay-900 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-            <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-purple-200/50 transition-all duration-300 transform group-hover:scale-110">
-                <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-              </div>
-              <h4 className="text-xl font-light text-gray-900 mb-3 tracking-wide">PREMIUM QUALITY</h4>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Each product is meticulously crafted with the finest ingredients and undergoes rigorous quality testing
-              </p>
-            </div>
-
-            <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-purple-200/50 transition-all duration-300 transform group-hover:scale-110">
-                <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h4 className="text-xl font-light text-gray-900 mb-3 tracking-wide">SECURE SHIPPING</h4>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Your luxury products are carefully packaged and delivered with premium protection worldwide
-              </p>
-            </div>
-
-            <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-purple-200/50 transition-all duration-300 transform group-hover:scale-110">
-                <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <h4 className="text-xl font-light text-gray-900 mb-3 tracking-wide">EXPERT CURATION</h4>
-              <p className="text-gray-600 font-light leading-relaxed">
-                Our beauty experts personally select and test every product to ensure exceptional results
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };
