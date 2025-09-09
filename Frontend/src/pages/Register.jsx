@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/no-unknown-property */
-// pages/Register.jsx - Rekker Business Registration
+// pages/Register.jsx - Rekker Business Registration (Red Theme)
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { userRequest } from "../requestMethods";
@@ -110,9 +110,9 @@ const Register = () => {
       
       toast.success("Business registration submitted! We'll review your application and contact you within 2 business days.", {
         style: {
-          background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
+          background: 'linear-gradient(135deg, #991b1b 0%, #dc2626 100%)',
           color: '#f8f8f8',
-          border: '1px solid #3b82f6',
+          border: '1px solid #ef4444',
         }
       });
       
@@ -122,17 +122,17 @@ const Register = () => {
       if (error.response && error.response.data.message) {
         toast.error(error.response.data.message, {
           style: {
-            background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
+            background: 'linear-gradient(135deg, #991b1b 0%, #dc2626 100%)',
             color: '#f8f8f8',
-            border: '1px solid #3b82f6',
+            border: '1px solid #ef4444',
           }
         });
       } else {
         toast.error("Registration failed. Please try again.", {
           style: {
-            background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
+            background: 'linear-gradient(135deg, #991b1b 0%, #dc2626 100%)',
             color: '#f8f8f8',
-            border: '1px solid #3b82f6',
+            border: '1px solid #ef4444',
           }
         });
       }
@@ -153,12 +153,12 @@ const Register = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-blue-300/20 to-transparent"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-red-500/10 to-rose-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-rose-500/10 to-red-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-red-300/20 to-transparent"></div>
       </div>
 
       <ToastContainer
@@ -183,7 +183,7 @@ const Register = () => {
             <div className="text-center mb-12">
               <h1 className="text-4xl font-light text-white mb-4 tracking-wider">Join Rekker</h1>
               <p className="text-gray-300 text-lg font-light">Apply for wholesale partnership</p>
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent mx-auto mt-6"></div>
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-red-400 to-transparent mx-auto mt-6"></div>
             </div>
 
             {/* Progress Indicator */}
@@ -192,14 +192,14 @@ const Register = () => {
                 <div key={step} className="flex items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                     currentStep >= step 
-                      ? 'bg-blue-600 text-white' 
+                      ? 'bg-red-600 text-white' 
                       : 'bg-white/10 text-gray-400'
                   }`}>
                     {step}
                   </div>
                   {step < 3 && (
                     <div className={`w-20 h-px mx-4 ${
-                      currentStep > step ? 'bg-blue-600' : 'bg-white/20'
+                      currentStep > step ? 'bg-red-600' : 'bg-white/20'
                     }`}></div>
                   )}
                 </div>
@@ -225,7 +225,7 @@ const Register = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="Your full name"
                         required
                       />
@@ -240,7 +240,7 @@ const Register = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="business@company.com"
                         required
                       />
@@ -255,7 +255,7 @@ const Register = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="+254 700 000 000"
                         required
                       />
@@ -272,7 +272,7 @@ const Register = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="••••••••"
                         required
                         minLength={6}
@@ -288,7 +288,7 @@ const Register = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="••••••••"
                         required
                       />
@@ -298,7 +298,7 @@ const Register = () => {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-light tracking-wider uppercase rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+                    className="w-full py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white font-light tracking-wider uppercase rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
                   >
                     Continue to Business Information
                   </button>
@@ -323,7 +323,7 @@ const Register = () => {
                         name="businessName"
                         value={formData.businessName}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="Your registered business name"
                         required
                       />
@@ -337,7 +337,7 @@ const Register = () => {
                         name="businessType"
                         value={formData.businessType}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-black focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-gray-900 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         required
                       >
                         <option value="">Select business type</option>
@@ -362,7 +362,7 @@ const Register = () => {
                         name="kraPin"
                         value={formData.kraPin}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="P051234567X"
                       />
                     </div>
@@ -375,7 +375,7 @@ const Register = () => {
                         name="yearsInBusiness"
                         value={formData.yearsInBusiness}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-black focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-gray-900 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                       >
                         <option value="">Select</option>
                         <option value="less_than_1">Less than 1 year</option>
@@ -396,7 +396,7 @@ const Register = () => {
                       name="businessAddress"
                       value={formData.businessAddress}
                       onChange={handleInputChange}
-                      className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                      className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                       placeholder="Street address, building name"
                       required
                     />
@@ -412,7 +412,7 @@ const Register = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         placeholder="City/Town"
                         required
                       />
@@ -426,7 +426,7 @@ const Register = () => {
                         name="region"
                         value={formData.region}
                         onChange={handleInputChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-black focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                        className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-gray-900 focus:outline-none focus:border-red-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm"
                         required
                       >
                         <option value="">Select region</option>
@@ -445,7 +445,7 @@ const Register = () => {
                   <div className="flex space-x-4">
                     <button
                       type="button"
-                      onClick={() => setCurrentStep(2)}
+                      onClick={() => setCurrentStep(1)}
                       className="flex-1 py-4 border-2 border-white/20 text-white rounded-xl font-light tracking-wide uppercase hover:border-white/40 transition-colors"
                     >
                       Back
@@ -455,9 +455,9 @@ const Register = () => {
                       disabled={loading}
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
-                      className="flex-1 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-light tracking-wider uppercase rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden"
+                      className="flex-1 py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white font-light tracking-wider uppercase rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-red-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden"
                     >
-                      <div className={`absolute inset-0 bg-gradient-to-r from-green-600 to-blue-600 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
+                      <div className={`absolute inset-0 bg-gradient-to-r from-rose-600 to-red-600 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
                       <span className="relative z-10">
                         {loading ? "Submitting Application..." : "Submit Application"}
                       </span>
@@ -476,7 +476,7 @@ const Register = () => {
 
               <p className="text-gray-300 font-light mb-4">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-400 hover:text-blue-300 transition-colors font-normal">
+                <Link to="/login" className="text-red-400 hover:text-red-300 transition-colors font-normal">
                   Sign in here
                 </Link>
               </p>
@@ -509,27 +509,27 @@ const Register = () => {
                   <h4 className="text-white font-medium mb-3">Wholesale Benefits</h4>
                   <div className="text-sm text-gray-300 font-light space-y-2 text-left">
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                      <span className="w-2 h-2 bg-red-400 rounded-full"></span>
                       <span>Competitive wholesale pricing</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                      <span className="w-2 h-2 bg-rose-400 rounded-full"></span>
                       <span>Minimum order quantities (MOQ)</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                      <span className="w-2 h-2 bg-red-500 rounded-full"></span>
                       <span>Dedicated account management</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
+                      <span className="w-2 h-2 bg-rose-500 rounded-full"></span>
                       <span>Flexible payment terms</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-pink-400 rounded-full"></span>
+                      <span className="w-2 h-2 bg-red-600 rounded-full"></span>
                       <span>Priority customer support</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-indigo-400 rounded-full"></span>
+                      <span className="w-2 h-2 bg-rose-600 rounded-full"></span>
                       <span>Marketing support materials</span>
                     </div>
                   </div>
@@ -549,23 +549,23 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-blue-500/20 to-green-500/20 rounded-xl p-6 border border-white/10">
+                <div className="bg-gradient-to-r from-red-500/20 to-rose-500/20 rounded-xl p-6 border border-white/10">
                   <h4 className="text-white font-medium mb-3">Application Process</h4>
                   <div className="text-sm text-gray-300 font-light space-y-2">
                     <div className="flex items-center space-x-2">
-                      <span className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-white">1</span>
+                      <span className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white">1</span>
                       <span>Submit application</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-white">2</span>
+                      <span className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white">2</span>
                       <span>Business verification</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-white">3</span>
+                      <span className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white">3</span>
                       <span>Account approval</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs font-bold text-white">4</span>
+                      <span className="w-6 h-6 bg-rose-500 rounded-full flex items-center justify-center text-xs font-bold text-white">4</span>
                       <span>Start ordering</span>
                     </div>
                   </div>
