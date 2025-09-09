@@ -77,7 +77,7 @@ const Footer = () => {
             <h4 className="text-xl font-semibold mb-6 text-red-200">Our Brands</h4>
             <div className="space-y-4">
               <div>
-                <Link to="/saffron" className="block group">
+                <Link to="/brands/saffron" className="block group">
                   <h5 className="text-red-400 font-medium group-hover:text-red-300 transition-colors">
                     Saffron
                   </h5>
@@ -90,7 +90,7 @@ const Footer = () => {
                 </Link>
               </div>
               <div>
-                <Link to="/cornells" className="block group">
+                <Link to="/brands/cornells" className="block group">
                   <h5 className="text-rose-400 font-medium group-hover:text-rose-300 transition-colors">
                     Cornells
                   </h5>

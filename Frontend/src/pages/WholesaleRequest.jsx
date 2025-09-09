@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-// pages/WholesaleRequest.jsx - Professional Wholesale Request Form
+// pages/WholesaleRequest.jsx - Professional Wholesale Request Form with Red Theme
 import { useState, useEffect } from "react";
 import { 
   FaTruck, FaBuilding, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt,
@@ -99,6 +99,8 @@ const WholesaleRequest = () => {
       toast.success("Wholesale request submitted successfully! Our team will contact you within 24 hours.", {
         position: "top-right",
         autoClose: 5000,
+        className: "bg-red-50 text-red-800",
+        progressClassName: "bg-red-600",
       });
       
       // Reset form
@@ -129,6 +131,8 @@ const WholesaleRequest = () => {
       toast.error("Failed to submit request. Please try again.", {
         position: "top-right",
         autoClose: 5000,
+        className: "bg-red-50 text-red-800",
+        progressClassName: "bg-red-600",
       });
     } finally {
       setIsSubmitting(false);
@@ -164,7 +168,10 @@ const WholesaleRequest = () => {
     if (validateStep(currentStep)) {
       setCurrentStep(prev => Math.min(prev + 1, totalSteps));
     } else {
-      toast.warning("Please fill in all required fields before proceeding.");
+      toast.warning("Please fill in all required fields before proceeding.", {
+        className: "bg-rose-50 text-rose-800",
+        progressClassName: "bg-rose-500",
+      });
     }
   };
 
@@ -197,23 +204,23 @@ const WholesaleRequest = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-green-50/10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50/20 to-rose-50/10">
       <ToastContainer />
       
       {/* Hero Section */}
-      <div className={`relative py-20 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+      <div className={`relative py-20 bg-gradient-to-r from-red-900 via-red-800 to-red-900 transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-green-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-red-500/10 to-rose-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-rose-500/10 to-red-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
         <div className="container mx-auto px-6 text-center relative z-10">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center mx-auto mb-6">
             <FaTruck className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-5xl font-bold text-white mb-6 tracking-wide">Wholesale Partnership</h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-green-400 mx-auto mb-8"></div>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+          <div className="w-24 h-1 bg-gradient-to-r from-red-400 to-rose-400 mx-auto mb-8"></div>
+          <p className="text-xl text-red-100 max-w-3xl mx-auto leading-relaxed">
             Join our network of successful wholesale partners and access premium products at competitive prices 
             with professional support and reliable service.
           </p>
@@ -226,7 +233,7 @@ const WholesaleRequest = () => {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Partner with Rekker?</h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto"></div>
+              <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-rose-500 mx-auto"></div>
             </div>
 
             <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
@@ -235,8 +242,8 @@ const WholesaleRequest = () => {
                   key={index}
                   className="text-center group hover:shadow-lg rounded-2xl p-6 transition-all duration-300"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-green-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <benefit.icon className="w-8 h-8 text-blue-600" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-rose-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <benefit.icon className="w-8 h-8 text-red-600" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 mb-3">{benefit.title}</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
@@ -253,10 +260,10 @@ const WholesaleRequest = () => {
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
               {/* Form Header with Progress */}
-              <div className="bg-gradient-to-r from-blue-600 to-green-600 p-8">
+              <div className="bg-gradient-to-r from-red-600 to-rose-600 p-8">
                 <div className="text-center text-white mb-8">
                   <h2 className="text-3xl font-bold mb-2">Wholesale Request Form</h2>
-                  <p className="text-blue-100">Complete the form below to get wholesale pricing</p>
+                  <p className="text-red-100">Complete the form below to get wholesale pricing</p>
                 </div>
 
                 {/* Progress Bar */}
@@ -264,20 +271,20 @@ const WholesaleRequest = () => {
                   {[1, 2, 3, 4].map((step) => (
                     <div key={step} className="flex items-center">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                        step <= currentStep ? 'bg-white text-blue-600' : 'bg-blue-400 text-white'
+                        step <= currentStep ? 'bg-white text-red-600' : 'bg-red-400 text-white'
                       }`}>
                         {step < currentStep ? <FaCheckCircle /> : step}
                       </div>
                       {step < totalSteps && (
                         <div className={`w-16 h-1 mx-2 ${
-                          step < currentStep ? 'bg-white' : 'bg-blue-400'
+                          step < currentStep ? 'bg-white' : 'bg-red-400'
                         }`}></div>
                       )}
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-between text-sm text-blue-100">
+                <div className="flex justify-between text-sm text-red-100">
                   <span>Business Info</span>
                   <span>Contact Details</span>
                   <span>Requirements</span>
@@ -291,7 +298,7 @@ const WholesaleRequest = () => {
                 {currentStep === 1 && (
                   <div className="space-y-6">
                     <div className="text-center mb-8">
-                      <FaBuilding className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                      <FaBuilding className="w-12 h-12 text-red-600 mx-auto mb-4" />
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">Business Information</h3>
                       <p className="text-gray-600">Tell us about your business</p>
                     </div>
@@ -306,7 +313,7 @@ const WholesaleRequest = () => {
                           name="businessName"
                           value={formData.businessName}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder="Enter your business name"
                           required
                         />
@@ -320,7 +327,7 @@ const WholesaleRequest = () => {
                           name="businessType"
                           value={formData.businessType}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           required
                         >
                           <option value="">Select business type</option>
@@ -339,7 +346,7 @@ const WholesaleRequest = () => {
                           name="businessLicense"
                           value={formData.businessLicense}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder="Enter license number"
                         />
                       </div>
@@ -352,7 +359,7 @@ const WholesaleRequest = () => {
                           name="yearsInBusiness"
                           value={formData.yearsInBusiness}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                         >
                           <option value="">Select years</option>
                           <option value="Less than 1 year">Less than 1 year</option>
@@ -373,7 +380,7 @@ const WholesaleRequest = () => {
                         name="contactPerson"
                         value={formData.contactPerson}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                         placeholder="Enter contact person's name"
                         required
                       />
@@ -385,7 +392,7 @@ const WholesaleRequest = () => {
                 {currentStep === 2 && (
                   <div className="space-y-6">
                     <div className="text-center mb-8">
-                      <FaUser className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                      <FaUser className="w-12 h-12 text-red-600 mx-auto mb-4" />
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">Contact & Location Details</h3>
                       <p className="text-gray-600">How can we reach you?</p>
                     </div>
@@ -400,7 +407,7 @@ const WholesaleRequest = () => {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder="your.email@example.com"
                           required
                         />
@@ -415,7 +422,7 @@ const WholesaleRequest = () => {
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder="+254 700 000 000"
                           required
                         />
@@ -430,7 +437,7 @@ const WholesaleRequest = () => {
                           name="alternativePhone"
                           value={formData.alternativePhone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder="+254 700 000 001"
                         />
                       </div>
@@ -443,7 +450,7 @@ const WholesaleRequest = () => {
                           name="county"
                           value={formData.county}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           required
                         >
                           <option value="">Select county</option>
@@ -462,7 +469,7 @@ const WholesaleRequest = () => {
                           name="town"
                           value={formData.town}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder="Enter town or city"
                         />
                       </div>
@@ -477,7 +484,7 @@ const WholesaleRequest = () => {
                         value={formData.physicalAddress}
                         onChange={handleInputChange}
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
                         placeholder="Enter your business physical address"
                       />
                     </div>
@@ -488,7 +495,7 @@ const WholesaleRequest = () => {
                 {currentStep === 3 && (
                   <div className="space-y-6">
                     <div className="text-center mb-8">
-                      <FaShoppingCart className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                      <FaShoppingCart className="w-12 h-12 text-red-600 mx-auto mb-4" />
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">Business Requirements</h3>
                       <p className="text-gray-600">What are you looking for?</p>
                     </div>
@@ -505,7 +512,7 @@ const WholesaleRequest = () => {
                             value="Saffron"
                             checked={formData.interestedBrands.includes('Saffron')}
                             onChange={handleInputChange}
-                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                            className="w-5 h-5 text-red-600 rounded focus:ring-red-500"
                           />
                           <div>
                             <span className="font-semibold text-gray-900">Saffron Products</span>
@@ -520,7 +527,7 @@ const WholesaleRequest = () => {
                             value="Cornells"
                             checked={formData.interestedBrands.includes('Cornells')}
                             onChange={handleInputChange}
-                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                            className="w-5 h-5 text-red-600 rounded focus:ring-red-500"
                           />
                           <div>
                             <span className="font-semibold text-gray-900">Cornells Products</span>
@@ -535,7 +542,7 @@ const WholesaleRequest = () => {
                             value="Rekker General"
                             checked={formData.interestedBrands.includes('Rekker General')}
                             onChange={handleInputChange}
-                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                            className="w-5 h-5 text-red-600 rounded focus:ring-red-500"
                           />
                           <div>
                             <span className="font-semibold text-gray-900">Rekker General Products</span>
@@ -550,7 +557,7 @@ const WholesaleRequest = () => {
                             value="All Products"
                             checked={formData.interestedBrands.includes('All Products')}
                             onChange={handleInputChange}
-                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                            className="w-5 h-5 text-red-600 rounded focus:ring-red-500"
                           />
                           <div>
                             <span className="font-semibold text-gray-900">All Products</span>
@@ -569,7 +576,7 @@ const WholesaleRequest = () => {
                           name="targetMarket"
                           value={formData.targetMarket}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           required
                         >
                           <option value="">Select target market</option>
@@ -591,7 +598,7 @@ const WholesaleRequest = () => {
                           name="estimatedMonthlyVolume"
                           value={formData.estimatedMonthlyVolume}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                           required
                         >
                           <option value="">Select volume range</option>
@@ -613,7 +620,7 @@ const WholesaleRequest = () => {
                         value={formData.specificProducts}
                         onChange={handleInputChange}
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
                         placeholder="List specific products you're interested in..."
                       />
                     </div>
@@ -627,7 +634,7 @@ const WholesaleRequest = () => {
                         name="currentSuppliers"
                         value={formData.currentSuppliers}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                         placeholder="Who do you currently buy from?"
                       />
                     </div>
@@ -638,7 +645,7 @@ const WholesaleRequest = () => {
                 {currentStep === 4 && (
                   <div className="space-y-6">
                     <div className="text-center mb-8">
-                      <FaClipboardList className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                      <FaClipboardList className="w-12 h-12 text-red-600 mx-auto mb-4" />
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">Additional Information</h3>
                       <p className="text-gray-600">Help us serve you better</p>
                     </div>
@@ -652,7 +659,7 @@ const WholesaleRequest = () => {
                           name="preferredPaymentTerms"
                           value={formData.preferredPaymentTerms}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                         >
                           <option value="">Select payment terms</option>
                           <option value="Cash on Delivery">Cash on Delivery</option>
@@ -671,7 +678,7 @@ const WholesaleRequest = () => {
                           name="deliveryRequirements"
                           value={formData.deliveryRequirements}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500"
                         >
                           <option value="">Select delivery preference</option>
                           <option value="Weekly Delivery">Weekly Delivery</option>
@@ -692,24 +699,24 @@ const WholesaleRequest = () => {
                         value={formData.additionalRequirements}
                         onChange={handleInputChange}
                         rows="4"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
                         placeholder="Any special requirements, questions, or comments..."
                       />
                     </div>
 
-                    <div className="bg-blue-50 rounded-2xl p-6">
+                    <div className="bg-red-50 rounded-2xl p-6">
                       <h4 className="font-bold text-gray-900 mb-3">What happens next?</h4>
                       <div className="space-y-2 text-sm text-gray-600">
                         <div className="flex items-center">
-                          <FaCheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                          <FaCheckCircle className="w-4 h-4 text-red-500 mr-2" />
                           <span>Our team reviews your application within 24 hours</span>
                         </div>
                         <div className="flex items-center">
-                          <FaCheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                          <FaCheckCircle className="w-4 h-4 text-red-500 mr-2" />
                           <span>We contact you to discuss pricing and terms</span>
                         </div>
                         <div className="flex items-center">
-                          <FaCheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                          <FaCheckCircle className="w-4 h-4 text-red-500 mr-2" />
                           <span>Partnership agreement and first order setup</span>
                         </div>
                       </div>
@@ -736,7 +743,7 @@ const WholesaleRequest = () => {
                     <button
                       type="button"
                       onClick={nextStep}
-                      className="px-8 py-3 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
+                      className="px-8 py-3 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300"
                     >
                       Next Step
                     </button>
@@ -744,7 +751,7 @@ const WholesaleRequest = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="px-8 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                      className="px-8 py-3 bg-gradient-to-r from-rose-600 to-red-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                     >
                       {isSubmitting ? (
                         <>
@@ -767,11 +774,11 @@ const WholesaleRequest = () => {
       </section>
 
       {/* Contact Information */}
-      <section className={`py-16 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+      <section className={`py-16 bg-gradient-to-r from-red-900 via-red-800 to-red-900 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-white mb-6">Need Help with Your Application?</h2>
-            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+            <p className="text-xl text-red-100 mb-8 leading-relaxed">
               Our wholesale team is ready to assist you with any questions about products, pricing, or partnership opportunities.
             </p>
 
@@ -781,7 +788,7 @@ const WholesaleRequest = () => {
                   <FaPhone className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Call Us</h3>
-                <p className="text-blue-100">+254 700 000 000</p>
+                <p className="text-red-100">+254 700 000 000</p>
               </div>
 
               <div className="text-center">
@@ -789,7 +796,7 @@ const WholesaleRequest = () => {
                   <FaEnvelope className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Email Us</h3>
-                <p className="text-blue-100">wholesale@rekker.co.ke</p>
+                <p className="text-red-100">wholesale@rekker.co.ke</p>
               </div>
 
               <div className="text-center">
@@ -797,7 +804,7 @@ const WholesaleRequest = () => {
                   <FaClock className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Business Hours</h3>
-                <p className="text-blue-100">Mon-Fri: 8AM-6PM</p>
+                <p className="text-red-100">Mon-Fri: 8AM-6PM</p>
               </div>
             </div>
           </div>
