@@ -1,4 +1,4 @@
-// components/Announcements.jsx - Rekker Professional Company Announcements
+// components/Announcements.jsx - Rekker Professional Company Announcements (Red Theme)
 import { Typewriter } from "react-simple-typewriter";
 import { useState, useEffect } from "react";
 
@@ -21,7 +21,7 @@ const Announcements = () => {
   }, [announcements.length]);
 
   return (
-    <div className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white overflow-hidden">
+    <div className="relative bg-gradient-to-r from-red-900 via-red-800 to-red-900 text-white overflow-hidden">
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-repeat bg-center" 
@@ -38,8 +38,8 @@ const Announcements = () => {
         <div className="flex items-center space-x-4">
           {/* Decorative Elements */}
           <div className="hidden md:flex items-center space-x-2">
-            <div className="w-8 h-px bg-gradient-to-r from-transparent to-blue-400"></div>
-            <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="w-8 h-px bg-gradient-to-r from-transparent to-red-400"></div>
+            <div className="w-1 h-1 bg-red-400 rounded-full animate-pulse"></div>
           </div>
 
           {/* Main Announcement */}
@@ -53,27 +53,27 @@ const Announcements = () => {
                 typeSpeed={80}
                 deleteSpeed={0}
                 delaySpeed={0}
-                cursorColor="#3B82F6"
+                cursorColor="#EF4444"
               />
             </div>
           </div>
 
           {/* Decorative Elements */}
           <div className="hidden md:flex items-center space-x-2">
-            <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
-            <div className="w-8 h-px bg-gradient-to-l from-transparent to-blue-400"></div>
+            <div className="w-1 h-1 bg-red-400 rounded-full animate-pulse"></div>
+            <div className="w-8 h-px bg-gradient-to-l from-transparent to-red-400"></div>
           </div>
         </div>
       </div>
 
       {/* Professional Bottom Border */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-400/60 to-transparent"></div>
       
       {/* Floating Particles Effect */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-2 left-1/4 w-1 h-1 bg-blue-400/30 rounded-full animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
-        <div className="absolute top-4 right-1/3 w-1 h-1 bg-blue-400/20 rounded-full animate-bounce" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
-        <div className="absolute bottom-2 left-2/3 w-1 h-1 bg-blue-400/25 rounded-full animate-bounce" style={{animationDelay: '2s', animationDuration: '3.5s'}}></div>
+        <div className="absolute top-2 left-1/4 w-1 h-1 bg-red-400/30 rounded-full animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
+        <div className="absolute top-4 right-1/3 w-1 h-1 bg-red-400/20 rounded-full animate-bounce" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
+        <div className="absolute bottom-2 left-2/3 w-1 h-1 bg-red-400/25 rounded-full animate-bounce" style={{animationDelay: '2s', animationDuration: '3.5s'}}></div>
       </div>
     </div>
   );

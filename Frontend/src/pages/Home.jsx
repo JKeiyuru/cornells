@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-// pages/Home.jsx - Rekker Professional Homepage with Video Sync
+// pages/Home.jsx - Rekker Professional Homepage with Video Sync (Red Theme)
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -50,7 +50,7 @@ const Home = () => {
       icon: FaPen,
       description: "Complete range of office and school supplies",
       items: ["Rulers", "Pens", "Pencils", "Rubbers", "Math Sets", "Photocopy Papers"],
-      color: "from-blue-500 to-blue-600"
+      color: "from-red-500 to-red-600"
     },
     {
       id: "bags",
@@ -58,7 +58,7 @@ const Home = () => {
       icon: FaSchool,
       description: "Quality school bags and travel suitcases",
       items: ["School Backpacks", "Travel Suitcases", "Sports Bags", "Laptop Bags"],
-      color: "from-green-500 to-green-600"
+      color: "from-rose-500 to-rose-600"
     },
     {
       id: "toys",
@@ -66,7 +66,7 @@ const Home = () => {
       icon: FaGamepad,
       description: "Safe and educational toys for children",
       items: ["Educational Toys", "Action Figures", "Board Games", "Puzzles"],
-      color: "from-purple-500 to-purple-600"
+      color: "from-red-600 to-rose-600"
     },
     {
       id: "kitchenware",
@@ -74,7 +74,7 @@ const Home = () => {
       icon: FaUtensils,
       description: "Essential kitchen tools and accessories",
       items: ["Cooking Utensils", "Storage Containers", "Kitchen Tools", "Tableware"],
-      color: "from-orange-500 to-orange-600"
+      color: "from-rose-600 to-red-600"
     },
     {
       id: "padlocks",
@@ -82,7 +82,7 @@ const Home = () => {
       icon: FaLock,
       description: "Secure and durable security solutions",
       items: ["Combination Locks", "Keyed Padlocks", "Heavy Duty Locks", "Security Chains"],
-      color: "from-gray-500 to-gray-600"
+      color: "from-red-700 to-rose-700"
     },
     {
       id: "stuffed-toys",
@@ -90,7 +90,7 @@ const Home = () => {
       icon: FaHeart,
       description: "Soft and cuddly companions for all ages",
       items: ["Teddy Bears", "Stuffed Animals", "Character Plushies", "Baby Toys"],
-      color: "from-pink-500 to-pink-600"
+      color: "from-rose-500 to-red-500"
     },
     {
       id: "party-items",
@@ -98,7 +98,7 @@ const Home = () => {
       icon: FaBirthdayCake,
       description: "Complete party and celebration supplies",
       items: ["Paper Cups & Plates", "Cutlery", "Birthday Hats", "Balloons", "Candles"],
-      color: "from-yellow-500 to-yellow-600"
+      color: "from-red-500 to-rose-500"
     },
     {
       id: "educational",
@@ -106,7 +106,7 @@ const Home = () => {
       icon: FaPaintBrush,
       description: "Art and craft supplies for creativity",
       items: ["Paintbrushes", "Canvas", "Modeling Clay", "Art Supplies", "Craft Materials"],
-      color: "from-teal-500 to-teal-600"
+      color: "from-rose-600 to-red-700"
     }
   ];
 
@@ -119,7 +119,7 @@ const Home = () => {
       products: ["Handwashes", "Dishwashing Soaps", "Detergents", "Shower Gels", "After-Shave"],
       image: "/api/placeholder/400/300",
       link: "/brands/saffron",
-      color: "from-orange-500 to-red-500"
+      color: "from-red-500 to-rose-500"
     },
     {
       name: "Cornells",
@@ -128,7 +128,7 @@ const Home = () => {
       products: ["Lotions", "Sunscreens", "Toners", "Beauty Care", "Skincare"],
       image: "/api/placeholder/400/300",
       link: "/brands/cornells", 
-      color: "from-purple-500 to-pink-500"
+      color: "from-rose-500 to-red-500"
     }
   ];
 
@@ -166,7 +166,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-green-50/10">
+    <div className="min-h-screen bg-gradient-to-br from-red-50/30 via-rose-25/20 to-red-50/10">
       
       {/* Hero Section with Professional Carousel and Videos */}
       <div className={`relative h-screen transition-all duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
@@ -179,7 +179,7 @@ const Home = () => {
                 index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/70 via-blue-900/50 to-transparent z-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/70 via-red-900/50 to-transparent z-10"></div>
               
               {/* Video Background */}
               <video
@@ -215,12 +215,12 @@ const Home = () => {
                     <h1 className="text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
                       {slide.title}
                     </h1>
-                    <p className="text-2xl text-blue-100 mb-8 font-medium drop-shadow-md">
+                    <p className="text-2xl text-red-100 mb-8 font-medium drop-shadow-md">
                       {slide.subtitle}
                     </p>
                     <Link
                       to="/products/all"
-                      className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                      className="inline-flex items-center space-x-3 bg-gradient-to-r from-red-600 to-rose-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
                     >
                       <span>{slide.cta}</span>
                       <FaArrowRight className="w-5 h-5" />
@@ -272,7 +272,7 @@ const Home = () => {
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-12">
               <h2 className="text-5xl font-bold text-gray-900 mb-6">Welcome to Rekker</h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto mb-8"></div>
+              <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-rose-500 mx-auto mb-8"></div>
               <p className="text-xl text-gray-600 leading-relaxed">
                 Kenya's trusted manufacturer and distributor of quality products. From everyday essentials 
                 to premium branded solutions, we serve retailers, wholesalers, and institutions across the region 
@@ -283,29 +283,29 @@ const Home = () => {
             {/* Key Stats */}
             <div className="grid md:grid-cols-4 gap-8 mb-16">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FaBuilding className="w-8 h-8 text-blue-600" />
+                <div className="w-16 h-16 bg-gradient-to-r from-red-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaBuilding className="w-8 h-8 text-red-600" />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-2">10+</h3>
                 <p className="text-gray-600 font-medium">Years Experience</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FaTruck className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 bg-gradient-to-r from-red-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaTruck className="w-8 h-8 text-rose-600" />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-2">500+</h3>
                 <p className="text-gray-600 font-medium">Products</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FaUsers className="w-8 h-8 text-blue-600" />
+                <div className="w-16 h-16 bg-gradient-to-r from-red-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaUsers className="w-8 h-8 text-red-600" />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-2">1000+</h3>
                 <p className="text-gray-600 font-medium">Happy Clients</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FaGlobe className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 bg-gradient-to-r from-red-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaGlobe className="w-8 h-8 text-rose-600" />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-2">47</h3>
                 <p className="text-gray-600 font-medium">Counties Served</p>
@@ -316,11 +316,11 @@ const Home = () => {
       </section>
 
       {/* Product Categories Section */}
-      <section className={`py-20 bg-gradient-to-br from-gray-50 to-blue-50/30 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+      <section className={`py-20 bg-gradient-to-br from-red-50/30 to-rose-50/30 transition-all duration-1000 delay-500 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Product Categories</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto mb-8"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-rose-500 mx-auto mb-8"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Comprehensive range of quality products serving diverse market needs across Kenya
             </p>
@@ -341,7 +341,7 @@ const Home = () => {
                   <div className="space-y-2 mb-6">
                     {category.items.slice(0, 3).map((item, idx) => (
                       <div key={idx} className="flex items-center text-sm text-gray-500">
-                        <FaCheckCircle className="w-3 h-3 text-green-500 mr-2" />
+                        <FaCheckCircle className="w-3 h-3 text-red-500 mr-2" />
                         {item}
                       </div>
                     ))}
@@ -351,7 +351,7 @@ const Home = () => {
                   </div>
                   <Link
                     to={`/products/${category.id}`}
-                    className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold group-hover:translate-x-2 transition-transform duration-300"
+                    className="inline-flex items-center text-red-600 hover:text-red-700 font-semibold group-hover:translate-x-2 transition-transform duration-300"
                   >
                     View Products <FaArrowRight className="w-4 h-4 ml-2" />
                   </Link>
@@ -363,12 +363,12 @@ const Home = () => {
       </section>
 
       {/* Our Brands Section */}
-      <section className={`py-20 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+      <section className={`py-20 bg-gradient-to-r from-slate-900 via-red-900 to-slate-900 transition-all duration-1000 delay-700 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-6">Our Premium Brands</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-green-400 mx-auto mb-8"></div>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+            <div className="w-24 h-1 bg-gradient-to-r from-red-400 to-rose-400 mx-auto mb-8"></div>
+            <p className="text-xl text-red-100 max-w-3xl mx-auto">
               Trusted brands delivering quality and value across Kenya and beyond
             </p>
           </div>
@@ -395,14 +395,14 @@ const Home = () => {
                 </div>
 
                 <div className="p-8">
-                  <p className="text-blue-100 text-lg mb-6 leading-relaxed">
+                  <p className="text-red-100 text-lg mb-6 leading-relaxed">
                     {brand.description}
                   </p>
                   
                   <div className="grid grid-cols-2 gap-2 mb-8">
                     {brand.products.map((product, idx) => (
                       <div key={idx} className="flex items-center text-white/80">
-                        <FaCheckCircle className="w-3 h-3 text-green-400 mr-2" />
+                        <FaCheckCircle className="w-3 h-3 text-red-400 mr-2" />
                         <span className="text-sm">{product}</span>
                       </div>
                     ))}
@@ -424,7 +424,7 @@ const Home = () => {
           <div className="text-center mt-16">
             <Link
               to="/brands"
-              className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+              className="inline-flex items-center space-x-3 bg-gradient-to-r from-red-600 to-rose-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
             >
               <span>View All Our Brands</span>
               <FaArrowRight className="w-5 h-5" />
@@ -438,13 +438,13 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Why Choose Rekker</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto mb-8"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-red-500 to-rose-500 mx-auto mb-8"></div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-12 max-w-5xl mx-auto">
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-blue-200/50 transition-all duration-300 transform group-hover:scale-110">
-                <FaAward className="w-10 h-10 text-blue-600" />
+              <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-red-200/50 transition-all duration-300 transform group-hover:scale-110">
+                <FaAward className="w-10 h-10 text-red-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Quality Assured</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -453,8 +453,8 @@ const Home = () => {
             </div>
 
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-green-200/50 transition-all duration-300 transform group-hover:scale-110">
-                <FaTruck className="w-10 h-10 text-green-600" />
+              <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-rose-200/50 transition-all duration-300 transform group-hover:scale-110">
+                <FaTruck className="w-10 h-10 text-rose-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Reliable Distribution</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -463,8 +463,8 @@ const Home = () => {
             </div>
 
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-purple-200/50 transition-all duration-300 transform group-hover:scale-110">
-                <FaUsers className="w-10 h-10 text-purple-600" />
+              <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-rose-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:shadow-lg group-hover:shadow-red-200/50 transition-all duration-300 transform group-hover:scale-110">
+                <FaUsers className="w-10 h-10 text-red-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Customer First</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -476,11 +476,11 @@ const Home = () => {
       </section>
 
       {/* Call to Action Section */}
-      <section className={`py-20 bg-gradient-to-br from-blue-600 via-green-600 to-blue-700 transition-all duration-1000 delay-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+      <section className={`py-20 bg-gradient-to-br from-red-600 via-rose-600 to-red-700 transition-all duration-1000 delay-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl font-bold text-white mb-6">Ready to Partner with Rekker?</h2>
-            <p className="text-xl text-blue-100 mb-10 leading-relaxed">
+            <p className="text-xl text-red-100 mb-10 leading-relaxed">
               Whether you're looking for wholesale opportunities, retail partnerships, or distribution agreements, 
               we're here to support your business growth with quality products and professional service.
             </p>
@@ -488,19 +488,19 @@ const Home = () => {
             <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               <Link
                 to="/wholesale-request"
-                className="bg-white text-blue-700 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                className="bg-white text-red-700 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
               >
                 Request Wholesale Pricing
               </Link>
               <Link
                 to="/contact"
-                className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-white hover:text-blue-700"
+                className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-white hover:text-red-700"
               >
                 Contact Our Team
               </Link>
             </div>
 
-            <div className="mt-8 text-blue-100">
+            <div className="mt-8 text-red-100">
               <p className="text-sm">
                 *Minimum order quantities apply. Contact us for detailed pricing and terms.
               </p>
