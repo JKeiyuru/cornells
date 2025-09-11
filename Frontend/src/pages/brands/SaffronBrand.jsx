@@ -1,4 +1,4 @@
-// pages/SaffronBrand.jsx
+// pages/SaffronBrand.jsx - Updated with strong red-orange theme
 import { useState, useEffect } from "react";
 import { 
   FaLeaf, 
@@ -173,42 +173,42 @@ const SaffronBrand = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50/30 to-red-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50/30 to-orange-100/20">
       {/* Hero Section */}
-      <div className={`relative py-20 bg-gradient-to-r from-orange-600 via-red-600 to-orange-700 transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+      <div className={`relative py-20 bg-gradient-to-r from-red-900 via-orange-900 to-red-800 transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-orange-600/10 to-red-600/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-red-700/10 to-orange-700/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
-                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center shadow-2xl">
                   <FaLeaf className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-5xl font-bold text-white mb-2">Saffron</h1>
-                  <p className="text-orange-100">Manufactured by Rekker</p>
+                  <h1 className="text-5xl font-bold text-white mb-2 filter drop-shadow-2xl">Saffron</h1>
+                  <p className="text-orange-200">Manufactured by Rekker</p>
                 </div>
               </div>
-              <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-orange-400 mb-8 mx-auto lg:mx-0"></div>
-              <p className="text-xl text-orange-100 leading-relaxed mb-8">
+              <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-red-500 mb-8 mx-auto lg:mx-0 shadow-lg"></div>
+              <p className="text-xl text-orange-100 leading-relaxed mb-8 filter drop-shadow-lg">
                 Premium household and personal care products crafted with natural ingredients 
                 and advanced formulations for the modern Kenyan family.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link
                   to="/wholesale-request"
-                  className="inline-flex items-center justify-center space-x-2 bg-white text-orange-600 px-8 py-4 rounded-lg font-semibold hover:bg-orange-50 transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-4 rounded-xl font-bold shadow-2xl hover:from-orange-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 hover:shadow-orange-500/25"
                 >
                   <span>Order Wholesale</span>
                   <FaArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-orange-600 transition-all duration-300"
+                  className="inline-flex items-center justify-center space-x-2 border-2 border-orange-300 text-orange-100 px-8 py-4 rounded-xl font-bold hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all duration-300"
                 >
                   <span>Learn More</span>
                 </Link>
@@ -217,21 +217,21 @@ const SaffronBrand = () => {
 
             {/* Brand Stats */}
             <div className="grid grid-cols-2 gap-6">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
-                <div className="text-3xl font-bold text-white mb-2">15+</div>
-                <div className="text-orange-100">Years Manufacturing</div>
+              <div className="bg-gradient-to-br from-orange-600/20 to-red-700/20 backdrop-blur-sm rounded-xl p-6 text-center border border-orange-400/30 shadow-xl">
+                <div className="text-3xl font-bold text-white mb-2 filter drop-shadow-lg">15+</div>
+                <div className="text-orange-200">Years Manufacturing</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
-                <div className="text-3xl font-bold text-white mb-2">5</div>
-                <div className="text-orange-100">Product Categories</div>
+              <div className="bg-gradient-to-br from-red-600/20 to-orange-700/20 backdrop-blur-sm rounded-xl p-6 text-center border border-red-400/30 shadow-xl">
+                <div className="text-3xl font-bold text-white mb-2 filter drop-shadow-lg">5</div>
+                <div className="text-orange-200">Product Categories</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
-                <div className="text-3xl font-bold text-white mb-2">500+</div>
-                <div className="text-orange-100">Retail Partners</div>
+              <div className="bg-gradient-to-br from-orange-700/20 to-red-600/20 backdrop-blur-sm rounded-xl p-6 text-center border border-orange-500/30 shadow-xl">
+                <div className="text-3xl font-bold text-white mb-2 filter drop-shadow-lg">500+</div>
+                <div className="text-orange-200">Retail Partners</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
-                <div className="text-3xl font-bold text-white mb-2">47</div>
-                <div className="text-orange-100">Counties Served</div>
+              <div className="bg-gradient-to-br from-red-700/20 to-orange-600/20 backdrop-blur-sm rounded-xl p-6 text-center border border-red-500/30 shadow-xl">
+                <div className="text-3xl font-bold text-white mb-2 filter drop-shadow-lg">47</div>
+                <div className="text-orange-200">Counties Served</div>
               </div>
             </div>
           </div>
@@ -243,6 +243,7 @@ const SaffronBrand = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Why Choose Saffron?</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-orange-600 to-red-700 mx-auto mb-8 shadow-lg"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Built on a foundation of quality, sustainability, and care for every family
             </p>
@@ -250,11 +251,11 @@ const SaffronBrand = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {brandValues.map((value, index) => (
-              <div key={index} className="bg-white rounded-xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 group">
-                <div className="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-6 text-orange-600 group-hover:scale-110 transition-transform duration-300">
+              <div key={index} className="bg-white rounded-2xl p-8 text-center shadow-2xl hover:shadow-orange-200/50 transition-all duration-300 group transform hover:-translate-y-2 border border-orange-100/50">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white group-hover:scale-110 transition-transform duration-300 shadow-xl">
                   {value.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">{value.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
                 <p className="text-gray-600 leading-relaxed">{value.description}</p>
               </div>
             ))}
@@ -263,11 +264,12 @@ const SaffronBrand = () => {
       </div>
 
       {/* Product Showcase */}
-      <div className="bg-white py-20">
+      <div className="bg-gradient-to-br from-white via-orange-50/30 to-red-50/30 py-20">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Product Range</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-orange-600 to-red-700 mx-auto mb-8 shadow-lg"></div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Complete household and personal care solutions manufactured with precision and care
               </p>
@@ -279,10 +281,10 @@ const SaffronBrand = () => {
                 <button
                   key={product.id}
                   onClick={() => setActiveProduct(index)}
-                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                  className={`px-6 py-3 rounded-full font-medium transition-all duration-300 transform ${
                     activeProduct === index
-                      ? 'bg-orange-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-orange-100 hover:text-orange-700'
+                      ? 'bg-gradient-to-r from-orange-600 to-red-700 text-white shadow-2xl scale-105'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gradient-to-r hover:from-orange-100 hover:to-red-100 hover:text-orange-800 hover:shadow-lg'
                   }`}
                 >
                   {product.name}
@@ -294,10 +296,10 @@ const SaffronBrand = () => {
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div className="space-y-8">
                 <div>
-                  <div className="inline-block px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium mb-4">
+                  <div className="inline-block px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-full text-sm font-bold mb-6 shadow-xl">
                     {products[activeProduct].category}
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                  <h3 className="text-4xl font-bold text-gray-900 mb-4">
                     {products[activeProduct].name}
                   </h3>
                   <p className="text-gray-600 text-lg leading-relaxed">
@@ -307,7 +309,7 @@ const SaffronBrand = () => {
 
                 {/* Key Features */}
                 <div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-4">Key Features</h4>
+                  <h4 className="text-xl font-bold text-gray-900 mb-4">Key Features</h4>
                   <div className="grid sm:grid-cols-2 gap-3">
                     {products[activeProduct].keyFeatures.map((feature, index) => (
                       <div key={index} className="flex items-center space-x-3">
@@ -319,27 +321,27 @@ const SaffronBrand = () => {
                 </div>
 
                 {/* Wholesale Information */}
-                <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Wholesale Information</h4>
-                  <div className="grid sm:grid-cols-2 gap-4">
+                <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-8 shadow-xl border border-orange-200/50">
+                  <h4 className="text-xl font-bold text-gray-900 mb-6">Wholesale Information</h4>
+                  <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">Wholesale Price</div>
-                      <div className="text-lg font-bold text-orange-600">
+                      <div className="text-sm text-gray-600 mb-2">Wholesale Price</div>
+                      <div className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent">
                         {products[activeProduct].wholesalePrice}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">Minimum Order</div>
-                      <div className="text-lg font-bold text-gray-900">
+                      <div className="text-sm text-gray-600 mb-2">Minimum Order</div>
+                      <div className="text-2xl font-bold text-gray-900">
                         {products[activeProduct].moq}
                       </div>
                     </div>
                   </div>
-                  <div className="mt-4">
-                    <div className="text-sm text-gray-600 mb-2">Available Sizes</div>
+                  <div className="mt-6">
+                    <div className="text-sm text-gray-600 mb-3">Available Sizes</div>
                     <div className="flex flex-wrap gap-2">
                       {products[activeProduct].sizes.map((size, index) => (
-                        <span key={index} className="px-3 py-1 bg-white rounded-full text-sm font-medium border border-orange-200">
+                        <span key={index} className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-full text-sm font-bold shadow-lg">
                           {size}
                         </span>
                       ))}
@@ -350,14 +352,14 @@ const SaffronBrand = () => {
                 <div className="flex space-x-4">
                   <Link
                     to="/wholesale-request"
-                    className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-600 to-red-700 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:from-orange-700 hover:to-red-800 shadow-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-orange-500/25"
                   >
                     <span>Order Now</span>
-                    <FaArrowRight className="w-4 h-4" />
+                    <FaArrowRight className="w-5 h-5" />
                   </Link>
                   <Link
                     to="/contact"
-                    className="inline-flex items-center space-x-2 border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-orange-400 hover:text-orange-600 transition-all duration-300"
+                    className="inline-flex items-center space-x-2 border-3 border-orange-300 text-orange-700 px-10 py-5 rounded-2xl font-bold text-lg hover:border-orange-500 hover:text-orange-800 hover:shadow-lg transition-all duration-300"
                   >
                     <span>Get Quote</span>
                   </Link>
@@ -366,18 +368,21 @@ const SaffronBrand = () => {
 
               {/* Product Image */}
               <div className="relative">
-                <div className="aspect-square bg-gradient-to-br from-orange-100 to-red-100 rounded-3xl overflow-hidden shadow-2xl">
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <div className="text-center text-gray-500">
-                      <FaLeaf className="w-24 h-24 mx-auto mb-4 text-orange-400" />
-                      <p className="text-lg font-medium">{products[activeProduct].name}</p>
+                <div className="aspect-square bg-gradient-to-br from-orange-100 via-red-100 to-orange-200 rounded-3xl overflow-hidden shadow-2xl border-4 border-gradient-to-r from-orange-300 to-red-400">
+                  <div className="w-full h-full bg-gradient-to-br from-orange-200/50 to-red-200/50 flex items-center justify-center backdrop-blur-sm">
+                    <div className="text-center text-gray-600">
+                      <div className="w-32 h-32 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                        <FaLeaf className="w-16 h-16 text-white" />
+                      </div>
+                      <p className="text-xl font-bold text-gray-800">{products[activeProduct].name}</p>
+                      <p className="text-sm text-gray-600 mt-2">{products[activeProduct].category}</p>
                     </div>
                   </div>
                 </div>
-                <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl p-4">
+                <div className="absolute -bottom-8 -right-8 bg-gradient-to-r from-orange-600 to-red-700 rounded-2xl shadow-2xl p-6 border-4 border-white">
                   <div className="text-center">
-                    <div className="text-sm text-gray-600 mb-1">Manufactured by</div>
-                    <div className="text-lg font-bold text-orange-600">REKKER</div>
+                    <div className="text-sm text-orange-100 mb-1">Manufactured by</div>
+                    <div className="text-2xl font-bold text-white">REKKER</div>
                   </div>
                 </div>
               </div>
@@ -387,11 +392,12 @@ const SaffronBrand = () => {
       </div>
 
       {/* Certifications */}
-      <div className="bg-gray-50 py-20">
+      <div className="bg-gradient-to-br from-gray-50 to-orange-50/50 py-20">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Quality Certifications</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-orange-600 to-red-700 mx-auto mb-8 shadow-lg"></div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Our commitment to quality is backed by international certifications and standards
               </p>
@@ -399,11 +405,11 @@ const SaffronBrand = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {certifications.map((cert, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 text-orange-600">
+                <div key={index} className="bg-white rounded-2xl p-8 text-center shadow-2xl hover:shadow-orange-200/50 transition-all duration-300 transform hover:-translate-y-2 border border-orange-100/50">
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white shadow-xl">
                     {cert.icon}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{cert.title}</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">{cert.title}</h3>
                   <p className="text-gray-600 text-sm">{cert.description}</p>
                 </div>
               ))}
@@ -413,11 +419,12 @@ const SaffronBrand = () => {
       </div>
 
       {/* Customer Testimonials */}
-      <div className="bg-white py-20">
+      <div className="bg-gradient-to-br from-white via-orange-50/30 to-red-50/30 py-20">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">What Our Partners Say</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-orange-600 to-red-700 mx-auto mb-8 shadow-lg"></div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Hear from our retail and distribution partners across Kenya
               </p>
@@ -425,18 +432,18 @@ const SaffronBrand = () => {
 
             <div className="grid md:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center space-x-1 mb-4">
+                <div key={index} className="bg-white rounded-2xl p-8 hover:shadow-2xl hover:shadow-orange-200/30 transition-all duration-300 transform hover:-translate-y-2 border border-orange-100/50">
+                  <div className="flex items-center space-x-1 mb-6">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <FaStar key={i} className="w-5 h-5 text-yellow-400" />
+                      <FaStar key={i} className="w-6 h-6 text-orange-500" />
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-6 italic leading-relaxed">
+                  <p className="text-gray-700 mb-6 italic leading-relaxed text-lg">
                     "{testimonial.comment}"
                   </p>
-                  <div>
-                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.business}</div>
+                  <div className="border-t border-orange-100 pt-6">
+                    <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
+                    <div className="text-sm bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent font-semibold">{testimonial.business}</div>
                   </div>
                 </div>
               ))}
@@ -446,26 +453,32 @@ const SaffronBrand = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-orange-600 to-red-600 py-20">
-        <div className="container mx-auto px-6 text-center">
+      <div className="bg-gradient-to-r from-red-900 via-orange-900 to-red-800 py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-orange-600/20 to-red-700/20"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-600/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-700/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+        
+        <div className="container mx-auto px-6 text-center relative z-10">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-white mb-6">
+            <h2 className="text-5xl font-bold text-white mb-8 filter drop-shadow-2xl">
               Partner with Saffron Today
             </h2>
-            <p className="text-xl text-orange-100 mb-8">
+            <p className="text-2xl text-orange-100 mb-12 filter drop-shadow-lg">
               Join hundreds of successful retailers and distributors who trust Saffron for quality products and profitable partnerships
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 to="/wholesale-request"
-                className="inline-flex items-center justify-center space-x-2 bg-white text-orange-600 px-8 py-4 rounded-lg font-semibold hover:bg-orange-50 transition-all duration-300 transform hover:scale-105"
+                className="inline-flex items-center justify-center space-x-3 bg-gradient-to-r from-orange-500 to-red-600 text-white px-12 py-6 rounded-2xl font-bold text-xl hover:from-orange-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-orange-500/25"
               >
                 <span>Start Wholesale Order</span>
-                <FaArrowRight className="w-4 h-4" />
+                <FaArrowRight className="w-6 h-6" />
               </Link>
               <Link
                 to="/contact"
-                className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-orange-600 transition-all duration-300"
+                className="inline-flex items-center justify-center space-x-3 border-3 border-orange-300 text-orange-100 px-12 py-6 rounded-2xl font-bold text-xl hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all duration-300"
               >
                 <span>Contact Sales Team</span>
               </Link>

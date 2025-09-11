@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Menu from "./components/Menu";
 import Home from "./pages/Home";
 import Users from './pages/Users';
-import Products from './pages/Products';
+import ProductsList from './pages/Products';
 import Orders from "./pages/Orders";
 import Product from "./pages/Product";
 import NewProduct from "./pages/NewProduct";
@@ -153,7 +153,7 @@ function App() {
         },
         {
           path: "products",
-          element: <Products />,
+          element: <ProductsList />,
         },
         {
           path: "product/:id",

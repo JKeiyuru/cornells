@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-// pages/brands/CornellsBrand.jsx - Updated to match official Cornells website
+// pages/brands/CornellsBrand.jsx - Updated with deep burgundy theme (#7c2724)
 import { useState, useEffect } from "react";
 import { 
   FaLeaf, 
@@ -30,15 +30,15 @@ const CornellsBrand = () => {
     setIsLoaded(true);
   }, []);
 
-  // Product Collections matching Cornells official website
+  // Product Collections with burgundy theme updates
   const productCollections = [
     {
       id: "bold-beautiful",
       name: "Bold & Beautiful",
       tagline: "Body Lotions & Care",
       description: "Deeply nourishing body lotions with Shea Butter and natural ingredients for ultra-rich, lightweight hydration.",
-      color: "from-rose-500 to-pink-600",
-      bgColor: "bg-rose-50",
+      color: "from-red-800 to-red-900",
+      bgColor: "bg-red-50",
       products: [
         {
           name: "Bold & Beautiful Vanilla Lotion",
@@ -63,8 +63,8 @@ const CornellsBrand = () => {
       name: "Cute & Pretty",
       tagline: "Kids & Family Care",
       description: "Gentle, safe formulations designed specifically for children's delicate skin and family wellness.",
-      color: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-50",
+      color: "from-red-700 to-red-800",
+      bgColor: "bg-red-50",
       products: [
         {
           name: "Cute & Pretty Baby Lotion",
@@ -89,8 +89,8 @@ const CornellsBrand = () => {
       name: "Dark & Beautiful",
       tagline: "Hair Care Excellence",
       description: "Professional hair care solutions celebrating natural beauty with nourishing ingredients for all hair types.",
-      color: "from-amber-600 to-orange-600",
-      bgColor: "bg-amber-50",
+      color: "from-red-800 to-red-900",
+      bgColor: "bg-red-50",
       products: [
         {
           name: "Dark & Beautiful Hair Oil",
@@ -115,8 +115,8 @@ const CornellsBrand = () => {
       name: "Super Food",
       tagline: "Nutritive Wellness",
       description: "Vitamin and nutrient-enriched personal care products inspired by nature's superfoods for optimal wellness.",
-      color: "from-green-600 to-emerald-600",
-      bgColor: "bg-green-50",
+      color: "from-red-700 to-red-800",
+      bgColor: "bg-red-50",
       products: [
         {
           name: "Super Food Vitamin C Serum",
@@ -166,7 +166,7 @@ const CornellsBrand = () => {
     }
   ];
 
-  // Core Values matching Cornells philosophy
+  // Core Values with burgundy theme
   const coreValues = [
     {
       icon: <FaLeaf className="w-8 h-8" />,
@@ -190,7 +190,7 @@ const CornellsBrand = () => {
     }
   ];
 
-  // Best Sellers section
+  // Best Sellers section with updated pricing colors
   const bestSellers = [
     {
       name: "Bold & Beautiful Shea Butter Lotion",
@@ -260,13 +260,13 @@ const CornellsBrand = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-purple-50/30 to-green-50/20">
-      {/* Hero Section - Inspired by Cornells official hero */}
-      <div className={`relative min-h-screen bg-gradient-to-br from-rose-900 via-purple-800 to-pink-900 transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`}>
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-red-25 to-red-50/20">
+      {/* Hero Section - Updated with burgundy theme */}
+      <div className={`relative min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-900 transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`} style={{backgroundColor: '#7c2724'}}>
         {/* Background Pattern */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-rose-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-pink-500/10 to-rose-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-red-500/10 to-red-600/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-red-600/10 to-red-700/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
         <div className="container mx-auto px-6 relative z-10 flex items-center min-h-screen">
@@ -274,18 +274,18 @@ const CornellsBrand = () => {
             <div className="text-center lg:text-left">
               <div className="mb-8">
                 <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 mb-6">
-                  <FaGlobe className="w-5 h-5 text-rose-300" />
-                  <span className="text-rose-100 font-medium">Global Beauty. Local Excellence.</span>
+                  <FaGlobe className="w-5 h-5 text-red-300" />
+                  <span className="text-red-100 font-medium">Global Beauty. Local Excellence.</span>
                 </div>
                 
                 <h1 className="text-7xl font-bold text-white mb-6 leading-tight">
                   Cornells
-                  <span className="block text-4xl font-light text-rose-200 mt-2">Wellness</span>
+                  <span className="block text-4xl font-light text-red-200 mt-2">Wellness</span>
                 </h1>
                 
-                <div className="w-24 h-1 bg-gradient-to-r from-rose-400 to-purple-400 mb-8 mx-auto lg:mx-0"></div>
+                <div className="w-24 h-1 bg-gradient-to-r from-red-400 to-red-300 mb-8 mx-auto lg:mx-0"></div>
                 
-                <p className="text-2xl text-rose-100 leading-relaxed mb-8 max-w-2xl">
+                <p className="text-2xl text-red-100 leading-relaxed mb-8 max-w-2xl">
                   Experience the beauty of wellness with our globally trusted, 
                   <span className="font-semibold text-white"> cruelty-free products</span> now exclusively 
                   available in Kenya through Rekker.
@@ -297,7 +297,7 @@ const CornellsBrand = () => {
                 {globalStats.map((stat, index) => (
                   <div key={index} className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">{stat.number}</div>
-                    <div className="text-rose-200 text-sm font-medium">{stat.label}</div>
+                    <div className="text-red-200 text-sm font-medium">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -305,14 +305,16 @@ const CornellsBrand = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link
                   to="#collections"
-                  className="inline-flex items-center justify-center space-x-2 bg-white text-rose-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-rose-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                  className="inline-flex items-center justify-center space-x-2 bg-white hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-xl px-8 py-4 rounded-xl font-bold text-lg"
+                  style={{color: '#7c2724'}}
                 >
                   <FaEye className="w-5 h-5" />
                   <span>Explore Collections</span>
                 </Link>
                 <Link
                   to="/wholesale-request"
-                  className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-rose-600 transition-all duration-300"
+                  className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white transition-all duration-300"
+                  style={{'&:hover': {color: '#7c2724'}}}
                 >
                   <FaShoppingCart className="w-5 h-5" />
                   <span>Wholesale Order</span>
@@ -320,23 +322,23 @@ const CornellsBrand = () => {
               </div>
             </div>
 
-            {/* Product Showcase */}
+            {/* Product Showcase - Updated colors */}
             <div className="relative">
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-6">
-                  <div className="aspect-square bg-gradient-to-br from-rose-200 to-purple-200 rounded-3xl shadow-2xl overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-red-200 to-red-300 rounded-3xl shadow-2xl overflow-hidden">
                     <div className="h-full flex items-center justify-center p-6">
                       <div className="text-center">
-                        <FaGem className="w-16 h-16 text-rose-600 mx-auto mb-4" />
+                        <FaGem className="w-16 h-16 mx-auto mb-4" style={{color: '#7c2724'}} />
                         <h3 className="font-bold text-gray-800 text-lg">Bold & Beautiful</h3>
                         <p className="text-gray-600 text-sm">Body Care</p>
                       </div>
                     </div>
                   </div>
-                  <div className="aspect-square bg-gradient-to-br from-green-200 to-emerald-200 rounded-3xl shadow-2xl overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-red-200 to-red-300 rounded-3xl shadow-2xl overflow-hidden">
                     <div className="h-full flex items-center justify-center p-6">
                       <div className="text-center">
-                        <FaLeaf className="w-16 h-16 text-green-600 mx-auto mb-4" />
+                        <FaLeaf className="w-16 h-16 mx-auto mb-4" style={{color: '#7c2724'}} />
                         <h3 className="font-bold text-gray-800 text-lg">Super Food</h3>
                         <p className="text-gray-600 text-sm">Wellness</p>
                       </div>
@@ -344,19 +346,19 @@ const CornellsBrand = () => {
                   </div>
                 </div>
                 <div className="space-y-6 pt-12">
-                  <div className="aspect-square bg-gradient-to-br from-purple-200 to-pink-200 rounded-3xl shadow-2xl overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-red-200 to-red-300 rounded-3xl shadow-2xl overflow-hidden">
                     <div className="h-full flex items-center justify-center p-6">
                       <div className="text-center">
-                        <FaSun className="w-16 h-16 text-purple-600 mx-auto mb-4" />
+                        <FaSun className="w-16 h-16 mx-auto mb-4" style={{color: '#7c2724'}} />
                         <h3 className="font-bold text-gray-800 text-lg">Cute & Pretty</h3>
                         <p className="text-gray-600 text-sm">Family Care</p>
                       </div>
                     </div>
                   </div>
-                  <div className="aspect-square bg-gradient-to-br from-amber-200 to-orange-200 rounded-3xl shadow-2xl overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-red-200 to-red-300 rounded-3xl shadow-2xl overflow-hidden">
                     <div className="h-full flex items-center justify-center p-6">
                       <div className="text-center">
-                        <FaHeart className="w-16 h-16 text-amber-600 mx-auto mb-4" />
+                        <FaHeart className="w-16 h-16 mx-auto mb-4" style={{color: '#7c2724'}} />
                         <h3 className="font-bold text-gray-800 text-lg">Dark & Beautiful</h3>
                         <p className="text-gray-600 text-sm">Hair Care</p>
                       </div>
@@ -383,7 +385,7 @@ const CornellsBrand = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-5xl font-bold text-gray-900 mb-6">Global Beauty, Local Excellence</h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-rose-500 to-purple-500 mx-auto mb-8"></div>
+              <div className="w-24 h-1 bg-gradient-to-r mx-auto mb-8" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}></div>
               <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
                 With a presence in 90+ countries, we spread beauty and innovation worldwide, fostering connections and making a positive impact across diverse markets.
               </p>
@@ -392,7 +394,7 @@ const CornellsBrand = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               {globalStats.map((stat, index) => (
                 <div key={index} className="text-center group">
-                  <div className="w-20 h-20 bg-gradient-to-br from-rose-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6 text-rose-600 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
+                  <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-red-200 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300" style={{color: '#7c2724'}}>
                     {stat.icon}
                   </div>
                   <div className="text-4xl font-bold text-gray-900 mb-2">{stat.number}</div>
@@ -405,8 +407,8 @@ const CornellsBrand = () => {
             {/* Core Values */}
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {coreValues.map((value, index) => (
-                <div key={index} className="bg-gradient-to-br from-gray-50 to-rose-50/30 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center mx-auto mb-4 text-rose-600">
+                <div key={index} className="bg-gradient-to-br from-gray-50 to-red-50/30 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300">
+                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-4" style={{color: '#7c2724'}}>
                     {value.icon}
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">{value.title}</h3>
@@ -419,12 +421,12 @@ const CornellsBrand = () => {
       </section>
 
       {/* Best Sellers Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-rose-50/30" id="best-sellers">
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-red-50/30" id="best-sellers">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Best Sellers</h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-rose-500 to-purple-500 mx-auto mb-8"></div>
+              <div className="w-24 h-1 bg-gradient-to-r mx-auto mb-8" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}></div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Our most loved products trusted by millions worldwide, now available for wholesale in Kenya
               </p>
@@ -434,8 +436,8 @@ const CornellsBrand = () => {
               {bestSellers.map((product, index) => (
                 <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group overflow-hidden">
                   {/* Product Image */}
-                  <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-rose-100/30 overflow-hidden">
-                    <div className="absolute top-4 left-4 bg-rose-600 text-white px-3 py-1 rounded-full text-xs font-bold">
+                  <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-red-100/30 overflow-hidden">
+                    <div className="absolute top-4 left-4 text-white px-3 py-1 rounded-full text-xs font-bold" style={{backgroundColor: '#7c2724'}}>
                       {product.discount}
                     </div>
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2">
@@ -455,7 +457,7 @@ const CornellsBrand = () => {
                   {/* Product Info */}
                   <div className="p-6 space-y-4">
                     <div>
-                      <div className="text-xs font-medium text-rose-600 mb-2">{product.collection}</div>
+                      <div className="text-xs font-medium mb-2" style={{color: '#7c2724'}}>{product.collection}</div>
                       <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2">{product.name}</h3>
                       <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
                         <FaStar className="w-3 h-3 text-yellow-400" />
@@ -465,11 +467,11 @@ const CornellsBrand = () => {
                     </div>
 
                     {/* Pricing */}
-                    <div className="bg-rose-50 rounded-lg p-4">
+                    <div className="bg-red-50 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm text-gray-600">Wholesale Price</span>
                         <div className="text-right">
-                          <div className="text-lg font-bold text-rose-600">{product.price}</div>
+                          <div className="text-lg font-bold" style={{color: '#7c2724'}}>{product.price}</div>
                           <div className="text-xs text-gray-500 line-through">{product.originalPrice}</div>
                         </div>
                       </div>
@@ -483,13 +485,15 @@ const CornellsBrand = () => {
                     <div className="flex space-x-2">
                       <Link
                         to="/wholesale-request"
-                        className="flex-1 bg-gradient-to-r from-rose-600 to-purple-600 text-white py-3 rounded-lg font-semibold text-center hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                        className="flex-1 text-white py-3 rounded-lg font-semibold text-center hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                        style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}
                       >
                         Order
                       </Link>
                       <Link
                         to="/contact"
-                        className="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold text-center hover:border-rose-400 hover:text-rose-600 transition-all duration-300"
+                        className="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold text-center hover:border-red-400 transition-all duration-300"
+                        style={{'&:hover': {color: '#7c2724', borderColor: '#7c2724'}}}
                       >
                         Quote
                       </Link>
@@ -508,7 +512,7 @@ const CornellsBrand = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Product Collections</h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-rose-500 to-purple-500 mx-auto mb-8"></div>
+              <div className="w-24 h-1 bg-gradient-to-r mx-auto mb-8" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}></div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Four distinct collections designed to meet every wellness and beauty need
               </p>
@@ -522,9 +526,10 @@ const CornellsBrand = () => {
                   onClick={() => setActiveCollection(index)}
                   className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
                     activeCollection === index
-                      ? `bg-gradient-to-r ${collection.color} text-white shadow-lg`
+                      ? 'text-white shadow-lg'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
+                  style={activeCollection === index ? {background: 'linear-gradient(to right, #7c2724, #a0312a)'} : {}}
                 >
                   {collection.name}
                 </button>
@@ -558,7 +563,7 @@ const CornellsBrand = () => {
                             <div className="text-sm text-gray-500">Size: {product.size}</div>
                           </div>
                           <div className="text-right">
-                            <div className="text-lg font-bold text-rose-600 mb-1">{product.wholesalePrice}</div>
+                            <div className="text-lg font-bold mb-1" style={{color: '#7c2724'}}>{product.wholesalePrice}</div>
                             <div className="text-xs text-gray-500">MOQ: {product.moq}</div>
                           </div>
                         </div>
@@ -578,7 +583,8 @@ const CornellsBrand = () => {
                   <div className="flex space-x-4">
                     <Link
                       to="/wholesale-request"
-                      className={`inline-flex items-center space-x-2 bg-gradient-to-r ${productCollections[activeCollection].color} text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105`}
+                      className="inline-flex items-center space-x-2 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}
                     >
                       <FaShoppingCart className="w-5 h-5" />
                       <span>Order Collection</span>
@@ -586,7 +592,8 @@ const CornellsBrand = () => {
                     </Link>
                     <Link
                       to="/contact"
-                      className="inline-flex items-center space-x-2 border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-rose-400 hover:text-rose-600 transition-all duration-300"
+                      className="inline-flex items-center space-x-2 border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-red-400 transition-all duration-300"
+                      style={{'&:hover': {color: '#7c2724', borderColor: '#7c2724'}}}
                     >
                       <span>Get Quote</span>
                     </Link>
@@ -598,7 +605,7 @@ const CornellsBrand = () => {
                   <div className="aspect-square bg-white rounded-3xl shadow-2xl overflow-hidden">
                     <div className="h-full flex items-center justify-center p-12">
                       <div className="text-center">
-                        <div className={`w-32 h-32 bg-gradient-to-r ${productCollections[activeCollection].color} rounded-full flex items-center justify-center mx-auto mb-6`}>
+                        <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}>
                           <FaGem className="w-16 h-16 text-white" />
                         </div>
                         <h4 className="text-2xl font-bold text-gray-900 mb-2">
@@ -616,12 +623,12 @@ const CornellsBrand = () => {
       </section>
 
       {/* Customer Testimonials */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-purple-50/30">
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-red-50/30">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">Retail Partner Success Stories</h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-rose-500 to-purple-500 mx-auto mb-8"></div>
+              <div className="w-24 h-1 bg-gradient-to-r mx-auto mb-8" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}></div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Beauty retailers across Kenya trust Cornells for premium quality and exceptional customer satisfaction
               </p>
@@ -640,7 +647,7 @@ const CornellsBrand = () => {
                   </p>
                   <div className="border-t border-gray-100 pt-6">
                     <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
-                    <div className="text-rose-600 font-medium">{testimonial.business}</div>
+                    <div className="font-medium" style={{color: '#7c2724'}}>{testimonial.business}</div>
                   </div>
                 </div>
               ))}
@@ -650,12 +657,12 @@ const CornellsBrand = () => {
       </section>
 
       {/* Exclusive Partnership Section */}
-      <section className="py-20 bg-gradient-to-r from-rose-100 via-purple-100 to-pink-100">
+      <section className="py-20 bg-gradient-to-r from-red-100 via-red-50 to-red-100">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <div className="inline-flex items-center space-x-3 bg-white/80 backdrop-blur-sm rounded-full px-8 py-4 mb-8">
-                <FaMedal className="w-6 h-6 text-rose-600" />
+                <FaMedal className="w-6 h-6" style={{color: '#7c2724'}} />
                 <span className="text-gray-800 font-bold text-lg">Exclusive Partnership</span>
               </div>
               
@@ -672,7 +679,7 @@ const CornellsBrand = () => {
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
                 <div className="text-center mb-8">
                   <div className="text-sm text-gray-600 mb-2">Global Manufacturer</div>
-                  <div className="text-3xl font-bold text-rose-600 mb-4">CORNELLS WELLNESS</div>
+                  <div className="text-3xl font-bold mb-4" style={{color: '#7c2724'}}>CORNELLS WELLNESS</div>
                   <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
                   <div className="text-sm text-gray-600 mb-2">Exclusive Kenya Distributor</div>
                   <div className="text-2xl font-bold text-gray-900">REKKER LIMITED</div>
@@ -703,25 +710,25 @@ const CornellsBrand = () => {
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Why Partner with Us?</h3>
                   <ul className="space-y-3 text-gray-700">
                     <li className="flex items-start space-x-3">
-                      <FaCheckCircle className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
+                      <FaCheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{color: '#7c2724'}} />
                       <span>Guaranteed authentic Cornells products with full manufacturer warranty</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <FaCheckCircle className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
+                      <FaCheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{color: '#7c2724'}} />
                       <span>Competitive wholesale pricing with flexible MOQs for different business sizes</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <FaCheckCircle className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
+                      <FaCheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{color: '#7c2724'}} />
                       <span>Full marketing support and product training for your team</span>
                     </li>
                     <li className="flex items-start space-x-3">
-                      <FaCheckCircle className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
+                      <FaCheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{color: '#7c2724'}} />
                       <span>Reliable supply chain with nationwide delivery coverage</span>
                     </li>
                   </ul>
                 </div>
 
-                <div className="bg-gradient-to-r from-rose-50 to-purple-50 rounded-xl p-6 shadow-lg">
+                <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-xl p-6 shadow-lg">
                   <h3 className="text-lg font-bold text-gray-900 mb-3">Global Quality, Local Service</h3>
                   <p className="text-gray-700 leading-relaxed">
                     Experience the best of both worlds - internationally acclaimed Cornells quality 
@@ -735,14 +742,14 @@ const CornellsBrand = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-rose-900 via-purple-900 to-pink-900">
+      <section className="py-20" style={{background: 'linear-gradient(to right, #7c2724, #a0312a, #7c2724)'}}>
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-5xl mx-auto">
             <div className="mb-12">
               <h2 className="text-5xl font-bold text-white mb-6">
                 Ready to Transform Your Beauty Business?
               </h2>
-              <p className="text-2xl text-rose-100 leading-relaxed">
+              <p className="text-2xl text-red-100 leading-relaxed">
                 Join Kenya's most successful beauty retailers who trust Cornells for premium quality, 
                 global recognition, and exceptional profit margins.
               </p>
@@ -751,26 +758,27 @@ const CornellsBrand = () => {
             {/* Key Benefits */}
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <FaGlobe className="w-12 h-12 text-rose-300 mx-auto mb-4" />
+                <FaGlobe className="w-12 h-12 text-red-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-white mb-3">Global Brand Recognition</h3>
-                <p className="text-rose-200 text-sm">Trusted in 90+ countries with 30M+ happy customers worldwide</p>
+                <p className="text-red-200 text-sm">Trusted in 90+ countries with 30M+ happy customers worldwide</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <FaHeart className="w-12 h-12 text-purple-300 mx-auto mb-4" />
+                <FaHeart className="w-12 h-12 text-red-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-white mb-3">Ethical & Cruelty-Free</h3>
-                <p className="text-purple-200 text-sm">100% cruelty-free products that resonate with conscious consumers</p>
+                <p className="text-red-200 text-sm">100% cruelty-free products that resonate with conscious consumers</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <FaArrowRight className="w-12 h-12 text-pink-300 mx-auto mb-4" />
+                <FaArrowRight className="w-12 h-12 text-red-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-white mb-3">Exclusive Access</h3>
-                <p className="text-pink-200 text-sm">Be the only authentic Cornells retailer in your area</p>
+                <p className="text-red-200 text-sm">Be the only authentic Cornells retailer in your area</p>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 to="/wholesale-request"
-                className="inline-flex items-center justify-center space-x-3 bg-white text-rose-600 px-10 py-5 rounded-xl font-bold text-xl hover:bg-rose-50 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+                className="inline-flex items-center justify-center space-x-3 bg-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+                style={{color: '#7c2724'}}
               >
                 <FaShoppingCart className="w-6 h-6" />
                 <span>Start Wholesale Order</span>
@@ -778,13 +786,14 @@ const CornellsBrand = () => {
               </Link>
               <Link
                 to="/contact"
-                className="inline-flex items-center justify-center space-x-3 border-3 border-white text-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-white hover:text-rose-600 transition-all duration-300"
+                className="inline-flex items-center justify-center space-x-3 border-3 border-white text-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-white transition-all duration-300"
+                style={{'&:hover': {color: '#7c2724'}}}
               >
                 <span>Contact Sales Team</span>
               </Link>
             </div>
 
-            <div className="mt-8 text-rose-200">
+            <div className="mt-8 text-red-200">
               <p className="text-sm">
                 *Minimum order quantities apply. Special pricing available for established retailers.
               </p>

@@ -5,6 +5,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { Upload, Save, ArrowLeft, Edit, Eye, Box, Star, Building, TrendingUp, DollarSign, Package, Users, AlertTriangle, CheckCircle, RefreshCw } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { userRequest } from "../requestMethods";
+import axios from "axios";
 
 const Product = () => {
   const { id } = useParams();

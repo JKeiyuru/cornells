@@ -3,7 +3,7 @@
 // Enhanced Home.jsx - Rekker Business Admin Dashboard
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useState, useEffect } from "react";
-import { Package, ShoppingCart, Users, DollarSign, TrendingUp, TrendingDown, Eye, FileText, Star, Building, Quote, UserCheck, AlertCircle, RefreshCw, Plus } from "lucide-react";
+import { Package, ShoppingCart, Users, DollarSign, TrendingUp, TrendingDown, Eye, FileText, Star, Building, Quote, Box, UserCheck, AlertCircle, RefreshCw, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -709,6 +709,4 @@ const Home = () => {
   );
 };
 
-export default Home; => {
-    switch (urgency) {
-      case
+export default Home; 

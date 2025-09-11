@@ -1,391 +1,495 @@
 /* eslint-disable no-unused-vars */
-// Product.jsx
-import { Link, useParams } from "react-router-dom";
-import { LineChart } from "@mui/x-charts/LineChart";
-import { Upload, Save, ArrowLeft, Edit, Eye, Box, Star, Heart, ShoppingCart, TrendingUp } from "lucide-react";
-import React, { useState, useEffect } from "react";
-import { userRequest } from "../requestMethods";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Search, 
+  Filter, 
+  Plus, 
+  Edit, 
+  Eye, 
+  Trash2, 
+  Package, 
+  DollarSign, 
+  ShoppingCart, 
+  TrendingUp,
+  Star,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  MoreVertical
+} from 'lucide-react';
+import { userRequest } from '../requestMethods';
 
-const Product = () => {
-  const { id } = useParams();
+const ProductsList = () => {
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [product, setProduct] = useState({
-    _id: "123456",
-    title: "Hydrating Facial Cleanser",
-    img: "https://images.pexels.com/photos/8054395/pexels-photo-8054395.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    desc: "A gentle cleanser that helps hydrate and remove makeup while maintaining skin's natural moisture barrier.",
-    originalPrice: 15.99,
-    discountedPrice: 12.99,
-    inStock: true,
-    brand: "Cornell's",
-    categories: ["Skincare", "Cleansers"],
-    rating: 4.8,
-    reviews: 342,
-    sales: 1250
-  });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
-  const [inputs, setInputs] = React.useState(product);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(product.img);
+  // Mock data - replace with API call
+  const mockProducts = [
+    {
+      _id: '1',
+      title: 'Saffron Handwash 500ml',
+      brand: 'Saffron',
+      category: 'Cleaning Products',
+      wholesalePrice: 450,
+      retailPrice: 650,
+      moq: 500,
+      stock: 2500,
+      img: 'https://images.pexels.com/photos/4465831/pexels-photo-4465831.jpeg?auto=compress&cs=tinysrgb&w=400',
+      status: 'active',
+      quoteRequests: 42,
+      totalSales: 15620,
+      createdAt: '2024-01-15'
+    },
+    {
+      _id: '2',
+      title: 'Rekker A4 Photocopy Paper',
+      brand: 'Rekker',
+      category: 'Stationery',
+      wholesalePrice: 320,
+      retailPrice: 450,
+      moq: 1000,
+      stock: 5000,
+      img: 'https://images.pexels.com/photos/1076885/pexels-photo-1076885.jpeg?auto=compress&cs=tinysrgb&w=400',
+      status: 'active',
+      quoteRequests: 38,
+      totalSales: 22450,
+      createdAt: '2024-01-12'
+    },
+    {
+      _id: '3',
+      title: 'Cornells Premium Lotion 250ml',
+      brand: 'Cornells',
+      category: 'Beauty & Personal Care',
+      wholesalePrice: 680,
+      retailPrice: 950,
+      moq: 300,
+      stock: 1200,
+      img: 'https://images.pexels.com/photos/3685530/pexels-photo-3685530.jpeg?auto=compress&cs=tinysrgb&w=400',
+      status: 'active',
+      quoteRequests: 29,
+      totalSales: 18750,
+      createdAt: '2024-01-10'
+    },
+    {
+      _id: '4',
+      title: 'Rekker School Backpack',
+      brand: 'Rekker',
+      category: 'School Bags',
+      wholesalePrice: 1250,
+      retailPrice: 1800,
+      moq: 100,
+      stock: 450,
+      img: 'https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg?auto=compress&cs=tinysrgb&w=400',
+      status: 'active',
+      quoteRequests: 18,
+      totalSales: 12400,
+      createdAt: '2024-01-08'
+    },
+    {
+      _id: '5',
+      title: 'Saffron Dishwashing Liquid 1L',
+      brand: 'Saffron',
+      category: 'Cleaning Products',
+      wholesalePrice: 380,
+      retailPrice: 520,
+      moq: 250,
+      stock: 0,
+      img: 'https://images.pexels.com/photos/4465831/pexels-photo-4465831.jpeg?auto=compress&cs=tinysrgb&w=400',
+      status: 'out_of_stock',
+      quoteRequests: 15,
+      totalSales: 8950,
+      createdAt: '2024-01-05'
+    }
+  ];
 
   useEffect(() => {
-    // Fetch product data when component mounts
-    const fetchProduct = async () => {
-      if (id && id !== "123456") {
-        try {
-          setLoading(true);
-          const res = await userRequest.get(`/products/${id}`);
-          setProduct(res.data);
-          setInputs(res.data);
-          setPreviewImage(res.data.img);
-        } catch (error) {
-          console.error('Error fetching product:', error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    fetchProduct();
-  }, [id]);
+    fetchProducts();
+  }, []);
 
-  const handleUpdate = async () => {
+  const fetchProducts = async () => {
     try {
       setLoading(true);
-      await userRequest.put(`/products/${inputs._id}`, inputs);
-      alert('Product updated successfully!');
+      // Replace with actual API call
+      // const res = await userRequest.get('/products/admin/all');
+      // setProducts(res.data);
+      
+      // Mock API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setProducts(mockProducts);
     } catch (error) {
-      console.error('Error updating product:', error);
-      alert('Failed to update product. Please try again.');
+      console.error('Error fetching products:', error);
+      // Fallback to mock data
+      setProducts(mockProducts);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    setInputs((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
-  };
-
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
-      setPreviewImage(URL.createObjectURL(e.target.files[0]));
+  const handleDeleteProduct = async (productId) => {
+    try {
+      await userRequest.delete(`/products/${productId}`);
+      setProducts(products.filter(p => p._id !== productId));
+      setShowDeleteModal(false);
+      setProductToDelete(null);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product');
     }
   };
 
-  // Mock sales data for chart
-  const salesData = [
-    { month: 'Jan', sales: 420 },
-    { month: 'Feb', sales: 680 },
-    { month: 'Mar', sales: 520 },
-    { month: 'Apr', sales: 890 },
-    { month: 'May', sales: 750 },
-    { month: 'Jun', sales: 1250 }
-  ];
+  const getBrandColor = (brand) => {
+    switch (brand) {
+      case 'Rekker':
+        return 'bg-gradient-to-r from-blue-600 to-green-600 text-white';
+      case 'Saffron':
+        return 'bg-gradient-to-r from-orange-400 to-yellow-500 text-white';
+      case 'Cornells':
+        return 'bg-gradient-to-r from-purple-400 to-pink-500 text-white';
+      default:
+        return 'bg-gray-500 text-white';
+    }
+  };
 
-  if (loading && !product._id) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#fafafa] via-[#f8f6f3] to-[#f5f2ee]">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#d4af37] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#d4af37] font-medium">Loading product details...</p>
-        </div>
-      </div>
-    );
-  }
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'active':
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'out_of_stock':
+        return <XCircle className="w-4 h-4 text-red-500" />;
+      default:
+        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
+    }
+  };
+
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesBrand = selectedBrand === 'all' || product.brand === selectedBrand;
+    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    
+    return matchesSearch && matchesBrand && matchesCategory;
+  });
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortBy) {
+      case 'newest':
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      case 'oldest':
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      case 'price_high':
+        return b.wholesalePrice - a.wholesalePrice;
+      case 'price_low':
+        return a.wholesalePrice - b.wholesalePrice;
+      case 'sales_high':
+        return b.totalSales - a.totalSales;
+      case 'name_az':
+        return a.title.localeCompare(b.title);
+      default:
+        return 0;
+    }
+  });
+
+  const totalStats = {
+    totalProducts: products.length,
+    totalQuotes: products.reduce((sum, p) => sum + p.quoteRequests, 0),
+    totalSales: products.reduce((sum, p) => sum + p.totalSales, 0),
+    totalRevenue: products.reduce((sum, p) => sum + (p.totalSales * p.wholesalePrice), 0)
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fafafa] via-[#f8f6f3] to-[#f5f2ee] p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <Link 
-              to="/products"
-              className="p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white transition-all duration-300 text-[#d4af37]"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-[#d4af37] to-[#b8941f] bg-clip-text text-transparent flex items-center">
-                <Edit className="w-6 h-6 mr-4 text-[#d4af37]" />
-                Edit Product
-              </h1>
-              <p className="text-gray-600 mt-2 text-lg">Modify your luxury product details</p>
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8">
+          <div className="mb-4 lg:mb-0">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent flex items-center">
+              <Package className="w-8 h-8 mr-4 text-blue-600" />
+              Products Management
+            </h1>
+            <p className="text-gray-600 mt-2 text-lg">Manage your wholesale product catalog</p>
+          </div>
+          <Link to="/newproduct">
+            <button className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center">
+              <Plus className="w-5 h-5 mr-2" />
+              Add New Product
+            </button>
+          </Link>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">Total Products</p>
+                <p className="text-3xl font-bold text-slate-700">{totalStats.totalProducts}</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                <Package className="text-white" size={20} />
+              </div>
             </div>
           </div>
-          <div className="flex space-x-4">
-            <Link to="/newproduct">
-              <button className="bg-white border border-[#d4af37] text-[#d4af37] px-6 py-3 rounded-xl font-semibold hover:bg-[#d4af37] hover:text-white transition-all duration-300 flex items-center">
-                <Box className="w-5 h-5 mr-2" />
-                Create New
-              </button>
-            </Link>
-            <button className="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-all duration-300 flex items-center">
-              <Eye className="w-5 h-5 mr-2" />
-              Preview
-            </button>
+
+          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">Quote Requests</p>
+                <p className="text-3xl font-bold text-slate-700">{totalStats.totalQuotes}</p>
+              </div>
+              <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                <ShoppingCart className="text-white" size={20} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">Total Sales</p>
+                <p className="text-3xl font-bold text-slate-700">{totalStats.totalSales.toLocaleString()}</p>
+              </div>
+              <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                <TrendingUp className="text-white" size={20} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">Total Revenue</p>
+                <p className="text-3xl font-bold text-slate-700">KSh {totalStats.totalRevenue.toLocaleString()}</p>
+              </div>
+              <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
+                <DollarSign className="text-white" size={20} />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
-          {/* Sales Chart */}
-          <div className="xl:col-span-2 bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold text-[#8b4513] flex items-center">
-                <TrendingUp className="w-5 h-5 mr-2 text-[#d4af37]" />
-                Sales Performance
-              </h3>
-              <div className="flex space-x-4 text-sm">
-                <div className="text-center">
-                  <p className="text-gray-600">Total Sales</p>
-                  <p className="font-bold text-[#d4af37]">{product.sales || 1250}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-gray-600">Revenue</p>
-                  <p className="font-bold text-green-600">${((product.sales || 1250) * (product.discountedPrice || product.originalPrice)).toLocaleString()}</p>
-                </div>
-              </div>
-            </div>
-            <LineChart
-              xAxis={[{ 
-                data: [1, 2, 3, 4, 5, 6],
-                scaleType: 'point',
-                label: 'Months'
-              }]}
-              series={[
-                {
-                  data: [420, 680, 520, 890, 750, 1250],
-                  color: '#d4af37',
-                  curve: 'smooth'
-                },
-              ]}
-              height={300}
-              margin={{ left: 50, right: 50, top: 30, bottom: 50 }}
-              grid={{ vertical: true, horizontal: true }}
-            />
-          </div>
-
-          {/* Product Summary Card */}
-          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
-            <div className="text-center mb-6">
-              <div className="relative inline-block mb-4">
-                <img 
-                  src={previewImage} 
-                  alt={product.title} 
-                  className="h-32 w-32 rounded-2xl object-cover shadow-lg border-4 border-white mx-auto"
-                />
-                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-[#d4af37] to-[#b8941f] rounded-full p-2">
-                  <Star className="w-4 h-4 text-white" />
-                </div>
-              </div>
-              <h3 className="text-xl font-bold text-[#8b4513] mb-2">{product.title}</h3>
-              <p className="text-gray-600 text-sm mb-4">{product.brand}</p>
+        {/* Filters and Search */}
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search products, brands, categories..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
             </div>
             
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                <span className="font-medium text-gray-700">Product ID:</span>
-                <span className="font-mono text-xs text-gray-600">{product._id?.substring(0, 8)}...</span>
-              </div>
-              
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                <span className="font-medium text-gray-700 flex items-center">
-                  <ShoppingCart className="w-4 h-4 mr-2 text-[#d4af37]" />
-                  Total Sales:
-                </span>
-                <span className="font-bold text-[#d4af37]">{product.sales || 1250}</span>
-              </div>
-              
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                <span className="font-medium text-gray-700 flex items-center">
-                  <Star className="w-4 h-4 mr-2 text-yellow-400" />
-                  Rating:
-                </span>
-                <div className="flex items-center">
-                  <span className="font-bold text-[#8b4513]">{product.rating || 4.8}</span>
-                  <span className="text-gray-500 text-sm ml-1">({product.reviews || 342})</span>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                <span className="font-medium text-gray-700 flex items-center">
-                  <Heart className="w-4 h-4 mr-2 text-red-400" />
-                  Stock Status:
-                </span>
-                <div className="flex items-center">
-                  <div className={`w-3 h-3 rounded-full mr-2 ${product.inStock ? 'bg-green-400' : 'bg-red-400'}`}></div>
-                  <span className={`font-semibold ${product.inStock ? 'text-green-700' : 'text-red-700'}`}>
-                    {product.inStock ? 'In Stock' : 'Out of Stock'}
-                  </span>
-                </div>
-              </div>
+            <div className="flex gap-4">
+              <select
+                value={selectedBrand}
+                onChange={(e) => setSelectedBrand(e.target.value)}
+                className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-32"
+              >
+                <option value="all">All Brands</option>
+                <option value="Rekker">Rekker</option>
+                <option value="Saffron">Saffron</option>
+                <option value="Cornells">Cornells</option>
+              </select>
+
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-40"
+              >
+                <option value="all">All Categories</option>
+                <option value="Stationery">Stationery</option>
+                <option value="Cleaning Products">Cleaning Products</option>
+                <option value="Beauty & Personal Care">Beauty & Personal Care</option>
+                <option value="School Bags">School Bags</option>
+                <option value="Toys">Toys</option>
+                <option value="Kitchenware">Kitchenware</option>
+              </select>
+
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-36"
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price_high">Price: High to Low</option>
+                <option value="price_low">Price: Low to High</option>
+                <option value="sales_high">Sales: High to Low</option>
+                <option value="name_az">Name: A to Z</option>
+              </select>
             </div>
           </div>
         </div>
 
-        {/* Edit Form */}
-        <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-white/20">
-          <h3 className="text-2xl font-bold text-[#8b4513] mb-6 flex items-center">
-            <Edit className="w-6 h-6 mr-3 text-[#d4af37]" />
-            Product Information
-          </h3>
-          
-          <form className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            {/* Form Fields */}
-            <div className="xl:col-span-2 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Product Name
-                  </label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={inputs.title || ''}
-                    onChange={handleChange}
-                    placeholder="Enter product name"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Brand
-                  </label>
-                  <input
-                    type="text"
-                    name="brand"
-                    value={inputs.brand || ''}
-                    onChange={handleChange}
-                    placeholder="Enter brand name"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Product Description
-                </label>
-                <textarea
-                  name="desc"
-                  value={inputs.desc || ''}
-                  onChange={handleChange}
-                  placeholder="Enter detailed product description"
-                  rows={4}
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300 resize-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Original Price ($)
-                  </label>
-                  <input
-                    type="number"
-                    name="originalPrice"
-                    value={inputs.originalPrice || ''}
-                    onChange={handleChange}
-                    placeholder="0.00"
-                    step="0.01"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Discounted Price ($)
-                  </label>
-                  <input
-                    type="number"
-                    name="discountedPrice"
-                    value={inputs.discountedPrice || ''}
-                    onChange={handleChange}
-                    placeholder="0.00"
-                    step="0.01"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Stock Status
-                  </label>
-                  <select
-                    name="inStock"
-                    value={inputs.inStock}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
-                  >
-                    <option value={true}>In Stock</option>
-                    <option value={false}>Out of Stock</option>
-                  </select>
-                </div>
-              </div>
+        {/* Products Grid */}
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-gray-600 font-medium">Loading products...</p>
             </div>
-
-            {/* Image Upload */}
-            <div className="space-y-6">
-              <div className="text-center">
-                <label className="block text-sm font-semibold text-gray-700 mb-4">
-                  Product Image
-                </label>
-                <div className="relative inline-block mb-4">
-                  <img
-                    src={previewImage}
-                    alt="Product"
-                    className="h-48 w-48 object-cover rounded-2xl border-4 border-gray-200 shadow-lg"
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {sortedProducts.map((product) => (
+              <div key={product._id} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                {/* Product Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={product.img} 
+                    alt={product.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-40 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <label htmlFor="file" className="cursor-pointer p-4 bg-white bg-opacity-20 rounded-full backdrop-blur-sm">
-                      <Upload className="w-6 h-6 text-white" />
-                    </label>
+                  <div className="absolute top-4 left-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getBrandColor(product.brand)}`}>
+                      {product.brand}
+                    </span>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    {getStatusIcon(product.status)}
                   </div>
                 </div>
-                <input 
-                  type="file" 
-                  id="file" 
-                  onChange={handleImageChange}
-                  accept="image/*"
-                  className="hidden" 
-                />
-                <p className="text-xs text-gray-500 mt-2">
-                  Click on image to upload new photo
-                </p>
-              </div>
 
-              <div className="space-y-4">
-                <button
-                  type="button"
-                  onClick={handleUpdate}
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-[#d4af37] to-[#b8941f] text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  ) : (
-                    <Save className="w-5 h-5 mr-2" />
-                  )}
-                  {loading ? 'Updating...' : 'Update Product'}
-                </button>
-                
-                <button
-                  type="button"
-                  className="w-full bg-white border border-gray-300 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-300"
-                >
-                  Cancel Changes
-                </button>
+                {/* Product Info */}
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-lg font-bold text-slate-700 group-hover:text-blue-600 transition-colors line-clamp-2">
+                      {product.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-gray-600 text-sm mb-3">{product.category}</p>
+
+                  {/* Pricing */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="text-center p-3 bg-blue-50 rounded-xl">
+                      <p className="text-xs text-gray-600 mb-1">Wholesale</p>
+                      <p className="text-lg font-bold text-blue-600">KSh {product.wholesalePrice}</p>
+                    </div>
+                    <div className="text-center p-3 bg-green-50 rounded-xl">
+                      <p className="text-xs text-gray-600 mb-1">Retail</p>
+                      <p className="text-lg font-bold text-green-600">KSh {product.retailPrice}</p>
+                    </div>
+                  </div>
+
+                  {/* MOQ and Stock */}
+                  <div className="flex justify-between items-center mb-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">MOQ: </span>
+                      <span className="font-semibold text-slate-700">{product.moq} units</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Stock: </span>
+                      <span className={`font-semibold ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {product.stock} units
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Performance Stats */}
+                  <div className="flex justify-between items-center mb-6 p-3 bg-gray-50 rounded-xl">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-600">Quotes</p>
+                      <p className="font-bold text-slate-700">{product.quoteRequests}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-gray-600">Sales</p>
+                      <p className="font-bold text-slate-700">{product.totalSales}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-gray-600">Revenue</p>
+                      <p className="font-bold text-slate-700">KSh {(product.totalSales * product.wholesalePrice).toLocaleString()}</p>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2">
+                    <Link to={`/product/${product._id}`} className="flex-1">
+                      <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors flex items-center justify-center text-sm">
+                        <Edit className="w-4 h-4 mr-1" />
+                        Edit
+                      </button>
+                    </Link>
+                    <button className="bg-gray-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-600 transition-colors flex items-center justify-center text-sm">
+                      <Eye className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setProductToDelete(product);
+                        setShowDeleteModal(true);
+                      }}
+                      className="bg-red-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-600 transition-colors flex items-center justify-center text-sm"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sortedProducts.length === 0 && !loading && (
+          <div className="text-center py-20">
+            <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
+            <p className="text-gray-500 mb-6">Try adjusting your search criteria or add a new product</p>
+            <Link to="/newproduct">
+              <button className="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-colors flex items-center mx-auto">
+                <Plus className="w-5 h-5 mr-2" />
+                Add Your First Product
+              </button>
+            </Link>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteModal && productToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl p-8 max-w-md w-full">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Trash2 className="w-8 h-8 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-700 mb-2">Delete Product</h3>
+                <p className="text-gray-600 mb-6">
+                  Are you sure you want to delete "<strong>{productToDelete.title}</strong>"? 
+                  This action cannot be undone.
+                </p>
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => {
+                      setShowDeleteModal(false);
+                      setProductToDelete(null);
+                    }}
+                    className="flex-1 bg-gray-200 text-gray-800 py-3 px-4 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleDeleteProduct(productToDelete._id)}
+                    className="flex-1 bg-red-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-red-700 transition-colors"
+                  >
+                    Delete Product
+                  </button>
+                </div>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default Product;
+export default ProductsList;

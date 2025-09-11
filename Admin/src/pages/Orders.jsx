@@ -3,7 +3,7 @@
 // Orders.jsx - Rekker Quote Requests Management
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
-import { FaCheckCircle, FaCheckDouble, FaClock, FaTruck, FaSearch, FaFilter, FaDownload, FaPlus, FaFileText, FaDollarSign, FaEye, FaEdit } from "react-icons/fa";
+import { FaCheckCircle, FaCheckDouble, FaClock, FaTruck, FaSearch, FaFilter, FaDownload, FaPlus, FaFileAlt, FaDollarSign, FaEye, FaEdit } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { FileText, Building, Quote, Send, MessageSquare } from "lucide-react";
 import { userRequest } from "../requestMethods";
@@ -42,7 +42,7 @@ const Orders = () => {
         color: 'text-blue-600', 
         bgColor: 'bg-blue-100', 
         borderColor: 'border-blue-200',
-        icon: FaFileText 
+        icon: FaFileAlt 
       },
       1: { 
         label: 'Under Review', 
@@ -390,7 +390,7 @@ const Orders = () => {
                   <p className="text-2xl font-bold text-slate-700">{stats.newRequests}</p>
                 </div>
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
-                  <FaFileText className="text-white text-xl" />
+                  <FaFileAlt className="text-white text-xl" />
                 </div>
               </div>
             </div>
