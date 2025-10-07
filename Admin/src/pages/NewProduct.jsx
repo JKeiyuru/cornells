@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 // NewProduct.jsx - Enhanced Rekker Product Creation
 import { useState } from "react";
@@ -59,79 +60,87 @@ const NewProduct = () => {
     });
   };
 
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    
-    if (!selectedImage) {
-      alert('Please select an image first.');
-      return;
-    }
+const handleUpload = async (e) => {
+  e.preventDefault();
 
-    if (!inputs.title || !inputs.desc || !inputs.wholesalePrice || !inputs.moq) {
-      alert('Please fill in all required fields including wholesale price and MOQ.');
-      return;
-    }
+  if (!selectedImage) {
+    alert("Please select an image first.");
+    return;
+  }
 
-    const data = new FormData();
-    data.append("file", selectedImage);
-    data.append("upload_preset", "uploads");
-    
-    setUploading(true);
-    setUploadProgress("Uploading image...");
-    
-    try {
-      const uploadRes = await axios.post(
-        "https://api.cloudinary.com/v1_1/dkjenslgr/image/upload",
-        data
-      );
-      const { url } = uploadRes.data;
-      setImage(url);
-      setUploadProgress("Image uploaded successfully!");
-      
-      // Create product with the uploaded image
-      const productData = {
-        img: url,
-        ...inputs,
-        ...selectedOptions,
-        // Convert string numbers to actual numbers
-        wholesalePrice: parseFloat(inputs.wholesalePrice),
-        retailPrice: parseFloat(inputs.retailPrice),
-        moq: parseInt(inputs.moq),
-        stock: parseInt(inputs.stock || 0),
-        // Add additional fields for admin tracking
-        createdAt: new Date().toISOString(),
-        quotesRequested: 0,
-        totalSales: 0,
-        rating: 0,
-        reviews: 0,
-        inStock: inputs.stock > 0,
-        // Add featured flag for homepage display
-        featured: inputs.featured || false
-      };
-      
-      // Uncomment when backend is ready
-      // await userRequest.post("/products", productData);
-      
-      setUploadProgress("Product created successfully!");
-      setShowSuccess(true);
-      
-      // Reset form after delay
-      setTimeout(() => {
-        setSelectImage(null);
-        setInputs({});
-        setImage("");
-        setSelectedOptions({ brand: "", category: "", subcategory: [], targetMarket: [] });
-        setUploadProgress("");
-        setShowSuccess(false);
-      }, 3000);
-      
-    } catch (error) {
-      console.log(error);
-      setUploadProgress("Upload failed. Please try again.");
-    } finally {
-      setUploading(false);
-    }
-  };
+  if (!inputs.title || !inputs.desc || !inputs.wholesalePrice || !inputs.moq) {
+    alert("Please fill in all required fields including wholesale price and MOQ.");
+    return;
+  }
+
+  setUploading(true);
+  setUploadProgress("0%");
+
+  try {
+    // Step 1: Upload image to backend (which sends to Cloudinary)
+    const formData = new FormData();
+    formData.append("file", selectedImage);
+
+    const uploadRes = await axios.post(
+      "http://localhost:5000/api/v1/upload",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(`${percent}%`);
+        },
+      }
+    );
+
+    const { url } = uploadRes.data;
+    setImage(url);
+    setUploadProgress("Image uploaded successfully ✅");
+
+    // Step 2: Create product with uploaded image
+    const productData = {
+      img: url,
+      ...inputs,
+      ...selectedOptions,
+      wholesalePrice: parseFloat(inputs.wholesalePrice),
+      retailPrice: parseFloat(inputs.retailPrice),
+      moq: parseInt(inputs.moq),
+      stock: parseInt(inputs.stock || 0),
+      createdAt: new Date().toISOString(),
+      quotesRequested: 0,
+      totalSales: 0,
+      rating: 0,
+      reviews: 0,
+      inStock: inputs.stock > 0,
+      featured: inputs.featured || false,
+    };
+
+    await userRequest.post("/products", productData);
+
+    setUploadProgress("Product created successfully 🎉");
+    setShowSuccess(true);
+
+    // Step 3: Reset form after 3s
+    setTimeout(() => {
+      setSelectImage(null);
+      setInputs({});
+      setImage("");
+      setSelectedOptions({ brand: "", category: "", subcategory: [], targetMarket: [] });
+      setUploadProgress("");
+      setShowSuccess(false);
+    }, 3000);
+
+  } catch (error) {
+    console.error("Error creating product:", error);
+    setUploadProgress("Upload failed ❌ Please try again.");
+  } finally {
+    setUploading(false);
+  }
+};
+
+
 
   const clearForm = () => {
     setSelectImage(null);

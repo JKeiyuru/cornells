@@ -7,7 +7,7 @@ const ProductSchema = mongoose.Schema(
     // Basic product information
     title: {
       type: String,
-      required: [true, "Product title is required for our luxury collection"],
+      required: [true, "Product title is required for Rekker collection"],
       trim: true,
       minlength: [2, "Product title must be at least 2 characters"],
       maxlength: [200, "Product title must be less than 200 characters"],
@@ -16,125 +16,77 @@ const ProductSchema = mongoose.Schema(
 
     description: {
       type: String,
-      required: [true, "Product description is essential for luxury experience"],
+      required: [true, "Product description is essential for comprehensive product information"],
       trim: true,
       minlength: [10, "Product description must be at least 10 characters"],
       maxlength: [2000, "Product description must be less than 2000 characters"],
       alias: 'desc'
     },
 
-    // Enhanced product details
-    whatinbox: {
-      type: String,
-      trim: true,
-      maxlength: [1000, "What's in box description too long"]
-    },
-
+    // Enhanced product details for Rekker products
     shortDescription: {
       type: String,
       trim: true,
       maxlength: [300, "Short description must be less than 300 characters"]
     },
 
-    // Product specifications
+    // Product specifications (especially important for wholesale)
     specifications: {
-      ingredients: [String],
-      volume: String,
-      weight: String,
-      dimensions: {
-        length: Number,
-        width: Number,
-        height: Number,
-        unit: {
-          type: String,
-          enum: ["cm", "inch"],
-          default: "cm"
-        }
-      },
-      shelfLife: {
-        duration: Number,
-        unit: {
-          type: String,
-          enum: ["months", "years"],
-          default: "months"
-        }
-      },
-      origin: String,
-      certifications: [String]
+      type: String,
+      trim: true,
+      maxlength: [500, "Specifications must be less than 500 characters"]
     },
 
-    // Media assets
-    images: {
-      primary: {
-        type: String,
-        required: [true, "Primary product image is required for luxury showcase"]
-      },
-      gallery: [String],
-      thumbnail: String
-    },
-
-    // Legacy support for existing img field
+    // Product images - Updated to support both single and multiple images
     img: {
+      type: String,
+      required: [true, "Product image is required for showcase"],
+      validate: {
+        validator: function(v) {
+          return validator.isURL(v) || v.length > 0;
+        },
+        message: "Please provide a valid image URL"
+      }
+    },
+
+    images: {
       type: [String],
       default: [],
-      get: function() {
-        // Return primary image and gallery combined for backward compatibility
-        const images = [];
-        if (this.images && this.images.primary) {
-          images.push(this.images.primary);
-        }
-        if (this.images && this.images.gallery) {
-          images.push(...this.images.gallery);
-        }
-        return images.length > 0 ? images : this._doc.img;
-      }
-    },
-
-    video: {
-      url: String,
-      thumbnail: String,
-      duration: Number
-    },
-
-    // Pricing information
-    originalPrice: {
-      type: Number,
-      required: [true, "Original price is required for our exclusive products"],
-      min: [0.01, "Price must be greater than 0"]
-    },
-
-    discountedPrice: {
-      type: Number,
-      min: [0.01, "Discounted price must be greater than 0"],
       validate: {
-        validator: function(value) {
-          return !value || value < this.originalPrice;
+        validator: function(v) {
+          return v.every(url => validator.isURL(url));
         },
-        message: "Discounted price must be less than original price"
+        message: "All image URLs must be valid"
       }
     },
 
-    // Legacy price field for backward compatibility
-    price: {
-      type: Number,
-      get: function() {
-        return this.discountedPrice || this.originalPrice;
+    // Brand system - Core to Rekker's business model
+    brand: {
+      type: String,
+      required: [true, "Brand information is essential"],
+      enum: {
+        values: ["Rekker", "Saffron (by Rekker)", "Cornells (Distributed by Rekker)"],
+        message: "Brand must be Rekker, Saffron (by Rekker), or Cornells (Distributed by Rekker)"
+      },
+      index: true
+    },
+
+    // Manufacturer information for proper attribution
+    manufacturer: {
+      type: String,
+      default: function() {
+        if (this.brand === "Saffron (by Rekker)") return "Rekker";
+        if (this.brand === "Cornells (Distributed by Rekker)") return "Starling Parfums";
+        return "Rekker";
       }
     },
 
-    // Wholesale pricing
-    wholesalePrice: {
-      type: Number,
-      min: [0.01, "Wholesale price must be greater than 0"]
+    distributedBy: {
+      type: String,
+      default: "Rekker"
     },
 
-    wholesaleMinimumQuantity: {
-      type: Number,
-      min: [1, "Minimum wholesale quantity must be at least 1"],
-      default: 10
-    },
-
-    // Product categorization
+    // Enhanced categorization for Rekker's diverse product range
     categories: {
       type: [String],
       required: [true, "Product must belong to at least one category"],
@@ -147,91 +99,97 @@ const ProductSchema = mongoose.Schema(
       index: true
     },
 
-    brand: {
-      type: String,
-      required: [true, "Brand information is essential for luxury products"],
-      trim: true,
-      maxlength: [100, "Brand name too long"],
-      index: true
-    },
-
-    // Beauty-specific categorization
-    skintype: {
+    // Subcategories for better organization
+    subcategories: {
       type: [String],
-      enum: {
-        values: ["oily", "dry", "combination", "sensitive", "normal", "mature", "acne-prone"],
-        message: "Invalid skin type specified"
-      },
-      index: true
+      default: []
     },
 
-    concern: {
+    // Target market - Important for wholesale business
+    targetMarket: {
       type: [String],
       enum: {
         values: [
-          "acne", "aging", "dark-spots", "sensitivity", "dryness", "oiliness", 
-          "pores", "fine-lines", "wrinkles", "hydration", "brightening", 
-          "firming", "anti-aging", "sun-protection", "repair"
+          "Supermarkets", 
+          "Retail Chains", 
+          "Schools", 
+          "Offices", 
+          "Wholesalers", 
+          "Event Planners", 
+          "Beauty Salons",
+          "Hotels & Restaurants",
+          "Online Retailers",
+          "Individual Consumers"
         ],
-        message: "Invalid skin concern specified"
+        message: "Invalid target market specified"
       },
-      index: true
+      default: []
     },
 
-    // Inventory management
-    inventory: {
-      inStock: {
-        type: Number,
-        required: [true, "Stock quantity is required"],
-        min: [0, "Stock cannot be negative"],
-        default: 0
-      },
-      reserved: {
-        type: Number,
-        default: 0,
-        min: [0, "Reserved stock cannot be negative"]
-      },
-      reorderLevel: {
-        type: Number,
-        default: 5,
-        min: [0, "Reorder level cannot be negative"]
-      },
-      maxStock: {
-        type: Number,
-        default: 1000
-      },
-      sku: {
-        type: String,
-        unique: true,
-        sparse: true,
-        trim: true,
-        uppercase: true
-      },
-      barcode: {
-        type: String,
-        unique: true,
-        sparse: true,
-        trim: true
+    // Wholesale pricing - Core to Rekker's business model
+    wholesalePrice: {
+      type: Number,
+      required: [true, "Wholesale price is required for business operations"],
+      min: [0.01, "Wholesale price must be greater than 0"]
+    },
+
+    // Retail price for comparison and partner guidance
+    retailPrice: {
+      type: Number,
+      min: [0.01, "Retail price must be greater than 0"],
+      validate: {
+        validator: function(value) {
+          return !value || value >= this.wholesalePrice;
+        },
+        message: "Retail price must be greater than or equal to wholesale price"
       }
     },
 
-    // Legacy inStock field for backward compatibility
-    inStock: {
-      type: Boolean,
-      default: true,
+    // Legacy price field for backward compatibility
+    price: {
+      type: Number,
       get: function() {
-        return this.inventory ? this.inventory.inStock > 0 : this._doc.inStock;
+        return this.retailPrice || this.wholesalePrice;
       }
+    },
+
+    // MOQ - Minimum Order Quantity (Critical for wholesale)
+    moq: {
+      type: Number,
+      required: [true, "Minimum Order Quantity (MOQ) is required for wholesale operations"],
+      min: [1, "MOQ must be at least 1"],
+      alias: 'minimumOrderQuantity'
+    },
+
+    // Enhanced inventory management
+    stock: {
+      type: Number,
+      required: [true, "Stock quantity is required"],
+      min: [0, "Stock cannot be negative"],
+      default: 0
+    },
+
+    // Stock status for better inventory management
+    stockStatus: {
+      type: String,
+      enum: ["In Stock", "Low Stock", "Out of Stock", "Pre-Order"],
+      default: function() {
+        if (this.stock <= 0) return "Out of Stock";
+        if (this.stock <= 10) return "Low Stock";
+        return "In Stock";
+      }
+    },
+
+    // Product identification
+    sku: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+      uppercase: true
     },
 
     // Product status and visibility
-    status: {
-      type: String,
-      enum: ["active", "inactive", "discontinued", "coming-soon"],
-      default: "active",
-      index: true
-    },
-
     isActive: {
       type: Boolean,
       default: true,
@@ -244,33 +202,12 @@ const ProductSchema = mongoose.Schema(
       index: true
     },
 
-    exclusiveProduct: {
+    // Legacy inStock field for backward compatibility
+    inStock: {
       type: Boolean,
-      default: false
-    },
-
-    limitedEdition: {
-      type: Boolean,
-      default: false
-    },
-
-    // SEO and marketing
-    seo: {
-      metaTitle: {
-        type: String,
-        maxlength: [60, "Meta title too long"]
-      },
-      metaDescription: {
-        type: String,
-        maxlength: [160, "Meta description too long"]
-      },
-      keywords: [String],
-      slug: {
-        type: String,
-        unique: true,
-        sparse: true,
-        trim: true,
-        lowercase: true
+      default: true,
+      get: function() {
+        return this.stock > 0;
       }
     },
 
@@ -308,10 +245,6 @@ const ProductSchema = mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "User"
         }],
-        reported: [{
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User"
-        }],
         createdAt: {
           type: Date,
           default: Date.now
@@ -338,87 +271,41 @@ const ProductSchema = mongoose.Schema(
       min: [0, "Total ratings cannot be negative"]
     },
 
-    // Sales and performance tracking
-    analytics: {
-      viewCount: {
-        type: Number,
-        default: 0,
-        min: [0, "View count cannot be negative"]
-      },
-      salesCount: {
-        type: Number,
-        default: 0,
-        min: [0, "Sales count cannot be negative"]
-      },
-      wishlistCount: {
-        type: Number,
-        default: 0,
-        min: [0, "Wishlist count cannot be negative"]
-      },
-      conversionRate: {
-        type: Number,
-        default: 0,
-        min: [0, "Conversion rate cannot be negative"],
-        max: [100, "Conversion rate cannot exceed 100%"]
-      },
-      lastSold: Date,
-      bestSellingMonth: {
-        month: Number,
-        year: Number,
-        quantity: Number
-      }
+    // Business analytics - Important for wholesale operations
+    quotesRequested: {
+      type: Number,
+      default: 0,
+      min: [0, "Quotes requested cannot be negative"]
     },
 
-    // Legacy viewCount for backward compatibility
+    totalSales: {
+      type: Number,
+      default: 0,
+      min: [0, "Total sales cannot be negative"]
+    },
+
     viewCount: {
       type: Number,
       default: 0,
-      get: function() {
-        return this.analytics ? this.analytics.viewCount : this._doc.viewCount;
-      }
+      min: [0, "View count cannot be negative"]
     },
 
-    soldCount: {
-      type: Number,
-      default: 0,
-      get: function() {
-        return this.analytics ? this.analytics.salesCount : this._doc.soldCount;
-      }
-    },
-
-    // Product relationships
-    relatedProducts: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product"
-    }],
-
-    bundleProducts: [{
-      product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product"
-      },
+    // Wholesale-specific features
+    bulkDiscount: {
       quantity: {
         type: Number,
-        default: 1,
-        min: 1
+        min: [1, "Bulk discount quantity must be at least 1"]
       },
       discountPercentage: {
         type: Number,
-        min: 0,
-        max: 100
+        min: [0, "Discount percentage cannot be negative"],
+        max: [100, "Discount percentage cannot exceed 100%"]
       }
-    }],
+    },
 
-    // Shipping and delivery
-    shipping: {
-      weight: {
-        value: Number,
-        unit: {
-          type: String,
-          enum: ["kg", "g", "lb", "oz"],
-          default: "g"
-        }
-      },
+    // Shipping and logistics (important for wholesale)
+    shippingInfo: {
+      weight: Number, // in kg
       dimensions: {
         length: Number,
         width: Number,
@@ -429,90 +316,55 @@ const ProductSchema = mongoose.Schema(
           default: "cm"
         }
       },
-      freeShipping: {
+      fragile: {
+        type: Boolean,
+        default: false
+      }
+    },
+
+    // Compliance and certifications (especially for beauty/cleaning products)
+    certifications: {
+      type: [String],
+      default: []
+    },
+
+    // Expiration tracking (for products with shelf life)
+    expiryTracking: {
+      hasExpiry: {
         type: Boolean,
         default: false
       },
-      shippingClass: {
+      shelfLife: {
+        duration: Number,
+        unit: {
+          type: String,
+          enum: ["days", "months", "years"],
+          default: "months"
+        }
+      }
+    },
+
+    // SEO and marketing
+    seo: {
+      slug: {
         type: String,
-        enum: ["standard", "fragile", "hazardous", "oversized"],
-        default: "standard"
+        unique: true,
+        sparse: true,
+        trim: true,
+        lowercase: true
       },
-      estimatedDelivery: {
-        min: Number, // days
-        max: Number  // days
-      }
-    },
-
-    // Promotional features
-    promotions: {
-      onSale: {
-        type: Boolean,
-        default: false
-      },
-      saleStartDate: Date,
-      saleEndDate: Date,
-      flashSale: {
-        type: Boolean,
-        default: false
-      },
-      newArrival: {
-        type: Boolean,
-        default: false
-      },
-      bestSeller: {
-        type: Boolean,
-        default: false
-      },
-      staffPick: {
-        type: Boolean,
-        default: false
-      }
-    },
-
-    // Luxury product features
-    luxury: {
-      premiumPackaging: {
-        type: Boolean,
-        default: false
-      },
-      giftWrapping: {
-        type: Boolean,
-        default: true
-      },
-      personalizedMessage: {
-        type: Boolean,
-        default: true
-      },
-      exclusiveAccess: {
-        type: Boolean,
-        default: false
-      },
-      vipOnly: {
-        type: Boolean,
-        default: false
-      },
-      limitedQuantity: Number,
-      luxuryTier: {
+      metaTitle: {
         type: String,
-        enum: ["premium", "luxury", "ultra-luxury", "exclusive"],
-        default: "premium"
-      }
-    },
-
-    // Usage instructions and care
-    usage: {
-      instructions: [String],
-      skinPatchTest: {
-        type: Boolean,
-        default: false
+        maxlength: [60, "Meta title too long"]
       },
-      warnings: [String],
-      storage: String,
-      applicationTips: [String]
+      metaDescription: {
+        type: String,
+        maxlength: [160, "Meta description too long"]
+      },
+      keywords: [String]
     },
 
-    // Audit and tracking fields
+    // Audit fields
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
@@ -528,26 +380,7 @@ const ProductSchema = mongoose.Schema(
       ref: "User"
     },
 
-    deletedAt: Date,
-
-    // Version control
-    version: {
-      type: Number,
-      default: 1
-    },
-
-    changeLog: [{
-      version: Number,
-      changes: String,
-      changedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      },
-      changedAt: {
-        type: Date,
-        default: Date.now
-      }
-    }]
+    deletedAt: Date
   },
   {
     timestamps: true,
@@ -555,7 +388,6 @@ const ProductSchema = mongoose.Schema(
       virtuals: true,
       getters: true,
       transform: function(doc, ret) {
-        // Clean up the response object
         delete ret._id;
         delete ret.__v;
         return ret;
@@ -568,91 +400,85 @@ const ProductSchema = mongoose.Schema(
   }
 );
 
-// Compound indexes for better query performance
-ProductSchema.index({ categories: 1, status: 1, isActive: 1 });
+// Indexes for optimal query performance
 ProductSchema.index({ brand: 1, categories: 1, isActive: 1 });
-ProductSchema.index({ originalPrice: 1, discountedPrice: 1 });
-ProductSchema.index({ averageRating: -1, totalRatings: -1 });
-ProductSchema.index({ "analytics.viewCount": -1, "analytics.salesCount": -1 });
-ProductSchema.index({ skintype: 1, concern: 1, isActive: 1 });
-ProductSchema.index({ featured: 1, status: 1, createdAt: -1 });
-ProductSchema.index({ "promotions.onSale": 1, "promotions.saleEndDate": 1 });
-ProductSchema.index({ "luxury.vipOnly": 1, "luxury.exclusiveAccess": 1 });
+ProductSchema.index({ wholesalePrice: 1, moq: 1 });
+ProductSchema.index({ stock: 1, stockStatus: 1 });
+ProductSchema.index({ featured: 1, isActive: 1, createdAt: -1 });
+ProductSchema.index({ targetMarket: 1, brand: 1 });
+ProductSchema.index({ quotesRequested: -1, totalSales: -1 });
 
-// Text index for search functionality
+// Text search index
 ProductSchema.index({ 
   title: "text", 
   description: "text", 
   brand: "text",
   categories: "text",
-  "specifications.ingredients": "text"
+  subcategories: "text"
 });
 
 // Virtual fields
-ProductSchema.virtual('displayPrice').get(function() {
-  return this.discountedPrice || this.originalPrice;
-});
-
-ProductSchema.virtual('discountPercentage').get(function() {
-  if (this.discountedPrice && this.originalPrice > this.discountedPrice) {
-    return Math.round(((this.originalPrice - this.discountedPrice) / this.originalPrice) * 100);
+ProductSchema.virtual('profitMargin').get(function() {
+  if (this.retailPrice && this.wholesalePrice) {
+    return (((this.retailPrice - this.wholesalePrice) / this.retailPrice) * 100).toFixed(1);
   }
   return 0;
 });
 
-ProductSchema.virtual('isOnSale').get(function() {
-  return this.discountedPrice && this.discountedPrice < this.originalPrice;
+ProductSchema.virtual('minimumOrderValue').get(function() {
+  return this.wholesalePrice * this.moq;
 });
 
-ProductSchema.virtual('stockStatus').get(function() {
-  const stock = this.inventory ? this.inventory.inStock : 0;
-  if (stock <= 0) return 'out-of-stock';
-  if (stock <= (this.inventory?.reorderLevel || 5)) return 'low-stock';
-  return 'in-stock';
+ProductSchema.virtual('stockLevel').get(function() {
+  if (this.stock <= 0) return 'out-of-stock';
+  if (this.stock <= 10) return 'low-stock';
+  if (this.stock <= 50) return 'medium-stock';
+  return 'high-stock';
 });
 
-ProductSchema.virtual('availableStock').get(function() {
-  const total = this.inventory ? this.inventory.inStock : 0;
-  const reserved = this.inventory ? this.inventory.reserved : 0;
-  return Math.max(0, total - reserved);
-});
-
-ProductSchema.virtual('ratingsSummary').get(function() {
-  const ratings = this.ratings || [];
-  const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-  
-  ratings.forEach(rating => {
-    distribution[rating.star] = (distribution[rating.star] || 0) + 1;
-  });
-  
-  return {
-    total: ratings.length,
-    average: this.averageRating,
-    distribution: distribution
+ProductSchema.virtual('brandInfo').get(function() {
+  const brandData = {
+    name: this.brand,
+    manufacturer: this.manufacturer,
+    distributor: this.distributedBy
   };
+  
+  if (this.brand === "Saffron (by Rekker)") {
+    brandData.description = "Cleaning products manufactured by Rekker";
+    brandData.color = "#f59e0b"; // Orange-yellow for Saffron
+  } else if (this.brand === "Cornells (Distributed by Rekker)") {
+    brandData.description = "Beauty products distributed by Rekker, manufactured by Starling Parfums";
+    brandData.color = "#a855f7"; // Purple-pink for Cornells
+  } else {
+    brandData.description = "Quality products by Rekker";
+    brandData.color = "#0891b2"; // Blue-green for Rekker
+  }
+  
+  return brandData;
 });
 
-ProductSchema.virtual('luxuryFeatures').get(function() {
-  const features = [];
-  if (this.luxury?.premiumPackaging) features.push('Premium Packaging');
-  if (this.luxury?.giftWrapping) features.push('Complimentary Gift Wrapping');
-  if (this.luxury?.personalizedMessage) features.push('Personalized Message');
-  if (this.luxury?.exclusiveAccess) features.push('Exclusive Access');
-  if (this.luxury?.vipOnly) features.push('VIP Only');
-  if (this.limitedEdition) features.push('Limited Edition');
-  if (this.exclusiveProduct) features.push('Exclusive Product');
-  return features;
+ProductSchema.virtual('wholesaleInfo').get(function() {
+  return {
+    price: this.wholesalePrice,
+    moq: this.moq,
+    minimumValue: this.minimumOrderValue,
+    currency: 'KSh',
+    bulkDiscount: this.bulkDiscount,
+    targetMarkets: this.targetMarket
+  };
 });
 
 // Pre-save middleware
 ProductSchema.pre('save', function(next) {
   // Auto-generate SKU if not provided
-  if (!this.inventory?.sku && this.isNew) {
-    const brand = this.brand?.substring(0, 3).toUpperCase() || 'COR';
-    const category = this.categories?.[0]?.substring(0, 3).toUpperCase() || 'PRD';
+  if (!this.sku && this.isNew) {
+    let prefix = 'RKR'; // Default for Rekker
+    if (this.brand.includes('Saffron')) prefix = 'SAF';
+    if (this.brand.includes('Cornells')) prefix = 'COR';
+    
+    const category = this.categories[0]?.substring(0, 3).toUpperCase() || 'PRD';
     const timestamp = Date.now().toString().slice(-6);
-    this.inventory = this.inventory || {};
-    this.inventory.sku = `${brand}-${category}-${timestamp}`;
+    this.sku = `${prefix}-${category}-${timestamp}`;
   }
   
   // Auto-generate slug from title if not provided
@@ -664,9 +490,26 @@ ProductSchema.pre('save', function(next) {
       .replace(/^-|-$/g, '');
   }
   
-  // Update version and changelog
-  if (this.isModified() && !this.isNew) {
-    this.version += 1;
+  // Set manufacturer based on brand
+  if (!this.manufacturer) {
+    if (this.brand === "Saffron (by Rekker)") {
+      this.manufacturer = "Rekker";
+    } else if (this.brand === "Cornells (Distributed by Rekker)") {
+      this.manufacturer = "Starling Parfums";
+    } else {
+      this.manufacturer = "Rekker";
+    }
+  }
+  
+  // Update stock status
+  if (this.isModified('stock')) {
+    if (this.stock <= 0) {
+      this.stockStatus = "Out of Stock";
+    } else if (this.stock <= 10) {
+      this.stockStatus = "Low Stock";
+    } else {
+      this.stockStatus = "In Stock";
+    }
   }
   
   next();
@@ -689,173 +532,105 @@ ProductSchema.pre('save', function(next) {
   next();
 });
 
-// Instance methods
-ProductSchema.methods.updateViewCount = function() {
-  this.analytics = this.analytics || {};
-  this.analytics.viewCount = (this.analytics.viewCount || 0) + 1;
-  return this.save();
-};
-
-ProductSchema.methods.updateSalesCount = function(quantity = 1) {
-  this.analytics = this.analytics || {};
-  this.analytics.salesCount = (this.analytics.salesCount || 0) + quantity;
-  this.analytics.lastSold = new Date();
-  return this.save();
-};
-
-ProductSchema.methods.updateStock = function(quantity, operation = 'reduce') {
-  this.inventory = this.inventory || { inStock: 0 };
-  
-  if (operation === 'reduce') {
-    this.inventory.inStock = Math.max(0, this.inventory.inStock - quantity);
-  } else if (operation === 'add') {
-    this.inventory.inStock += quantity;
-  }
-  
-  return this.save();
-};
-
-ProductSchema.methods.addRating = function(userId, rating, comment, userName) {
-  // Check if user already rated this product
-  const existingRatingIndex = this.ratings.findIndex(
-    r => r.postedBy.toString() === userId.toString()
-  );
-  
-  if (existingRatingIndex >= 0) {
-    // Update existing rating
-    this.ratings[existingRatingIndex].star = rating;
-    this.ratings[existingRatingIndex].comment = comment;
-    this.ratings[existingRatingIndex].updatedAt = new Date();
-  } else {
-    // Add new rating
-    this.ratings.push({
-      star: rating,
-      comment: comment,
-      name: userName,
-      postedBy: userId,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-  }
-  
-  return this.save();
-};
-
-ProductSchema.methods.removeRating = function(userId) {
-  this.ratings = this.ratings.filter(
-    rating => rating.postedBy.toString() !== userId.toString()
-  );
-  return this.save();
-};
-
-ProductSchema.methods.isLowStock = function() {
-  const stock = this.inventory ? this.inventory.inStock : 0;
-  const reorderLevel = this.inventory ? this.inventory.reorderLevel : 5;
-  return stock <= reorderLevel && stock > 0;
-};
-
-ProductSchema.methods.canPurchase = function(quantity = 1) {
-  const availableStock = this.availableStock;
-  return this.status === 'active' && 
-         this.isActive && 
-         availableStock >= quantity;
-};
-
-// Static methods
-ProductSchema.statics.findActive = function() {
-  return this.find({ isActive: true, status: 'active' });
-};
-
-ProductSchema.statics.findFeatured = function(limit = 10) {
-  return this.find({ 
-    featured: true, 
-    isActive: true, 
-    status: 'active' 
-  })
-  .limit(limit)
-  .sort({ createdAt: -1 });
-};
-
-ProductSchema.statics.findByCategory = function(category, limit = 12) {
-  return this.find({
-    categories: { $in: [category] },
-    isActive: true,
-    status: 'active'
-  })
-  .limit(limit)
-  .sort({ createdAt: -1 });
-};
-
-ProductSchema.statics.findLowStock = function(threshold = 10) {
-  return this.find({
-    'inventory.inStock': { $lte: threshold, $gt: 0 },
-    isActive: true,
-    status: 'active'
-  });
-};
-
-ProductSchema.statics.findVIPProducts = function() {
-  return this.find({
-    'luxury.vipOnly': true,
-    isActive: true,
-    status: 'active'
-  });
-};
-
-ProductSchema.statics.searchProducts = function(query, options = {}) {
-  const {
-    page = 1,
-    limit = 12,
-    sortBy = 'relevance',
-    category,
-    brand,
-    priceRange,
-    rating
-  } = options;
-  
-  let searchQuery = {
-    $text: { $search: query },
-    isActive: true,
-    status: 'active'
-  };
-  
-  // Add filters
-  if (category) searchQuery.categories = { $in: [category] };
-  if (brand) searchQuery.brand = new RegExp(brand, 'i');
-  if (priceRange) {
-    searchQuery.originalPrice = {};
-    if (priceRange.min) searchQuery.originalPrice.$gte = priceRange.min;
-    if (priceRange.max) searchQuery.originalPrice.$lte = priceRange.max;
-  }
-  if (rating) searchQuery.averageRating = { $gte: rating };
-  
-  let sort = {};
-  switch (sortBy) {
-    case 'price_low':
-      sort = { originalPrice: 1 };
-      break;
-    case 'price_high':
-      sort = { originalPrice: -1 };
-      break;
-    case 'rating':
-      sort = { averageRating: -1 };
-      break;
-    case 'newest':
-      sort = { createdAt: -1 };
-      break;
-    case 'popular':
-      sort = { 'analytics.viewCount': -1 };
-      break;
-    default:
-      sort = { score: { $meta: 'textScore' } };
-  }
-  
+// Static methods for brand-specific queries
+ProductSchema.statics.findByBrand = function(brand, options = {}) {
+  const { page = 1, limit = 12, featured = null } = options;
   const skip = (page - 1) * limit;
   
-  return this.find(searchQuery)
-    .sort(sort)
+  let query = { brand, isActive: true };
+  if (featured !== null) query.featured = featured;
+  
+  return this.find(query)
+    .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
+};
+
+ProductSchema.statics.findRekkerProducts = function(options = {}) {
+  return this.findByBrand('Rekker', options);
+};
+
+ProductSchema.statics.findSaffronProducts = function(options = {}) {
+  return this.findByBrand('Saffron (by Rekker)', options);
+};
+
+ProductSchema.statics.findCornellsProducts = function(options = {}) {
+  return this.findByBrand('Cornells (Distributed by Rekker)', options);
+};
+
+ProductSchema.statics.findWholesaleProducts = function(options = {}) {
+  const { minMoq, maxMoq, priceRange, targetMarket } = options;
+  
+  let query = { isActive: true };
+  
+  if (minMoq) query.moq = { $gte: minMoq };
+  if (maxMoq) query.moq = { ...query.moq, $lte: maxMoq };
+  if (priceRange) {
+    query.wholesalePrice = {};
+    if (priceRange.min) query.wholesalePrice.$gte = priceRange.min;
+    if (priceRange.max) query.wholesalePrice.$lte = priceRange.max;
+  }
+  if (targetMarket) query.targetMarket = { $in: [targetMarket] };
+  
+  return this.find(query).sort({ moq: 1, wholesalePrice: 1 });
+};
+
+// Instance methods
+ProductSchema.methods.incrementQuoteRequests = function() {
+  this.quotesRequested = (this.quotesRequested || 0) + 1;
+  return this.save();
+};
+
+ProductSchema.methods.updateSales = function(quantity = 1, revenue = 0) {
+  this.totalSales = (this.totalSales || 0) + revenue;
+  this.stock = Math.max(0, this.stock - quantity);
+  return this.save();
+};
+
+ProductSchema.methods.canFulfillOrder = function(quantity) {
+  return this.isActive && this.stock >= quantity && quantity >= this.moq;
+};
+
+ProductSchema.methods.calculateBulkPrice = function(quantity) {
+  let price = this.wholesalePrice;
+  
+  if (this.bulkDiscount && quantity >= this.bulkDiscount.quantity) {
+    const discount = (this.bulkDiscount.discountPercentage / 100);
+    price = price * (1 - discount);
+  }
+  
+  return {
+    unitPrice: price,
+    totalPrice: price * quantity,
+    discount: this.bulkDiscount && quantity >= this.bulkDiscount.quantity ? this.bulkDiscount.discountPercentage : 0
+  };
+};
+
+ProductSchema.methods.getBrandSpecificInfo = function() {
+  const info = {
+    brand: this.brand,
+    manufacturer: this.manufacturer,
+    distributor: this.distributedBy
+  };
+  
+  if (this.brand.includes('Saffron')) {
+    info.brandType = 'manufactured';
+    info.focus = 'Cleaning and hygiene products';
+    info.attribution = 'Manufactured by Rekker';
+    info.color = '#f59e0b';
+  } else if (this.brand.includes('Cornells')) {
+    info.brandType = 'distributed';
+    info.focus = 'Beauty and personal care products';
+    info.attribution = 'Distributed by Rekker, Manufactured by Starling Parfums';
+    info.color = '#a855f7';
+  } else {
+    info.brandType = 'owned';
+    info.focus = 'Quality everyday products';
+    info.attribution = 'Manufactured by Rekker';
+    info.color = '#0891b2';
+  }
+  
+  return info;
 };
 
 const Product = mongoose.model("Product", ProductSchema);
