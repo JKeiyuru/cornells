@@ -1,25 +1,19 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-// components/Navbar.jsx - Updated Professional Rekker Navigation with Red Theme and Scrollable Dropdown
+/* eslint-disable no-unused-vars */
+// components/Navbar.jsx - Cleaned Rekker Navigation (No Auth/Cart)
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logOut } from "../redux/userRedux";
+import { Link } from "react-router-dom";
 import { 
-  FaShoppingCart, FaUser, FaChevronDown, FaBars, FaTimes,
+  FaChevronDown, FaBars, FaTimes,
   FaPen, FaSchool, FaGamepad, FaUtensils, FaLock, FaHeart,
   FaBirthdayCake, FaPaintBrush, FaHandsWash, FaSprayCan,
-  FaBuilding, FaIndustry, FaTruck, FaPhone, FaGem, FaLeaf,
+  FaBuilding, FaIndustry, FaTruck, FaGem, FaLeaf,
   FaSpa, FaSun, FaStar, FaGlobe
 } from "react-icons/fa";
 
 const Navbar = ({ scrolled }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const cart = useSelector((state) => state.cart);
-  const user = useSelector((state) => state.user.currentUser);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
   // Updated product categories with distinct red color schemes
@@ -28,7 +22,7 @@ const Navbar = ({ scrolled }) => {
       name: "Rekker Products", 
       isHeader: true,
       description: "Quality products manufactured and distributed by Rekker",
-      colorScheme: "crimson", // Deep red
+      colorScheme: "crimson",
       bgGradient: "from-red-50 to-rose-50",
       borderColor: "border-red-200",
       iconBg: "from-red-100 to-red-200",
@@ -50,7 +44,7 @@ const Navbar = ({ scrolled }) => {
       name: "Saffron Brand",
       isHeader: true,
       description: "Premium personal care products manufactured by Rekker",
-      colorScheme: "orange-red", // Orange-red
+      colorScheme: "orange-red",
       bgGradient: "from-orange-50 to-red-50",
       borderColor: "border-orange-200",
       iconBg: "from-orange-100 to-red-100",
@@ -69,7 +63,7 @@ const Navbar = ({ scrolled }) => {
       name: "Cornells Brand",
       isHeader: true,
       description: "Global wellness products exclusively distributed by Rekker",
-      colorScheme: "rose", // Pink-red
+      colorScheme: "rose",
       bgGradient: "from-rose-50 to-pink-50",
       borderColor: "border-rose-200",
       iconBg: "from-rose-100 to-pink-100",
@@ -104,12 +98,6 @@ const Navbar = ({ scrolled }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const handlelogOut = () => {
-    dispatch(logOut());
-    navigate("/");
-    setIsMenuOpen(false);
-  };
 
   const toggleDropdown = (dropdown) => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
@@ -335,88 +323,6 @@ const Navbar = ({ scrolled }) => {
               <span className="relative z-10">Wholesale</span>
             </Link>
 
-            {/* Cart Icon */}
-            {user && (
-              <Link
-                to="/cart"
-                className="relative p-2 text-red-800 hover:text-red-600 transition-colors duration-300 group"
-              >
-                <FaShoppingCart className="w-6 h-6" />
-                {cart.quantity > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                    {cart.quantity}
-                  </span>
-                )}
-                <div className="absolute inset-0 rounded-full border-2 border-red-600 opacity-0 group-hover:opacity-100 scale-0 group-hover:scale-110 transition-all duration-300"></div>
-              </Link>
-            )}
-
-            {/* Enhanced User Menu */}
-            {user ? (
-              <div className="relative">
-                <button
-                  onClick={() => toggleDropdown('user')}
-                  className="flex items-center space-x-2 p-2 text-red-800 hover:text-red-600 transition-colors duration-300 group"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-rose-500 rounded-full flex items-center justify-center">
-                    <FaUser className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="hidden md:block font-medium">{user.name}</span>
-                  <FaChevronDown className={`w-3 h-3 transition-transform duration-300 ${activeDropdown === 'user' ? 'rotate-180' : ''}`} />
-                </button>
-                
-                {activeDropdown === 'user' && (
-                  <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-red-100 z-50 animate-in fade-in slide-in-from-top-3 duration-200">
-                    <div className="p-2">
-                      <div className="px-4 py-3 border-b border-red-100">
-                        <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                        <div className="text-xs text-red-600">{user.email}</div>
-                      </div>
-                      <Link
-                        to="/myAccount"
-                        onClick={closeDropdown}
-                        className="flex items-center space-x-3 px-4 py-3 text-red-700 hover:bg-red-50 rounded-lg transition-colors font-medium"
-                      >
-                        <FaUser className="w-4 h-4" />
-                        <span>My Account</span>
-                      </Link>
-                      <Link
-                        to="/orders"
-                        onClick={closeDropdown}
-                        className="flex items-center space-x-3 px-4 py-3 text-red-700 hover:bg-red-50 rounded-lg transition-colors font-medium"
-                      >
-                        <FaTruck className="w-4 h-4" />
-                        <span>Order History</span>
-                      </Link>
-                      <div className="border-t border-red-100 mt-2 pt-2">
-                        <button
-                          onClick={handlelogOut}
-                          className="flex items-center space-x-3 w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
-                        >
-                          <span>Sign Out</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="hidden md:flex items-center space-x-3">
-                <Link
-                  to="/login"
-                  className="text-red-800 hover:text-red-600 font-semibold transition-colors duration-300"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/create-account"
-                  className="bg-gradient-to-r from-red-600 to-rose-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
-
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -532,66 +438,6 @@ const Navbar = ({ scrolled }) => {
                 >
                   Contact
                 </Link>
-
-                {/* Mobile Auth/User Menu */}
-                {user ? (
-                  <div className="pt-4 space-y-3">
-                    <div className="flex items-center space-x-3 pb-3 border-b border-red-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-rose-500 rounded-full flex items-center justify-center">
-                        <FaUser className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-red-900">{user.name}</div>
-                        <div className="text-xs text-red-600">{user.email}</div>
-                      </div>
-                    </div>
-                    <Link
-                      to="/cart"
-                      onClick={closeDropdown}
-                      className="flex items-center space-x-3 py-2 text-red-700 hover:text-red-600 transition-colors"
-                    >
-                      <FaShoppingCart className="w-5 h-5" />
-                      <span>Cart ({cart.quantity})</span>
-                    </Link>
-                    <Link
-                      to="/myAccount"
-                      onClick={closeDropdown}
-                      className="block py-2 text-red-700 hover:text-red-600 transition-colors"
-                    >
-                      My Account
-                    </Link>
-                    <Link
-                      to="/orders"
-                      onClick={closeDropdown}
-                      className="block py-2 text-red-700 hover:text-red-600 transition-colors"
-                    >
-                      Order History
-                    </Link>
-                    <button
-                      onClick={handlelogOut}
-                      className="block w-full text-left py-2 text-red-600 hover:text-red-700 transition-colors font-medium"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <div className="pt-4 space-y-3">
-                    <Link
-                      to="/login"
-                      onClick={closeDropdown}
-                      className="block py-2 text-red-800 hover:text-red-600 font-semibold transition-colors"
-                    >
-                      Sign In
-                    </Link>
-                    <Link
-                      to="/create-account"
-                      onClick={closeDropdown}
-                      className="block py-2 text-red-600 hover:text-red-700 font-semibold transition-colors"
-                    >
-                      Create Account
-                    </Link>
-                  </div>
-                )}
 
                 {/* Mobile Wholesale CTA */}
                 <div className="pt-4">

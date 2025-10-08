@@ -1,3 +1,4 @@
+// Backend/controllers/auth.controller.js - Perfect Rekker Auth
 import User from "../models/user.model.js";
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
@@ -19,106 +20,9 @@ const validateName = (name) => {
   return name && name.trim().length >= 2 && name.trim().length <= 50;
 };
 
-// REGISTER USER (CLIENT)
-const registerUser = asyncHandler(async (req, res) => {
-  let { name, email, password, contact, profile, addresses } = req.body;
-
-  // Normalize inputs
-  name = name ? name.trim() : "";
-  email = email ? email.toLowerCase().trim() : "";
-  password = password ? password.trim() : "";
-
-  // Enhanced validation
-  if (!name || !email || !password) {
-    res.status(400);
-    throw new Error("All fields are required for your Rekker account");
-  }
-
-  if (!validateName(name)) {
-    res.status(400);
-    throw new Error("Name must be between 2 and 50 characters");
-  }
-
-  if (!validateEmail(email)) {
-    res.status(400);
-    throw new Error("Please provide a valid email address");
-  }
-
-  if (!validatePassword(password)) {
-    res.status(400);
-    throw new Error("Password must contain at least 8 characters with uppercase, lowercase, number and special character");
-  }
-
-  // Check if user exists (case insensitive)
-  const userExists = await User.findOne({
-    email: { $regex: new RegExp(`^${email}$`, "i") },
-  });
-
-  if (userExists) {
-    res.status(409);
-    throw new Error("An account with this email already exists");
-  }
-
-  try {
-    // Create user with enhanced data
-    const userData = {
-      name,
-      email,
-      password,
-      role: 'user' // Default role for client registration
-    };
-
-    // Add optional fields if provided
-    if (contact) userData.contact = contact;
-    if (profile) userData.profile = profile;
-    if (addresses && addresses.length > 0) userData.addresses = addresses;
-
-    const user = await User.create(userData);
-
-    if (user) {
-      generateToken(res, user._id);
-
-      // Trigger welcome email asynchronously
-      try {
-        await axios.post(
-          `${process.env.BG_SERVICE_URL || "http://localhost:6000"}/send-welcome`,
-          {
-            userId: user._id,
-            userName: user.name,
-            userEmail: user.email,
-          },
-          { timeout: 3000 }
-        );
-        console.log(`✨ Welcome email triggered for ${email} - Welcome to Rekker`);
-      } catch (error) {
-        console.warn("Welcome email service temporarily unavailable:", error.message);
-      }
-
-      res.status(201).json({
-        success: true,
-        message: "Welcome to Rekker - Your account has been created successfully",
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          createdAt: user.createdAt,
-        },
-      });
-    } else {
-      res.status(400);
-      throw new Error("Unable to create your account. Please try again.");
-    }
-  } catch (error) {
-    if (error.code === 11000) {
-      res.status(409);
-      throw new Error("An account with this email already exists");
-    }
-    throw error;
-  }
-});
-
-// REGISTER ADMIN
+// ============================================
+// ADMIN REGISTRATION (with verification code)
+// ============================================
 const registerAdmin = asyncHandler(async (req, res) => {
   let { name, email, password, adminCode } = req.body;
 
@@ -126,7 +30,6 @@ const registerAdmin = asyncHandler(async (req, res) => {
   name = name ? name.trim() : "";
   email = email ? email.toLowerCase().trim() : "";
   password = password ? password.trim() : "";
-  adminCode = adminCode ? adminCode.trim() : "";
 
   // Validation
   if (!name || !email || !password || !adminCode) {
@@ -149,13 +52,15 @@ const registerAdmin = asyncHandler(async (req, res) => {
     throw new Error("Password must contain at least 8 characters with uppercase, lowercase, number and special character");
   }
 
-  // Verify adminCode — replace 'YOUR_ADMIN_CODE' with the actual code or config variable
-  if (adminCode !== process.env.ADMIN_REGISTRATION_CODE) {
+  // Verify admin code
+  const ADMIN_REGISTRATION_CODE = process.env.ADMIN_REGISTRATION_CODE || "REKKER_ADMIN_2024";
+  
+  if (adminCode !== ADMIN_REGISTRATION_CODE) {
     res.status(403);
-    throw new Error("Invalid admin registration code");
+    throw new Error("Invalid admin verification code");
   }
 
-  // Check if user exists
+  // Check if user exists (case insensitive)
   const userExists = await User.findOne({
     email: { $regex: new RegExp(`^${email}$`, "i") },
   });
@@ -166,27 +71,30 @@ const registerAdmin = asyncHandler(async (req, res) => {
   }
 
   try {
-    const adminData = {
+    // Create admin user
+    const user = await User.create({
       name,
       email,
-      password,
+      password, // Will be hashed by pre-save middleware
       role: 'admin',
-    };
+      emailVerified: true, // Auto-verify admin accounts
+      status: 'active'
+    });
 
-    const admin = await User.create(adminData);
+    if (user) {
+      generateToken(res, user._id);
 
-    if (admin) {
-      generateToken(res, admin._id);
+      console.log(`✅ Admin account created: ${email}`);
 
       res.status(201).json({
         success: true,
         message: "Admin account created successfully",
         user: {
-          _id: admin._id,
-          name: admin.name,
-          email: admin.email,
-          role: admin.role,
-          createdAt: admin.createdAt,
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          createdAt: user.createdAt,
         },
       });
     } else {
@@ -202,8 +110,190 @@ const registerAdmin = asyncHandler(async (req, res) => {
   }
 });
 
-// (Assuming loginUser, logOut, verifyToken, refreshToken, forgotPassword are imported or implemented above)
+// ============================================
+// LOGIN USER (works for both admin and regular users)
+// ============================================
+const loginUser = asyncHandler(async (req, res) => {
+  let { email, password } = req.body;
 
+  // Normalize inputs
+  email = email ? email.toLowerCase().trim() : "";
+  password = password ? password.trim() : "";
+
+  if (!email || !password) {
+    res.status(400);
+    throw new Error("Email and password are required");
+  }
+
+  if (!validateEmail(email)) {
+    res.status(400);
+    throw new Error("Please provide a valid email address");
+  }
+
+  try {
+    // Find user (case insensitive email)
+    const user = await User.findOne({
+      email: { $regex: new RegExp(`^${email}$`, "i") },
+    }).select("+password");
+
+    if (!user) {
+      res.status(401);
+      throw new Error("Invalid credentials - Access denied");
+    }
+
+    // Check if account is active
+    if (user.status !== 'active' || user.isActive === false) {
+      res.status(401);
+      throw new Error("Account is not active. Please contact support.");
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      res.status(401);
+      throw new Error("Invalid credentials - Access denied");
+    }
+
+    // Update last login
+    await User.findByIdAndUpdate(user._id, {
+      'security.lastLogin': new Date(),
+      $inc: { 'security.loginCount': 1 },
+      lastActivity: new Date()
+    });
+
+    generateToken(res, user._id);
+
+    console.log(`✅ User logged in: ${email} (${user.role})`);
+
+    res.status(200).json({
+      success: true,
+      message: `Welcome back to Rekker${user.role === 'admin' ? ' Admin' : ''}`,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        lastLogin: new Date(),
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+});
+
+// ============================================
+// LOGOUT USER
+// ============================================
+const logOut = asyncHandler(async (req, res) => {
+  console.log("🚪 User logging out from Rekker");
+
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    expires: new Date(0),
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Successfully logged out from Rekker. Until next time!",
+  });
+});
+
+// ============================================
+// VERIFY TOKEN
+// ============================================
+const verifyToken = asyncHandler(async (req, res) => {
+  if (req.user) {
+    res.status(200).json({
+      success: true,
+      message: "Token is valid",
+      user: {
+        _id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role || "user",
+      },
+    });
+  } else {
+    res.status(401);
+    throw new Error("Token verification failed");
+  }
+});
+
+// ============================================
+// REFRESH TOKEN
+// ============================================
+const refreshToken = asyncHandler(async (req, res) => {
+  if (req.user) {
+    generateToken(res, req.user._id);
+
+    res.status(200).json({
+      success: true,
+      message: "Token refreshed successfully",
+      user: {
+        _id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+      },
+    });
+  } else {
+    res.status(401);
+    throw new Error("Unable to refresh token");
+  }
+});
+
+// ============================================
+// REQUEST PASSWORD RESET
+// ============================================
+const forgotPassword = asyncHandler(async (req, res) => {
+  let { email } = req.body;
+  email = email ? email.toLowerCase().trim() : "";
+
+  if (!email || !validateEmail(email)) {
+    res.status(400);
+    throw new Error("Please provide a valid email address");
+  }
+
+  const user = await User.findOne({
+    email: { $regex: new RegExp(`^${email}$`, "i") },
+  });
+
+  if (!user) {
+    // Don't reveal if user exists for security
+    res.status(200).json({
+      success: true,
+      message: "If an account with that email exists, password reset instructions have been sent",
+    });
+    return;
+  }
+
+  try {
+    await axios.post(
+      `${process.env.BG_SERVICE_URL || "http://localhost:6000"}/send-password-reset`,
+      {
+        userId: user._id,
+        userEmail: user.email,
+        userName: user.name,
+      },
+      { timeout: 3000 }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset instructions have been sent to your email",
+    });
+  } catch (error) {
+    console.error("Password reset email failed:", error.message);
+    res.status(500);
+    throw new Error("Unable to send password reset email. Please try again later.");
+  }
+});
+
+// ============================================
+// CHANGE PASSWORD (for logged-in users)
+// ============================================
 const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
@@ -218,6 +308,7 @@ const changePassword = asyncHandler(async (req, res) => {
   }
 
   try {
+    // Get user with password
     const user = await User.findById(req.user._id).select("+password");
 
     if (!user) {
@@ -225,20 +316,25 @@ const changePassword = asyncHandler(async (req, res) => {
       throw new Error("User not found");
     }
 
+    // Verify current password
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
       res.status(401);
       throw new Error("Current password is incorrect");
     }
 
+    // Check if new password is different
     const isSamePassword = await bcrypt.compare(newPassword, user.password);
     if (isSamePassword) {
       res.status(400);
       throw new Error("New password must be different from current password");
     }
 
+    // Update password (will be hashed by pre-save middleware)
     user.password = newPassword;
     await user.save();
+
+    console.log(`✅ Password changed for user: ${user.email}`);
 
     res.status(200).json({
       success: true,
@@ -249,6 +345,9 @@ const changePassword = asyncHandler(async (req, res) => {
   }
 });
 
+// ============================================
+// UPDATE USER PROFILE
+// ============================================
 const updateProfile = asyncHandler(async (req, res) => {
   const { name, contact, profile, addresses } = req.body;
 
@@ -260,6 +359,7 @@ const updateProfile = asyncHandler(async (req, res) => {
       throw new Error("User not found");
     }
 
+    // Update allowed fields
     if (name && validateName(name)) {
       user.name = name.trim();
     }
@@ -279,6 +379,8 @@ const updateProfile = asyncHandler(async (req, res) => {
     user.updatedBy = req.user._id;
     await user.save();
 
+    console.log(`✅ Profile updated for user: ${user.email}`);
+
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
@@ -297,14 +399,12 @@ const updateProfile = asyncHandler(async (req, res) => {
 });
 
 export {
-  registerUser,
   registerAdmin,
-  // If you have implementations for the following, import or define them, otherwise remove from export
   loginUser,
   logOut,
   verifyToken,
   refreshToken,
   forgotPassword,
   changePassword,
-  updateProfile,
+  updateProfile
 };

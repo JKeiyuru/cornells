@@ -1,14 +1,13 @@
-// Backend/routes/auth.route.js - Updated with Admin Registration
+// Backend/routes/auth.route.js - Perfect Rekker Auth Routes
 import express from "express";
 import {
-  registerUser,
   registerAdmin,
   loginUser,
-  // logOut,
-  // verifyToken,
-  // refreshToken,
+  logOut,
+  verifyToken,
+  refreshToken,
   forgotPassword,
-  // changePassword,
+  changePassword,
   updateProfile
 } from "../controllers/auth.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
@@ -16,22 +15,27 @@ import rateLimit from "express-rate-limit";
 
 const router = express.Router();
 
-// Rate limiting for authentication routes
+// ============================================
+// RATE LIMITERS
+// ============================================
+
+// Strict rate limiting for authentication
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
+  max: 5, // 5 attempts per window
   message: {
     success: false,
-    message: "Too many authentication attempts. Please try again in 15 minutes for your security.",
+    message: "Too many authentication attempts. Please try again in 15 minutes.",
     error: "RATE_LIMIT_EXCEEDED"
   },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
+// Extra strict for password reset
 const forgotPasswordLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // limit each IP to 3 requests per hour
+  max: 3, // 3 requests per hour
   message: {
     success: false,
     message: "Too many password reset requests. Please try again in an hour.",
@@ -41,9 +45,10 @@ const forgotPasswordLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Very strict for admin registration
 const adminRegisterLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // limit to 3 admin registration attempts per hour
+  max: 3, // 3 attempts per hour
   message: {
     success: false,
     message: "Too many admin registration attempts. Please try again later.",
@@ -53,50 +58,47 @@ const adminRegisterLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// ================================
+// ============================================
 // PUBLIC ROUTES
-// ================================
+// ============================================
 
-// REGISTER ROUTE - Join Rekker (Client)
-router.post("/register", authLimiter, registerUser);
-
-// REGISTER ADMIN ROUTE - Create admin account (requires admin code)
+// REGISTER ADMIN - Create admin account (requires verification code)
 router.post("/register-admin", adminRegisterLimiter, registerAdmin);
 
-// LOGIN ROUTE - Access your account
+// LOGIN - Authentication for all users (admin & regular)
 router.post("/login", authLimiter, loginUser);
 
-// FORGOT PASSWORD ROUTE - Recover your account
+// FORGOT PASSWORD - Request password reset
 router.post("/forgot-password", forgotPasswordLimiter, forgotPassword);
 
-// ================================
+// ============================================
 // PROTECTED ROUTES (require authentication)
-// ================================
+// ============================================
 
-// LOGOUT ROUTE - Secure departure
+// LOGOUT - Secure logout
 router.post("/logout", protect, logOut);
 
-// VERIFY TOKEN ROUTE - Validate access
+// VERIFY TOKEN - Check if token is valid
 router.get("/verify", protect, verifyToken);
 
-// REFRESH TOKEN ROUTE - Maintain session
+// REFRESH TOKEN - Renew authentication token
 router.post("/refresh", protect, refreshToken);
 
-// CHANGE PASSWORD ROUTE - Update password (for logged-in users)
+// CHANGE PASSWORD - Update password (for logged-in users)
 router.post("/change-password", protect, changePassword);
 
-// UPDATE PROFILE ROUTE - Update user information
+// UPDATE PROFILE - Update user information
 router.put("/profile", protect, updateProfile);
 
-// ================================
+// ============================================
 // UTILITY ROUTES
-// ================================
+// ============================================
 
-// Route to check if email is available for registration
+// Check if email is available for registration
 router.post("/check-email", rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 10,
-  message: "Please wait a moment before checking email availability again"
+  message: "Please wait before checking email availability again"
 }), async (req, res) => {
   try {
     const { email } = req.body;
@@ -104,7 +106,7 @@ router.post("/check-email", rateLimit({
     if (!email) {
       return res.status(400).json({
         success: false,
-        message: "Email is required for availability check"
+        message: "Email is required"
       });
     }
 
@@ -117,25 +119,25 @@ router.post("/check-email", rateLimit({
       success: true,
       available: !userExists,
       message: userExists 
-        ? "This email is already registered with Rekker" 
-        : "Email is available for your Rekker account"
+        ? "This email is already registered" 
+        : "Email is available"
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Unable to check email availability at this time"
+      message: "Unable to check email availability"
     });
   }
 });
 
-// Route to validate password strength
+// Validate password strength
 router.post("/validate-password", (req, res) => {
   const { password } = req.body;
   
   if (!password) {
     return res.status(400).json({
       success: false,
-      message: "Password is required for validation"
+      message: "Password is required"
     });
   }
 
@@ -155,12 +157,12 @@ router.post("/validate-password", (req, res) => {
     valid: isValid,
     strength: strength,
     message: isValid 
-      ? "Password meets Rekker security standards" 
-      : "Password requires enhancement for premium security"
+      ? "Password meets security standards" 
+      : "Password needs to be stronger"
   });
 });
 
-// Route to validate admin code (without creating account)
+// Validate admin code (without creating account)
 router.post("/validate-admin-code", rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5,
@@ -176,7 +178,6 @@ router.post("/validate-admin-code", rateLimit({
   }
 
   const ADMIN_REGISTRATION_CODE = process.env.ADMIN_REGISTRATION_CODE || "REKKER_ADMIN_2024";
-  
   const isValid = adminCode === ADMIN_REGISTRATION_CODE;
   
   res.status(200).json({

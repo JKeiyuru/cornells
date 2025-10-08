@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-// pages/brands/CornellsBrand.jsx - Updated with deep burgundy theme (#7c2724)
+// pages/brands/CornellsBrand.jsx - Updated with deep burgundy theme (#7c2724) and background images
 import { useState, useEffect } from "react";
 import { 
   FaLeaf, 
@@ -30,7 +30,7 @@ const CornellsBrand = () => {
     setIsLoaded(true);
   }, []);
 
-  // Product Collections with burgundy theme updates
+  // Product Collections with background images and gradient fallbacks
   const productCollections = [
     {
       id: "bold-beautiful",
@@ -39,6 +39,8 @@ const CornellsBrand = () => {
       description: "Deeply nourishing body lotions with Shea Butter and natural ingredients for ultra-rich, lightweight hydration.",
       color: "from-red-800 to-red-900",
       bgColor: "bg-red-50",
+      backgroundImage: "/images/cornellscategoryimages/BOLD_AND_BEAUTIFUL_BLOG.jpg",
+      overlay: "bg-black/40",
       products: [
         {
           name: "Bold & Beautiful Vanilla Lotion",
@@ -65,6 +67,8 @@ const CornellsBrand = () => {
       description: "Gentle, safe formulations designed specifically for children's delicate skin and family wellness.",
       color: "from-red-700 to-red-800",
       bgColor: "bg-red-50",
+      backgroundImage: "/images/cornellscategoryimages/CUTE_AND_PRETTY_s.jpg",
+      overlay: "bg-black/50",
       products: [
         {
           name: "Cute & Pretty Baby Lotion",
@@ -91,6 +95,8 @@ const CornellsBrand = () => {
       description: "Professional hair care solutions celebrating natural beauty with nourishing ingredients for all hair types.",
       color: "from-red-800 to-red-900",
       bgColor: "bg-red-50",
+      backgroundImage: "/images/cornellscategoryimages/DARK_AND_BEAUTIFUL.jpg",
+      overlay: "bg-black/30",
       products: [
         {
           name: "Dark & Beautiful Hair Oil",
@@ -117,6 +123,8 @@ const CornellsBrand = () => {
       description: "Vitamin and nutrient-enriched personal care products inspired by nature's superfoods for optimal wellness.",
       color: "from-red-700 to-red-800",
       bgColor: "bg-red-50",
+      backgroundImage: "/images/cornellscategoryimages/SUPER_FOOD.jpg",
+      overlay: "bg-black/40",
       products: [
         {
           name: "Super Food Vitamin C Serum",
@@ -506,7 +514,7 @@ const CornellsBrand = () => {
         </div>
       </section>
 
-      {/* Product Collections Section */}
+      {/* Product Collections Section with Background Images */}
       <section className="py-20 bg-white" id="collections">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
@@ -536,82 +544,91 @@ const CornellsBrand = () => {
               ))}
             </div>
 
-            {/* Active Collection Details */}
-            <div className={`${productCollections[activeCollection].bgColor} rounded-3xl p-8 lg:p-12`}>
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <div className="space-y-8">
-                  <div>
-                    <h3 className="text-4xl font-bold text-gray-900 mb-4">
-                      {productCollections[activeCollection].name}
-                    </h3>
-                    <p className="text-xl font-medium text-gray-700 mb-4">
-                      {productCollections[activeCollection].tagline}
-                    </p>
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                      {productCollections[activeCollection].description}
-                    </p>
-                  </div>
+            {/* Active Collection Details with Background Image */}
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 group min-h-96">
+              {/* Background Image with Gradient Fallback */}
+              <div 
+                className={`absolute inset-0 bg-cover bg-center bg-no-repeat ${productCollections[activeCollection].backgroundImage ? '' : `bg-gradient-to-br ${productCollections[activeCollection].color}`}`}
+                style={productCollections[activeCollection].backgroundImage ? 
+                  { backgroundImage: `url(${productCollections[activeCollection].backgroundImage})` } : {}}
+              />
+              
+              {/* Overlay for text readability */}
+              <div className={`absolute inset-0 ${productCollections[activeCollection].overlay} transition-all duration-300 group-hover:bg-black/60`} />
+              
+              {/* Content */}
+              <div className="relative z-10 p-8 lg:p-12 flex flex-col justify-between text-white min-h-96">
+                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                  <div className="space-y-8">
+                    <div>
+                      <h3 className="text-4xl font-bold mb-4 drop-shadow-lg">
+                        {productCollections[activeCollection].name}
+                      </h3>
+                      <p className="text-xl font-medium text-red-200 mb-4 drop-shadow-md">
+                        {productCollections[activeCollection].tagline}
+                      </p>
+                      <p className="text-lg text-white/90 leading-relaxed drop-shadow-sm">
+                        {productCollections[activeCollection].description}
+                      </p>
+                    </div>
 
-                  {/* Collection Products */}
-                  <div className="space-y-6">
-                    {productCollections[activeCollection].products.map((product, index) => (
-                      <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg">
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <h4 className="text-lg font-bold text-gray-900 mb-2">{product.name}</h4>
-                            <p className="text-gray-600 mb-3">{product.description}</p>
-                            <div className="text-sm text-gray-500">Size: {product.size}</div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold mb-1" style={{color: '#7c2724'}}>{product.wholesalePrice}</div>
-                            <div className="text-xs text-gray-500">MOQ: {product.moq}</div>
-                          </div>
-                        </div>
-                        
-                        <div className="grid sm:grid-cols-2 gap-2">
-                          {product.keyBenefits.map((benefit, idx) => (
-                            <div key={idx} className="flex items-center space-x-2 text-sm">
-                              <FaCheckCircle className="w-3 h-3 text-green-500" />
-                              <span className="text-gray-700">{benefit}</span>
+                    {/* Collection Products */}
+                    <div className="space-y-6">
+                      {productCollections[activeCollection].products.map((product, index) => (
+                        <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
+                          <div className="flex justify-between items-start mb-4">
+                            <div>
+                              <h4 className="text-lg font-bold text-white drop-shadow-sm mb-2">{product.name}</h4>
+                              <p className="text-white/80 mb-3">{product.description}</p>
+                              <div className="text-sm text-red-200">Size: {product.size}</div>
                             </div>
-                          ))}
+                            <div className="text-right">
+                              <div className="text-lg font-bold text-white mb-1 drop-shadow-sm">{product.wholesalePrice}</div>
+                              <div className="text-xs text-red-200">MOQ: {product.moq}</div>
+                            </div>
+                          </div>
+                          
+                          <div className="grid sm:grid-cols-2 gap-2">
+                            {product.keyBenefits.map((benefit, idx) => (
+                              <div key={idx} className="flex items-center space-x-2 text-sm">
+                                <FaCheckCircle className="w-3 h-3 text-green-300" />
+                                <span className="text-white/90 drop-shadow-sm">{benefit}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+
+                    <div className="flex space-x-4">
+                      <Link
+                        to="/wholesale-request"
+                        className="inline-flex items-center space-x-2 bg-white text-red-800 px-8 py-4 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      >
+                        <FaShoppingCart className="w-5 h-5" />
+                        <span>Order Collection</span>
+                        <FaArrowRight className="w-4 h-4" />
+                      </Link>
+                      <Link
+                        to="/contact"
+                        className="inline-flex items-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-red-800 transition-all duration-300"
+                      >
+                        <span>Get Quote</span>
+                      </Link>
+                    </div>
                   </div>
 
-                  <div className="flex space-x-4">
-                    <Link
-                      to="/wholesale-request"
-                      className="inline-flex items-center space-x-2 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                      style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}
-                    >
-                      <FaShoppingCart className="w-5 h-5" />
-                      <span>Order Collection</span>
-                      <FaArrowRight className="w-4 h-4" />
-                    </Link>
-                    <Link
-                      to="/contact"
-                      className="inline-flex items-center space-x-2 border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-red-400 transition-all duration-300"
-                      style={{'&:hover': {color: '#7c2724', borderColor: '#7c2724'}}}
-                    >
-                      <span>Get Quote</span>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Collection Visual */}
-                <div className="relative">
-                  <div className="aspect-square bg-white rounded-3xl shadow-2xl overflow-hidden">
-                    <div className="h-full flex items-center justify-center p-12">
+                  {/* Collection Visual */}
+                  <div className="relative">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
                       <div className="text-center">
-                        <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}>
+                        <div className="w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6 bg-white/20 backdrop-blur-sm">
                           <FaGem className="w-16 h-16 text-white" />
                         </div>
-                        <h4 className="text-2xl font-bold text-gray-900 mb-2">
+                        <h4 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
                           {productCollections[activeCollection].name}
                         </h4>
-                        <p className="text-gray-600">{productCollections[activeCollection].tagline}</p>
+                        <p className="text-red-200 drop-shadow-md">{productCollections[activeCollection].tagline}</p>
                       </div>
                     </div>
                   </div>

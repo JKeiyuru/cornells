@@ -1,76 +1,128 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
-// components/Products.jsx - Updated for dynamic product loading from admin
+// components/Products.jsx - Updated to work with products-data.js
 import { useState, useEffect } from "react";
 import { 
-  FaShoppingCart, 
-  FaEye, 
-  FaIndustry, 
-  FaStore,
-  FaTag,
-  FaBoxes,
-  FaArrowRight,
-  FaCheck,
-  FaStar,
-  FaHeart,
-  FaGem,
-  FaLeaf,
-  FaExclamationTriangle
+  FaShoppingCart, FaEye, FaBoxes, FaArrowRight, FaCheck, 
+  FaStar, FaHeart, FaGem, FaLeaf, FaExclamationTriangle
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { publicRequest } from "../requestMethods";
+
+// Import your products data
+import { 
+  getAllProducts, 
+  getProductsByBrand, 
+  getProductsByCategory,
+  searchProducts 
+} from "../data/products-data"; // Adjust path as needed
 
 const Products = ({ query, filters, sort, searchTerm }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch products from backend
+  // Load and filter products
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Build query parameters
-        const params = new URLSearchParams();
-        
-        // Add category filter if specified
-        if (query && query !== 'all') {
-          params.append('category', query);
-        }
-        
-        // Add other filters
-        Object.entries(filters).forEach(([key, value]) => {
-          if (value && value !== 'default') {
-            params.append(key, value);
-          }
-        });
-        
-        // Add search term
-        if (searchTerm) {
-          params.append('search', searchTerm);
-        }
-        
-        // Add sort parameter
-        if (sort) {
-          params.append('sort', sort);
-        }
+    try {
+      setLoading(true);
+      setError(null);
+      
+      let filteredProducts = [];
 
-        const response = await publicRequest.get(`/products?${params.toString()}`);
-        setProducts(response.data.products || response.data || []);
+      // Step 1: Get base products based on query
+      if (query && query !== 'all') {
+        // Try to get by category first
+        filteredProducts = getProductsByCategory(query);
         
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setError(error.response?.data?.message || "Failed to load products. Please try again.");
-        setProducts([]);
-      } finally {
-        setLoading(false);
+        // If no results, try by brand
+        if (filteredProducts.length === 0) {
+          filteredProducts = getProductsByBrand(query);
+        }
+      } else {
+        // Get all products
+        filteredProducts = getAllProducts();
       }
-    };
 
-    fetchProducts();
+      // Step 2: Apply search term
+      if (searchTerm && searchTerm.trim() !== '') {
+        const term = searchTerm.toLowerCase();
+        filteredProducts = filteredProducts.filter(product =>
+          product.title.toLowerCase().includes(term) ||
+          product.desc.toLowerCase().includes(term) ||
+          product.brand.toLowerCase().includes(term) ||
+          product.category.toLowerCase().includes(term) ||
+          product.subcategory?.toLowerCase().includes(term) ||
+          product.tags?.some(tag => tag.toLowerCase().includes(term))
+        );
+      }
+
+      // Step 3: Apply additional filters
+      if (filters.brand && filters.brand !== 'default') {
+        filteredProducts = filteredProducts.filter(p => 
+          p.brand.toLowerCase() === filters.brand.toLowerCase()
+        );
+      }
+
+      if (filters.category && filters.category !== 'default') {
+        filteredProducts = filteredProducts.filter(p => 
+          p.category === filters.category
+        );
+      }
+
+      if (filters.inStock === 'true') {
+        filteredProducts = filteredProducts.filter(p => p.inStock === true);
+      } else if (filters.inStock === 'false') {
+        filteredProducts = filteredProducts.filter(p => p.inStock === false);
+      }
+
+      if (filters.featured === 'true') {
+        filteredProducts = filteredProducts.filter(p => p.featured === true);
+      }
+
+      // Price range filter
+      if (filters.minPrice) {
+        filteredProducts = filteredProducts.filter(p => 
+          (p.discountedPrice || p.originalPrice) >= Number(filters.minPrice)
+        );
+      }
+
+      if (filters.maxPrice) {
+        filteredProducts = filteredProducts.filter(p => 
+          (p.discountedPrice || p.originalPrice) <= Number(filters.maxPrice)
+        );
+      }
+
+      // Step 4: Apply sorting
+      filteredProducts = [...filteredProducts].sort((a, b) => {
+        const priceA = a.discountedPrice || a.originalPrice;
+        const priceB = b.discountedPrice || b.originalPrice;
+
+        switch (sort) {
+          case "asc":
+            return priceA - priceB;
+          case "desc":
+            return priceB - priceA;
+          case "popular":
+            return (b.ratings?.length || 0) - (a.ratings?.length || 0);
+          case "featured":
+            return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+          case "newest":
+          default:
+            return 0; // Keep original order
+        }
+      });
+
+      setProducts(filteredProducts);
+      
+    } catch (error) {
+      console.error("Error loading products:", error);
+      setError("Failed to load products. Please try again.");
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
   }, [query, filters, sort, searchTerm]);
 
   const getBrandColor = (brand) => {
@@ -78,7 +130,16 @@ const Products = ({ query, filters, sort, searchTerm }) => {
       case 'saffron': return 'text-orange-600 bg-orange-100';
       case 'cornells': return 'text-rose-600 bg-rose-100';
       case 'rekker':
-      default: return 'text-red-600 bg-red-100';
+      default: return 'text-blue-600 bg-blue-100';
+    }
+  };
+
+  const getBrandGradient = (brand) => {
+    switch (brand?.toLowerCase()) {
+      case 'saffron': return 'from-orange-600 to-red-600';
+      case 'cornells': return 'from-rose-600 to-purple-600';
+      case 'rekker':
+      default: return 'from-blue-600 to-indigo-600';
     }
   };
 
@@ -93,16 +154,15 @@ const Products = ({ query, filters, sort, searchTerm }) => {
 
   const getProductRating = (ratings) => {
     if (!ratings || ratings.length === 0) {
-      return (Math.random() * 0.8 + 4.2).toFixed(1); // Mock rating for products without reviews
+      return (Math.random() * 0.8 + 4.2).toFixed(1);
     }
-    
     const average = ratings.reduce((sum, rating) => sum + rating.star, 0) / ratings.length;
     return average.toFixed(1);
   };
 
   const getReviewCount = (ratings) => {
     if (!ratings || ratings.length === 0) {
-      return Math.floor(Math.random() * 500 + 50); // Mock review count
+      return Math.floor(Math.random() * 500 + 50);
     }
     return ratings.length;
   };
@@ -116,7 +176,6 @@ const Products = ({ query, filters, sort, searchTerm }) => {
   };
 
   const getDisplayPrice = (product) => {
-    // Priority: discounted price > wholesale price > original price
     if (product.discountedPrice && product.discountedPrice > 0) {
       return product.discountedPrice;
     }
@@ -130,7 +189,7 @@ const Products = ({ query, filters, sort, searchTerm }) => {
     return (
       <div className="flex justify-center items-center py-20">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600 font-light">Loading premium products...</p>
         </div>
       </div>
@@ -147,7 +206,7 @@ const Products = ({ query, filters, sort, searchTerm }) => {
         <p className="text-gray-600 max-w-md mx-auto mb-6">{error}</p>
         <button 
           onClick={() => window.location.reload()}
-          className="bg-gradient-to-r from-red-600 to-rose-600 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+          className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-300"
         >
           Try Again
         </button>
@@ -167,7 +226,7 @@ const Products = ({ query, filters, sort, searchTerm }) => {
         </p>
         <Link
           to="/contact"
-          className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-600 to-rose-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300"
+          className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300"
         >
           <span>Contact Us</span>
           <FaArrowRight className="w-4 h-4" />
@@ -200,7 +259,10 @@ const Products = ({ query, filters, sort, searchTerm }) => {
           const displayPrice = getDisplayPrice(product);
 
           return (
-            <div key={product._id || product.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-1">
+            <div 
+              key={product._id} 
+              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group transform hover:-translate-y-1"
+            >
               {/* Product Image */}
               <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                 {product.img ? (
@@ -216,7 +278,10 @@ const Products = ({ query, filters, sort, searchTerm }) => {
                 ) : null}
                 
                 {/* Fallback when image fails or doesn't exist */}
-                <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center" style={{ display: product.img ? 'none' : 'flex' }}>
+                <div 
+                  className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center" 
+                  style={{ display: product.img ? 'none' : 'flex' }}
+                >
                   <div className="text-center text-gray-500">
                     <div className="w-20 h-20 mx-auto mb-3 flex items-center justify-center">
                       {getBrandIcon(product.brand)}
@@ -248,7 +313,7 @@ const Products = ({ query, filters, sort, searchTerm }) => {
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex space-x-3">
                     <Link
-                      to={`/product/${product._id || product.id}`}
+                      to={`/product/${product._id}`}
                       className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-700 hover:bg-blue-500 hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg"
                     >
                       <FaEye className="w-5 h-5" />
@@ -259,18 +324,16 @@ const Products = ({ query, filters, sort, searchTerm }) => {
                     >
                       <FaShoppingCart className="w-5 h-5" />
                     </Link>
-                    {product.brand?.toLowerCase() === 'cornells' && (
-                      <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-700 hover:bg-rose-500 hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg">
-                        <FaHeart className="w-5 h-5" />
-                      </button>
-                    )}
+                    <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gray-700 hover:bg-rose-500 hover:text-white transition-all duration-300 transform hover:scale-110 shadow-lg">
+                      <FaHeart className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
 
-                {/* Special Badge for Cornells */}
-                {product.brand?.toLowerCase() === 'cornells' && (
-                  <div className="absolute bottom-4 left-4 bg-rose-600 text-white px-2 py-1 rounded text-xs font-bold">
-                    GLOBAL BRAND
+                {/* Featured Badge */}
+                {product.featured && (
+                  <div className="absolute bottom-4 left-4 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-bold">
+                    FEATURED
                   </div>
                 )}
               </div>
@@ -283,7 +346,7 @@ const Products = ({ query, filters, sort, searchTerm }) => {
                     {product.title}
                   </h3>
                   <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
-                    {product.desc || product.description || "Premium quality product from Rekker"}
+                    {product.desc || "Premium quality product"}
                   </p>
                   
                   {/* Rating and Reviews */}
@@ -302,21 +365,12 @@ const Products = ({ query, filters, sort, searchTerm }) => {
                 </div>
 
                 {/* Wholesale Info */}
-                <div className={`${
-                  product.brand?.toLowerCase() === 'cornells' 
-                    ? 'bg-gradient-to-r from-rose-50 to-purple-50 border border-rose-100' 
-                    : product.brand?.toLowerCase() === 'saffron'
-                    ? 'bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-100'
-                    : 'bg-gradient-to-r from-red-50 to-rose-50 border border-red-100'
-                } rounded-lg p-4`}>
+                <div className={`bg-gradient-to-r ${getBrandGradient(product.brand)} bg-opacity-10 rounded-lg p-4`}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-gray-600">
                       {product.wholesalePrice ? 'Wholesale Price' : 'Price'}
                     </span>
-                    <span className={`text-lg font-bold ${
-                      product.brand?.toLowerCase() === 'cornells' ? 'text-rose-600' :
-                      product.brand?.toLowerCase() === 'saffron' ? 'text-orange-600' : 'text-red-600'
-                    }`}>
+                    <span className={`text-lg font-bold ${getBrandColor(product.brand).split(' ')[0]}`}>
                       {formatPrice(displayPrice)}
                     </span>
                   </div>
@@ -347,20 +401,14 @@ const Products = ({ query, filters, sort, searchTerm }) => {
                 <div className="flex space-x-3">
                   <Link
                     to="/wholesale-request"
-                    className={`flex-1 ${
-                      product.brand?.toLowerCase() === 'cornells'
-                        ? 'bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-700 hover:to-purple-700'
-                        : product.brand?.toLowerCase() === 'saffron'
-                        ? 'bg-gradient-to-r from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700'
-                        : 'bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700'
-                    } text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2`}
+                    className={`flex-1 bg-gradient-to-r ${getBrandGradient(product.brand)} text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2`}
                   >
                     <FaShoppingCart className="w-4 h-4" />
                     <span>Order</span>
                   </Link>
                   <Link
                     to="/contact"
-                    className="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-red-400 hover:text-red-600 transition-all duration-300 flex items-center justify-center space-x-2"
+                    className="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-blue-400 hover:text-blue-600 transition-all duration-300 flex items-center justify-center space-x-2"
                   >
                     <span>Quote</span>
                   </Link>
@@ -372,9 +420,6 @@ const Products = ({ query, filters, sort, searchTerm }) => {
                 }`}>
                   <FaCheck className="w-4 h-4" />
                   <span>{product.inStock !== false ? 'In Stock' : 'Out of Stock'}</span>
-                  {product.brand?.toLowerCase() === 'cornells' && product.inStock !== false && (
-                    <span className="text-rose-500 text-xs">• Global Quality</span>
-                  )}
                 </div>
               </div>
             </div>
@@ -383,7 +428,7 @@ const Products = ({ query, filters, sort, searchTerm }) => {
       </div>
 
       {/* Enhanced Call to Action */}
-      <div className="mt-16 bg-gradient-to-r from-slate-900 via-red-900 to-purple-900 rounded-2xl p-8 text-center text-white overflow-hidden relative">
+      <div className="mt-16 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 rounded-2xl p-8 text-center text-white overflow-hidden relative">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-white rounded-full blur-2xl"></div>
@@ -392,20 +437,20 @@ const Products = ({ query, filters, sort, searchTerm }) => {
         
         <div className="relative z-10">
           <h3 className="text-3xl font-bold mb-4">Ready to Place a Wholesale Order?</h3>
-          <p className="text-red-100 mb-8 max-w-3xl mx-auto text-lg">
+          <p className="text-blue-100 mb-8 max-w-3xl mx-auto text-lg">
             Join hundreds of successful retailers and distributors who trust Rekker for quality products, 
-            competitive wholesale prices, and authentic global brands like Cornells.
+            competitive wholesale prices, and authentic brands.
           </p>
           
           {/* Stats */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <div className="text-2xl font-bold mb-1">1000+</div>
-              <div className="text-red-200 text-sm">Happy Retailers</div>
+              <div className="text-blue-200 text-sm">Happy Retailers</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-              <div className="text-2xl font-bold mb-1">30+</div>
-              <div className="text-purple-200 text-sm">Product Categories</div>
+              <div className="text-2xl font-bold mb-1">{products.length}+</div>
+              <div className="text-purple-200 text-sm">Products Available</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <div className="text-2xl font-bold mb-1">47</div>
@@ -416,7 +461,7 @@ const Products = ({ query, filters, sort, searchTerm }) => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/wholesale-request"
-              className="inline-flex items-center justify-center space-x-2 bg-white text-red-600 px-8 py-4 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
+              className="inline-flex items-center justify-center space-x-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
             >
               <FaShoppingCart className="w-5 h-5" />
               <span>Start Wholesale Request</span>
@@ -424,17 +469,27 @@ const Products = ({ query, filters, sort, searchTerm }) => {
             </Link>
             <Link
               to="/contact"
-              className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-red-600 transition-all duration-300"
+              className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300"
             >
               <span>Contact Sales Team</span>
             </Link>
           </div>
           
-          <div className="mt-6 text-red-200 text-sm">
+          <div className="mt-6 text-blue-200 text-sm">
             <p>*Competitive pricing available for established retailers. Special rates for bulk orders.</p>
           </div>
         </div>
       </div>
+
+      {/* CSS for line clamp */}
+      <style jsx>{`
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </div>
   );
 };
