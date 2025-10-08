@@ -1,12 +1,15 @@
-// /home/jkeiyuru/Development/cornells/FullStackBeautyStore/Backend/routes/auth.route.js
+// Backend/routes/auth.route.js - Updated with Admin Registration
 import express from "express";
 import {
   registerUser,
+  registerAdmin,
   loginUser,
-  logOut,
-  verifyToken,
-  refreshToken,
-  forgotPassword
+  // logOut,
+  // verifyToken,
+  // refreshToken,
+  forgotPassword,
+  // changePassword,
+  updateProfile
 } from "../controllers/auth.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 import rateLimit from "express-rate-limit";
@@ -38,25 +41,56 @@ const forgotPasswordLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// REGISTER ROUTE - Join Cornells exclusive community
+const adminRegisterLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3, // limit to 3 admin registration attempts per hour
+  message: {
+    success: false,
+    message: "Too many admin registration attempts. Please try again later.",
+    error: "ADMIN_REGISTER_LIMIT_EXCEEDED"
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// ================================
+// PUBLIC ROUTES
+// ================================
+
+// REGISTER ROUTE - Join Rekker (Client)
 router.post("/register", authLimiter, registerUser);
 
-// LOGIN ROUTE - Access your exclusive collection
+// REGISTER ADMIN ROUTE - Create admin account (requires admin code)
+router.post("/register-admin", adminRegisterLimiter, registerAdmin);
+
+// LOGIN ROUTE - Access your account
 router.post("/login", authLimiter, loginUser);
 
-// LOGOUT ROUTE - Secure departure from Cornells experience
-router.post("/logout", protect, logOut);
-
-// VERIFY TOKEN ROUTE - Validate exclusive access
-router.get("/verify", protect, verifyToken);
-
-// REFRESH TOKEN ROUTE - Maintain seamless luxury experience
-router.post("/refresh", protect, refreshToken);
-
-// FORGOT PASSWORD ROUTE - Recover your exclusive account
+// FORGOT PASSWORD ROUTE - Recover your account
 router.post("/forgot-password", forgotPasswordLimiter, forgotPassword);
 
-// Additional luxury authentication routes for enhanced security
+// ================================
+// PROTECTED ROUTES (require authentication)
+// ================================
+
+// LOGOUT ROUTE - Secure departure
+router.post("/logout", protect, logOut);
+
+// VERIFY TOKEN ROUTE - Validate access
+router.get("/verify", protect, verifyToken);
+
+// REFRESH TOKEN ROUTE - Maintain session
+router.post("/refresh", protect, refreshToken);
+
+// CHANGE PASSWORD ROUTE - Update password (for logged-in users)
+router.post("/change-password", protect, changePassword);
+
+// UPDATE PROFILE ROUTE - Update user information
+router.put("/profile", protect, updateProfile);
+
+// ================================
+// UTILITY ROUTES
+// ================================
 
 // Route to check if email is available for registration
 router.post("/check-email", rateLimit({
@@ -83,8 +117,8 @@ router.post("/check-email", rateLimit({
       success: true,
       available: !userExists,
       message: userExists 
-        ? "This email is already part of our exclusive community" 
-        : "Email is available for your Cornells account"
+        ? "This email is already registered with Rekker" 
+        : "Email is available for your Rekker account"
     });
   } catch (error) {
     res.status(500).json({
@@ -121,8 +155,36 @@ router.post("/validate-password", (req, res) => {
     valid: isValid,
     strength: strength,
     message: isValid 
-      ? "Password meets Cornells security standards" 
+      ? "Password meets Rekker security standards" 
       : "Password requires enhancement for premium security"
+  });
+});
+
+// Route to validate admin code (without creating account)
+router.post("/validate-admin-code", rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  message: "Too many validation attempts"
+}), (req, res) => {
+  const { adminCode } = req.body;
+  
+  if (!adminCode) {
+    return res.status(400).json({
+      success: false,
+      message: "Admin code is required"
+    });
+  }
+
+  const ADMIN_REGISTRATION_CODE = process.env.ADMIN_REGISTRATION_CODE || "REKKER_ADMIN_2024";
+  
+  const isValid = adminCode === ADMIN_REGISTRATION_CODE;
+  
+  res.status(200).json({
+    success: true,
+    valid: isValid,
+    message: isValid 
+      ? "Admin code is valid" 
+      : "Invalid admin code"
   });
 });
 

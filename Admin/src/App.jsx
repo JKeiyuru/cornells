@@ -19,6 +19,7 @@ import Logs from "./pages/Logs";
 //import QuoteRequests from "./pages/QuoteRequests";
 //import BusinessRegistrations from "./pages/BusinessRegistrations";
 import { userRequest } from "./requestMethods";
+import Register from "./pages/Register";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -130,6 +131,10 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "/register",
+      element: <Register />,
     },
     {
       path: "/",

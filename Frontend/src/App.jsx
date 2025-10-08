@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/no-unknown-property */
@@ -10,13 +11,13 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import { RouterProvider, createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 import Product from "./pages/Product";
-import Cart from "./pages/Cart";
+// import Cart from "./pages/Cart";
 import Order from "./pages/Order";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+// import Login from "./pages/Login";
+// import Register from "./pages/Register";
 import ProductList from "./pages/ProductList";
-import Checkout from "./pages/Checkout";
-import Account from "./pages/Account";
+// import Checkout from "./pages/Checkout";
+// import Account from "./pages/Account";
 
 // New Rekker Pages
 import About from "./pages/About";
@@ -276,22 +277,22 @@ function App() {
           path: "/product/:id",
           element: <Product />,
         },
-        {
-          path: "/cart",
-          element: (
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "/checkout",
-          element: (
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          ),
-        },
+        // {
+        //   path: "/cart",
+        //   element: (
+        //     <ProtectedRoute>
+        //       <Cart />
+        //     </ProtectedRoute>
+        //   ),
+        // },
+        // {
+        //   path: "/checkout",
+        //   element: (
+        //     <ProtectedRoute>
+        //       <Checkout />
+        //     </ProtectedRoute>
+        //   ),
+        // },
         {
           path: "/orders",
           element: (
@@ -300,14 +301,14 @@ function App() {
             </ProtectedRoute>
           ),
         },
-        {
-          path: "/myAccount",
-          element: (
-            <ProtectedRoute>
-              <Account />
-            </ProtectedRoute>
-          ),
-        },
+        // {
+        //   path: "/myAccount",
+        //   element: (
+        //     <ProtectedRoute>
+        //       <Account />
+        //     </ProtectedRoute>
+        //   ),
+        // },
         {
           path: "/products/:category",
           element: <ProductList />,
@@ -320,22 +321,22 @@ function App() {
       ],
     },
     // Authentication Routes (separate layout)
-    {
-      path: "/login",
-      element: (
-        <PublicRoute>
-          <Login />
-        </PublicRoute>
-      ),
-    },
-    {
-      path: "/create-account",
-      element: (
-        <PublicRoute>
-          <Register />
-        </PublicRoute>
-      ),
-    },
+    // {
+    //   path: "/login",
+    //   element: (
+    //     <PublicRoute>
+    //       <Login />
+    //     </PublicRoute>
+    //   ),
+    // },
+    // {
+    //   path: "/create-account",
+    //   element: (
+    //     <PublicRoute>
+    //       <Register />
+    //     </PublicRoute>
+    //   ),
+    // },
   ]);
 
   // Show loading screen while app initializes

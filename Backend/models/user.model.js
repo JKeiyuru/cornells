@@ -263,8 +263,8 @@ const userSchema = mongoose.Schema(
     // System fields
     role: {
       type: String,
-      enum: ["user", "admin", "moderator", "vip"],
-      default: "user"
+      enum: ["admin", "moderator"],
+      default: "admin"
     },
 
     status: {
