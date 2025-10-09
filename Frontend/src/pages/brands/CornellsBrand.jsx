@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 // pages/brands/CornellsBrand.jsx - Updated with deep burgundy theme (#7c2724) and background images
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   FaLeaf, 
   FaHeart, 
@@ -17,14 +18,416 @@ import {
   FaSun,
   FaHandHoldingHeart ,
   FaSeedling,
-  FaGem
+  FaGem,
+  FaBook,
+  FaChevronLeft,
+  FaChevronRight,
+  FaExpand, 
+  FaCompress
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+
+
+// Brochure Flipbook Component
+const BrochureFlipbook = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [nextPage, setNextPage] = useState(0);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(true);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const containerRef = useRef(null);
+  const imageRef = useRef(null);
+
+  const brochurePages = [
+    {
+      id: 0,
+      title: "Bold & Beautiful Collection",
+      image: "/images/cornellscategoryimages/BOLD_AND_BEAUTIFUL_BLOG.jpg",
+      description: "Body Lotions & Care",
+      products: [
+        "Bold & Beautiful Vanilla Lotion 400ml",
+        "Bold & Beautiful Cocoa Butter Lotion 400ml",
+        "Bold & Beautiful Shea Butter Lotion 400ml"
+      ]
+    },
+    {
+      id: 1,
+      title: "Cute & Pretty Collection",
+      image: "/images/cornellscategoryimages/CUTE_AND_PRETTY_s.jpg",
+      description: "Kids & Family Care",
+      products: [
+        "Cute & Pretty Baby Lotion 200ml",
+        "Cute & Pretty Kids Sunscreen SPF 50+ 100ml",
+        "Cute & Pretty Baby Wash 250ml"
+      ]
+    },
+    {
+      id: 2,
+      title: "Dark & Beautiful Collection",
+      image: "/images/cornellscategoryimages/DARK_AND_BEAUTIFUL.jpg",
+      description: "Hair Care Excellence",
+      products: [
+        "Dark & Beautiful Hair Oil 250ml",
+        "Dark & Beautiful Shampoo 400ml",
+        "Dark & Beautiful Conditioner 400ml"
+      ]
+    },
+    {
+      id: 3,
+      title: "Super Food Collection",
+      image: "/images/cornellscategoryimages/SUPER_FOOD.jpg",
+      description: "Nutritive Wellness",
+      products: [
+        "Super Food Vitamin C Serum 30ml",
+        "Super Food Body Scrub 200ml",
+        "Super Food Face Mask 150ml"
+      ]
+    }
+  ];
+
+  useEffect(() => {
+    if (!autoPlay) return;
+
+    const interval = setInterval(() => {
+      handleNextPage();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [currentPage, autoPlay]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const handleMouseMove = (e) => {
+    if (!imageRef.current) return;
+    const rect = imageRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleNextPage = () => {
+    if (isFlipping) return;
+    const next = (currentPage + 1) % brochurePages.length;
+    setNextPage(next);
+    setIsFlipping(true);
+    setTimeout(() => {
+      setCurrentPage(next);
+      setIsFlipping(false);
+    }, 800);
+  };
+
+  const handlePrevPage = () => {
+    if (isFlipping) return;
+    const prev = (currentPage - 1 + brochurePages.length) % brochurePages.length;
+    setNextPage(prev);
+    setIsFlipping(true);
+    setTimeout(() => {
+      setCurrentPage(prev);
+      setIsFlipping(false);
+    }, 800);
+  };
+
+  const goToPage = (pageIndex) => {
+    if (isFlipping || pageIndex === currentPage) return;
+    setNextPage(pageIndex);
+    setIsFlipping(true);
+    setTimeout(() => {
+      setCurrentPage(pageIndex);
+      setIsFlipping(false);
+    }, 800);
+  };
+
+  const toggleFullscreen = async () => {
+    if (!document.fullscreenElement) {
+      await containerRef.current?.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  };
+
+  const PageContent = ({ page }) => (
+    <div 
+      ref={imageRef}
+      className="aspect-[4/3] sm:aspect-[16/10] bg-cover bg-center relative cursor-pointer"
+      style={{
+        backgroundImage: `url(${page.image})`,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {/* Interactive Ripple Effect */}
+      {isHovering && (
+        <>
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute pointer-events-none"
+              style={{
+                left: mousePos.x,
+                top: mousePos.y,
+                width: '40px',
+                height: '40px',
+                border: `2px solid rgba(255, 255, 255, ${0.6 - i * 0.2})`,
+                borderRadius: '50%',
+                transform: `translate(-50%, -50%) scale(${1 + i * 0.5})`,
+                transition: 'all 0.1s ease-out',
+                animation: `ripple ${1 + i * 0.3}s infinite`
+              }}
+            />
+          ))}
+        </>
+      )}
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+      
+      {/* Page Content */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 text-white">
+        <h3 className="text-2xl sm:text-4xl font-bold mb-2 drop-shadow-lg">
+          {page.title}
+        </h3>
+        <p className="text-base sm:text-xl text-red-200 mb-4 drop-shadow-md">
+          {page.description}
+        </p>
+        
+        <div className="grid sm:grid-cols-2 gap-2 sm:gap-3">
+          {page.products.map((product, idx) => (
+            <div key={idx} className="flex items-center space-x-2 text-xs sm:text-sm bg-black/30 backdrop-blur-sm rounded-lg p-2">
+              <FaCheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-300 flex-shrink-0" />
+              <span className="drop-shadow-sm">{product}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Page number */}
+      <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-white font-bold text-sm">
+        {page.id + 1}
+      </div>
+    </div>
+  );
+
+  return (
+    <div 
+      ref={containerRef}
+      className={`relative mx-auto ${isFullscreen ? 'w-screen h-screen flex items-center justify-center bg-black p-8' : 'max-w-6xl'}`}
+    >
+      <style>{`
+        @keyframes flipForward {
+          0% {
+            transform: perspective(2000px) rotateY(0deg);
+          }
+          100% {
+            transform: perspective(2000px) rotateY(-180deg);
+          }
+        }
+        
+        @keyframes flipBackward {
+          0% {
+            transform: perspective(2000px) rotateY(180deg);
+          }
+          100% {
+            transform: perspective(2000px) rotateY(0deg);
+          }
+        }
+        
+        .flip-forward {
+          animation: flipForward 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+          transform-origin: left center;
+        }
+        
+        .flip-backward {
+          animation: flipBackward 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+          transform-origin: right center;
+        }
+        
+        .page-shadow {
+          box-shadow: 
+            -10px 0 20px rgba(0, 0, 0, 0.2),
+            10px 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes ripple {
+          0% {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0.8;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(4);
+            opacity: 0;
+          }
+        }
+
+        .ripple {
+          animation: ripple 0.8s ease-out;
+        }
+
+        .page-back {
+          transform: rotateY(180deg);
+          backface-visibility: hidden;
+        }
+
+        .page-front {
+          backface-visibility: hidden;
+        }
+      `}</style>
+
+      <div className={`relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl shadow-2xl overflow-hidden ${isFullscreen ? 'w-full max-w-7xl h-full flex flex-col p-8' : 'p-4 sm:p-8'}`}>
+        
+        {/* Control Bar */}
+        <div className="flex justify-between items-center mb-6 px-4 sm:px-0 flex-shrink-0">
+          <button
+            onClick={() => setAutoPlay(!autoPlay)}
+            className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-semibold hover:bg-white transition-all duration-300 flex items-center space-x-2 z-10"
+            style={{color: '#7c2724'}}
+          >
+            <span>{autoPlay ? '⏸️' : '▶️'}</span>
+            <span className="hidden sm:inline">{autoPlay ? 'Pause' : 'Play'}</span>
+          </button>
+
+          <div className="flex items-center space-x-4">
+            <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-semibold text-gray-700">
+              <FaBook className="inline mr-2" />
+              Page {currentPage + 1} / {brochurePages.length}
+            </div>
+            
+            <button
+              onClick={toggleFullscreen}
+              className="bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-all duration-300 z-10"
+              style={{color: '#7c2724'}}
+              title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+            >
+              {isFullscreen ? <FaCompress className="w-4 h-4" /> : <FaExpand className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Book Container */}
+        <div className={`relative ${isFullscreen ? 'flex-1 flex items-center justify-center min-h-0' : ''}`}>
+          <div className="relative" style={{ perspective: '2000px' }}>
+            {/* Base Page (visible when not flipping or after flip) */}
+            <div className={`relative bg-white rounded-2xl page-shadow overflow-hidden ${isFlipping ? 'invisible' : 'visible'}`}>
+              <PageContent page={brochurePages[currentPage]} />
+            </div>
+
+            {/* Flipping Page (visible during flip animation) */}
+            {isFlipping && (
+              <div 
+                className="absolute inset-0 bg-white rounded-2xl page-shadow overflow-hidden flip-forward"
+                style={{
+                  transformStyle: 'preserve-3d',
+                }}
+              >
+                {/* Front of flipping page (current page) */}
+                <div className="absolute inset-0 page-front">
+                  <PageContent page={brochurePages[currentPage]} />
+                </div>
+                
+                {/* Back of flipping page (next page, mirrored) */}
+                <div className="absolute inset-0 page-back">
+                  <PageContent page={brochurePages[nextPage]} />
+                </div>
+              </div>
+            )}
+
+            {/* Book Spine Effect */}
+            <div className="absolute left-0 top-0 bottom-0 w-4 sm:w-8 bg-gradient-to-r from-gray-900/80 via-gray-700/50 to-transparent pointer-events-none rounded-l-2xl z-10"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-4 sm:w-8 bg-gradient-to-l from-gray-900/30 to-transparent pointer-events-none rounded-r-2xl z-10"></div>
+          </div>
+        </div>
+
+        {/* Navigation Controls */}
+        <div className="flex items-center justify-between mt-6 gap-4 px-4 sm:px-0 flex-shrink-0">
+          <button
+            onClick={handlePrevPage}
+            disabled={isFlipping}
+            className="flex items-center space-x-2 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed px-4 sm:px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg z-10"
+            style={{color: '#7c2724'}}
+          >
+            <FaChevronLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Previous</span>
+          </button>
+
+          <div className="flex space-x-2">
+            {brochurePages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToPage(index)}
+                className={`h-2 sm:h-3 rounded-full transition-all duration-300 ${
+                  currentPage === index 
+                    ? 'w-6 sm:w-8' 
+                    : 'w-2 sm:w-3 hover:bg-white/70'
+                }`}
+                style={{
+                  backgroundColor: currentPage === index ? '#7c2724' : 'rgba(255,255,255,0.5)'
+                }}
+                aria-label={`Go to page ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={handleNextPage}
+            disabled={isFlipping}
+            className="flex items-center space-x-2 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed px-4 sm:px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg z-10"
+            style={{color: '#7c2724'}}
+          >
+            <span className="hidden sm:inline">Next</span>
+            <FaChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Collection Quick Links */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mt-6 px-4 sm:px-0 flex-shrink-0">
+          {brochurePages.map((page, index) => (
+            <button
+              key={page.id}
+              onClick={() => goToPage(index)}
+              className={`p-3 sm:p-4 rounded-xl text-left transition-all duration-300 ${
+                currentPage === index
+                  ? 'bg-white text-gray-900 shadow-lg transform scale-105'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              <div className="text-xs sm:text-sm font-semibold mb-1 truncate">{page.title}</div>
+              <div className="text-xs opacity-70 truncate">{page.description}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Brochure Download/Contact */}
+      {!isFullscreen && (
+        <div className="mt-8 text-center">
+          <p className="text-gray-600 text-sm mb-4">
+            Want a full PDF brochure or need more information about specific products?
+          </p>
+          <a
+            href="/contact"
+            className="inline-flex items-center space-x-2 text-sm font-semibold hover:underline"
+            style={{color: '#7c2724'}}
+          >
+            <span>Contact our sales team</span>
+            <FaArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const CornellsBrand = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activeCollection, setActiveCollection] = useState(0);
-  const [featuredProduct, setFeaturedProduct] = useState(0);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -198,54 +601,6 @@ const CornellsBrand = () => {
     }
   ];
 
-  // Best Sellers section with updated pricing colors
-  const bestSellers = [
-    {
-      name: "Bold & Beautiful Shea Butter Lotion",
-      collection: "Bold & Beautiful",
-      price: "KSh 280",
-      originalPrice: "KSh 320",
-      discount: "12% OFF",
-      rating: 4.8,
-      reviews: 2847,
-      moq: "24 units",
-      image: "/placeholder/cornells-bold-beautiful.jpg"
-    },
-    {
-      name: "Dark & Beautiful Hair Treatment Oil",
-      collection: "Dark & Beautiful", 
-      price: "KSh 240",
-      originalPrice: "KSh 280",
-      discount: "14% OFF",
-      rating: 4.9,
-      reviews: 1926,
-      moq: "30 units",
-      image: "/placeholder/cornells-hair-oil.jpg"
-    },
-    {
-      name: "Super Food Vitamin E Face Cream",
-      collection: "Super Food",
-      price: "KSh 380", 
-      originalPrice: "KSh 420",
-      discount: "10% OFF",
-      rating: 4.7,
-      reviews: 1534,
-      moq: "20 units",
-      image: "/placeholder/cornells-vitamin-e.jpg"
-    },
-    {
-      name: "Cute & Pretty Baby Care Set",
-      collection: "Cute & Pretty",
-      price: "KSh 450",
-      originalPrice: "KSh 520", 
-      discount: "13% OFF",
-      rating: 4.9,
-      reviews: 987,
-      moq: "18 units",
-      image: "/placeholder/cornells-baby-set.jpg"
-    }
-  ];
-
   const testimonials = [
     {
       name: "Grace Wanjiru",
@@ -268,13 +623,12 @@ const CornellsBrand = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-red-25 to-red-50/20">
-      {/* Hero Section - Updated with burgundy theme */}
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50/20">
+      {/* Hero Section */}
       <div className={`relative min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-900 transition-all duration-1000 ${isLoaded ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-8'}`} style={{backgroundColor: '#7c2724'}}>
-        {/* Background Pattern */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-red-500/10 to-red-600/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-red-600/10 to-red-700/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-red-600/10 to-red-700/10 rounded-full blur-3xl animate-pulse"></div>
         </div>
 
         <div className="container mx-auto px-6 relative z-10 flex items-center min-h-screen">
@@ -286,52 +640,49 @@ const CornellsBrand = () => {
                   <span className="text-red-100 font-medium">Global Beauty. Local Excellence.</span>
                 </div>
                 
-                <h1 className="text-7xl font-bold text-white mb-6 leading-tight">
+                <h1 className="text-5xl sm:text-7xl font-bold text-white mb-6 leading-tight">
                   Cornells
-                  <span className="block text-4xl font-light text-red-200 mt-2">Wellness</span>
+                  <span className="block text-3xl sm:text-4xl font-light text-red-200 mt-2">Wellness</span>
                 </h1>
                 
                 <div className="w-24 h-1 bg-gradient-to-r from-red-400 to-red-300 mb-8 mx-auto lg:mx-0"></div>
                 
-                <p className="text-2xl text-red-100 leading-relaxed mb-8 max-w-2xl">
+                <p className="text-lg sm:text-2xl text-red-100 leading-relaxed mb-8">
                   Experience the beauty of wellness with our globally trusted, 
                   <span className="font-semibold text-white"> cruelty-free products</span> now exclusively 
                   available in Kenya through Rekker.
                 </p>
               </div>
 
-              {/* Global Stats Preview */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
                 {globalStats.map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-3xl font-bold text-white mb-1">{stat.number}</div>
-                    <div className="text-red-200 text-sm font-medium">{stat.label}</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-white mb-1">{stat.number}</div>
+                    <div className="text-red-200 text-xs sm:text-sm font-medium">{stat.label}</div>
                   </div>
                 ))}
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link
-                  to="#collections"
-                  className="inline-flex items-center justify-center space-x-2 bg-white hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-xl px-8 py-4 rounded-xl font-bold text-lg"
+                <a
+                  href="#product-brochure"
+                  className="inline-flex items-center justify-center space-x-2 bg-white hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-xl px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg"
                   style={{color: '#7c2724'}}
+                >
+                  <FaBook className="w-5 h-5" />
+                  <span>View Brochure</span>
+                </a>
+                <a
+                  href="#collections"
+                  className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-white hover:text-red-900 transition-all duration-300"
                 >
                   <FaEye className="w-5 h-5" />
                   <span>Explore Collections</span>
-                </Link>
-                <Link
-                  to="/wholesale-request"
-                  className="inline-flex items-center justify-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white transition-all duration-300"
-                  style={{'&:hover': {color: '#7c2724'}}}
-                >
-                  <FaShoppingCart className="w-5 h-5" />
-                  <span>Wholesale Order</span>
-                </Link>
+                </a>
               </div>
             </div>
 
-            {/* Product Showcase - Updated colors */}
-            <div className="relative">
+            <div className="relative hidden lg:block">
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-6">
                   <div className="aspect-square bg-gradient-to-br from-red-200 to-red-300 rounded-3xl shadow-2xl overflow-hidden">
@@ -378,7 +729,6 @@ const CornellsBrand = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/70 animate-bounce">
           <div className="text-center">
             <div className="w-px h-16 bg-white/30 mx-auto mb-2"></div>
@@ -392,28 +742,27 @@ const CornellsBrand = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-5xl font-bold text-gray-900 mb-6">Global Beauty, Local Excellence</h2>
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">Global Beauty, Local Excellence</h2>
               <div className="w-24 h-1 bg-gradient-to-r mx-auto mb-8" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}></div>
-              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
                 With a presence in 90+ countries, we spread beauty and innovation worldwide, fostering connections and making a positive impact across diverse markets.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-16">
               {globalStats.map((stat, index) => (
                 <div key={index} className="text-center group">
-                  <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-red-200 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300" style={{color: '#7c2724'}}>
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-100 to-red-200 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300" style={{color: '#7c2724'}}>
                     {stat.icon}
                   </div>
-                  <div className="text-4xl font-bold text-gray-900 mb-2">{stat.number}</div>
-                  <div className="text-lg font-semibold text-gray-700 mb-1">{stat.label}</div>
-                  <div className="text-sm text-gray-500">{stat.description}</div>
+                  <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stat.number}</div>
+                  <div className="text-base sm:text-lg font-semibold text-gray-700 mb-1">{stat.label}</div>
+                  <div className="text-xs sm:text-sm text-gray-500">{stat.description}</div>
                 </div>
               ))}
             </div>
 
-            {/* Core Values */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {coreValues.map((value, index) => (
                 <div key={index} className="bg-gradient-to-br from-gray-50 to-red-50/30 rounded-xl p-6 text-center hover:shadow-lg transition-all duration-300">
                   <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-4" style={{color: '#7c2724'}}>
@@ -428,87 +777,41 @@ const CornellsBrand = () => {
         </div>
       </section>
 
-      {/* Best Sellers Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-red-50/30" id="best-sellers">
+      {/* Interactive Product Brochure Section - REPLACES Best Sellers */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-red-50/30" id="product-brochure">
         <div className="container mx-auto px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">Best Sellers</h2>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">Interactive Product Brochure</h2>
               <div className="w-24 h-1 bg-gradient-to-r mx-auto mb-8" style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}></div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Our most loved products trusted by millions worldwide, now available for wholesale in Kenya
+                Explore our complete product range through our interactive digital brochure - just like flipping through a real catalog
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {bestSellers.map((product, index) => (
-                <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group overflow-hidden">
-                  {/* Product Image */}
-                  <div className="relative aspect-square bg-gradient-to-br from-gray-100 to-red-100/30 overflow-hidden">
-                    <div className="absolute top-4 left-4 text-white px-3 py-1 rounded-full text-xs font-bold" style={{backgroundColor: '#7c2724'}}>
-                      {product.discount}
-                    </div>
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2">
-                      <div className="flex items-center space-x-1">
-                        <FaStar className="w-3 h-3 text-yellow-400" />
-                        <span className="text-xs font-bold text-gray-700">{product.rating}</span>
-                      </div>
-                    </div>
-                    <div className="h-full flex items-center justify-center p-8">
-                      <div className="text-center text-gray-500">
-                        <FaGem className="w-20 h-20 mx-auto mb-4" />
-                        <p className="font-medium text-sm">{product.name}</p>
-                      </div>
-                    </div>
-                  </div>
+            {/* Brochure Flipbook Component */}
+            <BrochureFlipbook />
 
-                  {/* Product Info */}
-                  <div className="p-6 space-y-4">
-                    <div>
-                      <div className="text-xs font-medium mb-2" style={{color: '#7c2724'}}>{product.collection}</div>
-                      <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2">{product.name}</h3>
-                      <div className="flex items-center space-x-2 text-sm text-gray-500 mb-3">
-                        <FaStar className="w-3 h-3 text-yellow-400" />
-                        <span>{product.rating}</span>
-                        <span>({product.reviews} reviews)</span>
-                      </div>
-                    </div>
-
-                    {/* Pricing */}
-                    <div className="bg-red-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-600">Wholesale Price</span>
-                        <div className="text-right">
-                          <div className="text-lg font-bold" style={{color: '#7c2724'}}>{product.price}</div>
-                          <div className="text-xs text-gray-500 line-through">{product.originalPrice}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Min. Order</span>
-                        <span className="font-semibold text-gray-900">{product.moq}</span>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex space-x-2">
-                      <Link
-                        to="/wholesale-request"
-                        className="flex-1 text-white py-3 rounded-lg font-semibold text-center hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                        style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}
-                      >
-                        Order
-                      </Link>
-                      <Link
-                        to="/contact"
-                        className="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold text-center hover:border-red-400 transition-all duration-300"
-                        style={{'&:hover': {color: '#7c2724', borderColor: '#7c2724'}}}
-                      >
-                        Quote
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            {/* Call to Action Below Brochure */}
+            <div className="mt-12 text-center">
+              <p className="text-gray-600 mb-6 text-lg">Ready to stock these premium products in your store?</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="/wholesale-request"
+                  className="inline-flex items-center justify-center space-x-2 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  style={{background: 'linear-gradient(to right, #7c2724, #a0312a)'}}
+                >
+                  <FaShoppingCart className="w-5 h-5" />
+                  <span>Request Wholesale Order</span>
+                </a>
+                <a
+                  href="/contact"
+                  className="inline-flex items-center justify-center space-x-2 border-2 text-gray-700 px-8 py-4 rounded-xl font-semibold hover:border-red-600 hover:text-red-600 transition-all duration-300"
+                  style={{borderColor: '#7c2724'}}
+                >
+                  <span>Get Custom Quote</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -546,17 +849,14 @@ const CornellsBrand = () => {
 
             {/* Active Collection Details with Background Image */}
             <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 group min-h-96">
-              {/* Background Image with Gradient Fallback */}
               <div 
                 className={`absolute inset-0 bg-cover bg-center bg-no-repeat ${productCollections[activeCollection].backgroundImage ? '' : `bg-gradient-to-br ${productCollections[activeCollection].color}`}`}
                 style={productCollections[activeCollection].backgroundImage ? 
                   { backgroundImage: `url(${productCollections[activeCollection].backgroundImage})` } : {}}
               />
               
-              {/* Overlay for text readability */}
               <div className={`absolute inset-0 ${productCollections[activeCollection].overlay} transition-all duration-300 group-hover:bg-black/60`} />
               
-              {/* Content */}
               <div className="relative z-10 p-8 lg:p-12 flex flex-col justify-between text-white min-h-96">
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                   <div className="space-y-8">
@@ -572,7 +872,6 @@ const CornellsBrand = () => {
                       </p>
                     </div>
 
-                    {/* Collection Products */}
                     <div className="space-y-6">
                       {productCollections[activeCollection].products.map((product, index) => (
                         <div key={index} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300">
@@ -601,24 +900,23 @@ const CornellsBrand = () => {
                     </div>
 
                     <div className="flex space-x-4">
-                      <Link
-                        to="/wholesale-request"
+                      <a
+                        href="/wholesale-request"
                         className="inline-flex items-center space-x-2 bg-white text-red-800 px-8 py-4 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
                       >
                         <FaShoppingCart className="w-5 h-5" />
                         <span>Order Collection</span>
                         <FaArrowRight className="w-4 h-4" />
-                      </Link>
-                      <Link
-                        to="/contact"
+                      </a>
+                      <a
+                        href="/contact"
                         className="inline-flex items-center space-x-2 border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-red-800 transition-all duration-300"
                       >
                         <span>Get Quote</span>
-                      </Link>
+                      </a>
                     </div>
                   </div>
 
-                  {/* Collection Visual */}
                   <div className="relative">
                     <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
                       <div className="text-center">
@@ -763,16 +1061,15 @@ const CornellsBrand = () => {
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-5xl mx-auto">
             <div className="mb-12">
-              <h2 className="text-5xl font-bold text-white mb-6">
+              <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
                 Ready to Transform Your Beauty Business?
               </h2>
-              <p className="text-2xl text-red-100 leading-relaxed">
+              <p className="text-xl sm:text-2xl text-red-100 leading-relaxed">
                 Join Kenya's most successful beauty retailers who trust Cornells for premium quality, 
                 global recognition, and exceptional profit margins.
               </p>
             </div>
 
-            {/* Key Benefits */}
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 <FaGlobe className="w-12 h-12 text-red-300 mx-auto mb-4" />
@@ -792,22 +1089,21 @@ const CornellsBrand = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Link
-                to="/wholesale-request"
+              <a
+                href="/wholesale-request"
                 className="inline-flex items-center justify-center space-x-3 bg-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-2xl"
                 style={{color: '#7c2724'}}
               >
                 <FaShoppingCart className="w-6 h-6" />
                 <span>Start Wholesale Order</span>
                 <FaArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center justify-center space-x-3 border-3 border-white text-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-white transition-all duration-300"
-                style={{'&:hover': {color: '#7c2724'}}}
+              </a>
+              <a
+                href="/contact"
+                className="inline-flex items-center justify-center space-x-3 border-3 border-white text-white px-10 py-5 rounded-xl font-bold text-xl hover:bg-white hover:text-red-900 transition-all duration-300"
               >
                 <span>Contact Sales Team</span>
-              </Link>
+              </a>
             </div>
 
             <div className="mt-8 text-red-200">

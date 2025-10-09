@@ -18,7 +18,7 @@ export const PRODUCTS_DATABASE = {
     stationery: [
       {
         _id: "REK-STAT-001",
-        title: "Premium Math Set - Student Edition",
+        title: "Transparent Adhesive Tape (48 x 50)",
         brand: "Rekker",
         category: "Stationery",
         subcategory: "Math Tools",
@@ -27,8 +27,8 @@ export const PRODUCTS_DATABASE = {
         wholesalePrice: 220,
         wholesaleMinimumQuantity: 100,
         unit: "pieces",
-        img: "YOUR_IMAGE_URL_HERE", // Upload image and paste URL
-        desc: "Complete math set with compass, protractor, set squares, ruler, pencil, eraser, and sharpener. Durable plastic case. Perfect for students.",
+        img: "https://res.cloudinary.com/du9fhp5iq/image/upload/v1759910345/WhatsApp_Image_2025-10-08_at_10.38.06_3_ezrfm0.jpg", // Upload image and paste URL
+        desc: "This Clear Packaging Tape is an essential tool for all your packing, sealing, and shipping needs. Made from high-quality, durable BOPP material, this transparent adhesive tape provides a strong and reliable seal for cartons, boxes, and packages. With a generous size of 48mm wide and 50m long, it offers excellent coverage and value for both home and office use. The tape unwinds smoothly and adheres quickly to a variety of surfaces, ensuring your items remain secure during transit.",
         inStock: true,
         featured: true,
         tags: ["math", "student", "school", "geometry"],

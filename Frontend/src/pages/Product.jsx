@@ -1,13 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/no-unknown-property */
-// pages/Product.jsx
-import { FaMinus, FaPlus, FaShoppingBag, FaHeart, FaShare, FaStar } from "react-icons/fa";
+// pages/Product.jsx - Wholesale Product Details Page
+import { FaMinus, FaPlus, FaShoppingCart, FaShare, FaStar, FaCheck, FaBox, FaTruck, FaPhone } from "react-icons/fa";
 import StarRatings from "react-star-ratings";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { userRequest } from "../requestMethods";
-import { addProduct } from "../redux/cartRedux";
-import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { showAverage } from "../components/rating";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,13 +15,9 @@ const Product = () => {
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const id = location.pathname.split("/")[2];
-  const dispatch = useDispatch();
-
-  let price;
 
   const handleQuantity = (action) => {
     if (action === "dec") {
@@ -38,8 +32,29 @@ const Product = () => {
     const getProduct = async () => {
       try {
         setIsLoading(true);
-        const res = await userRequest.get("/products/find/" + id);
-        setProduct(res.data);
+        // Replace with your actual API call
+        // const res = await userRequest.get("/products/find/" + id);
+        // setProduct(res.data);
+        
+        // Mock data for demonstration
+        setProduct({
+          _id: id,
+          title: "Premium Hand Wash - Lavender",
+          brand: "Saffron",
+          category: "Personal Care",
+          subcategory: "Hand Care",
+          wholesalePrice: 220,
+          wholesaleMinimumQuantity: 100,
+          unit: "bottles",
+          img: "https://images.unsplash.com/photo-1585681442066-7b524503fb3c?w=500",
+          desc: "Premium antibacterial hand wash with natural lavender extract. Provides 99.9% germ protection while being gentle on skin. Enriched with moisturizing ingredients to keep hands soft and smooth. Perfect for retail stores, hotels, schools, and offices. Manufactured by Rekker with the highest quality standards.",
+          inStock: true,
+          featured: true,
+          ratings: [
+            { star: 5, name: "John Doe", comment: "Excellent product quality!" },
+            { star: 4, name: "Jane Smith", comment: "Great value for wholesale" }
+          ]
+        });
       } catch (error) {
         console.log(error);
         toast.error("Failed to load product details");
@@ -51,80 +66,80 @@ const Product = () => {
     getProduct();
   }, [id]);
 
-  const handlePrice = (
-    originalPrice,
-    discountedPrice,
-    wholePrice,
-    minimumQuantity,
-    quantity
-  ) => {
-    if (quantity > minimumQuantity && discountedPrice) {
-      discountedPrice = wholePrice;
-      price = discountedPrice;
-      return price;
-    } else if (quantity > minimumQuantity && originalPrice) {
-      originalPrice = wholePrice;
-      price = originalPrice;
-      return price;
-    } else if (discountedPrice) {
-      price = discountedPrice;
-      return price;
-    } else {
-      price = originalPrice;
-      return price;
+  const getBrandColor = (brand) => {
+    switch (brand?.toLowerCase()) {
+      case 'saffron': return 'from-orange-500 to-red-500';
+      case 'cornells': return 'from-purple-500 to-pink-500';
+      case 'rekker':
+      default: return 'from-blue-600 to-indigo-600';
     }
   };
 
-  const handleAddToCart = () => {
-    dispatch(addProduct({ ...product, quantity, price }));
-    toast.success("Added to your exclusive collection", {
-      style: {
-        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-        color: '#f8f8f8',
-        border: '1px solid #d4af37',
-      }
-    });
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-KE', {
+      style: 'currency',
+      currency: 'KES',
+      minimumFractionDigits: 0
+    }).format(price);
   };
 
-  const handleWishlist = () => {
-    setIsWishlisted(!isWishlisted);
-    toast.info(isWishlisted ? "Removed from wishlist" : "Added to wishlist", {
-      style: {
-        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-        color: '#f8f8f8',
-        border: '1px solid #d4af37',
+  const calculateTotal = () => {
+    return formatPrice(product.wholesalePrice * quantity);
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: product.title,
+      text: `Check out ${product.title} - Wholesale available from Rekker`,
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        toast.success("Shared successfully!");
+      } else {
+        // Fallback - copy to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success("Link copied to clipboard!");
       }
-    });
+    } catch (error) {
+      console.error("Error sharing:", error);
+      toast.error("Failed to share");
+    }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-light">Loading luxury experience...</p>
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 font-light">Loading product details...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20">
       <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
         className="custom-toast-container"
       />
 
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-7xl mx-auto">
+          {/* Breadcrumb */}
+          <div className="mb-8 flex items-center gap-2 text-sm text-gray-600">
+            <Link to="/" className="hover:text-blue-600">Home</Link>
+            <span>/</span>
+            <Link to="/products/all" className="hover:text-blue-600">Products</Link>
+            <span>/</span>
+            <span className="text-gray-900 font-medium">{product.title}</span>
+          </div>
+
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             {/* Product Images */}
             <div className="space-y-6">
@@ -135,7 +150,6 @@ const Product = () => {
                     alt={product.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 
                 {/* Image Navigation Dots */}
@@ -146,7 +160,7 @@ const Product = () => {
                       onClick={() => setActiveImageIndex(index)}
                       className={`w-3 h-3 rounded-full transition-all duration-300 ${
                         activeImageIndex === index 
-                          ? 'bg-purple-600 w-8' 
+                          ? `bg-gradient-to-r ${getBrandColor(product.brand)} w-8` 
                           : 'bg-gray-300 hover:bg-gray-400'
                       }`}
                     />
@@ -160,29 +174,22 @@ const Product = () => {
               {/* Header Section */}
               <div>
                 <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <p className="text-purple-600 font-light text-sm tracking-wider uppercase mb-2">
-                      Cornells Exclusive
-                    </p>
-                    <h1 className="text-4xl font-light text-gray-900 leading-tight tracking-wide">
+                  <div className="flex-1">
+                    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold text-white bg-gradient-to-r ${getBrandColor(product.brand)} mb-3`}>
+                      <span>{product.brand}</span>
+                    </div>
+                    <h1 className="text-4xl font-bold text-gray-900 leading-tight mb-2">
                       {product.title}
                     </h1>
+                    <p className="text-gray-600">{product.subcategory || product.category}</p>
                   </div>
-                  <div className="flex space-x-3">
-                    <button 
-                      onClick={handleWishlist}
-                      className={`p-3 rounded-full transition-all duration-300 ${
-                        isWishlisted 
-                          ? 'bg-red-100 text-red-600 shadow-lg shadow-red-200/50' 
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
-                      <FaHeart className="w-5 h-5" />
-                    </button>
-                    <button className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-300">
-                      <FaShare className="w-5 h-5" />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={handleShare}
+                    className="p-3 rounded-full bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-all duration-300"
+                    title="Share this product"
+                  >
+                    <FaShare className="w-5 h-5" />
+                  </button>
                 </div>
 
                 {/* Rating */}
@@ -190,43 +197,75 @@ const Product = () => {
                   {product && product?.ratings && product?.ratings.length > 0 ? (
                     <div className="flex items-center space-x-2">
                       {showAverage(product)}
-                      <span className="text-gray-600 font-light">
+                      <span className="text-gray-600 font-medium">
                         ({product.ratings.length} reviews)
                       </span>
                     </div>
                   ) : (
-                    <span className="text-gray-500 font-light">No reviews yet</span>
+                    <span className="text-gray-500">No reviews yet</span>
                   )}
                 </div>
 
-                {/* Price */}
-                <div className="flex items-baseline space-x-4 mb-8">
-                  <span className="text-4xl font-light text-gray-900">
-                    ${handlePrice(
-                      product.originalPrice,
-                      product.discountedPrice,
-                      product.wholesalePrice,
-                      product?.wholesaleMinimumQuantity,
-                      quantity
-                    )}
+                {/* Stock Status */}
+                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${
+                  product.inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}>
+                  <FaCheck className="w-4 h-4" />
+                  <span className="font-semibold">
+                    {product.inStock ? 'In Stock' : 'Out of Stock'}
                   </span>
-                  {product.discountedPrice && product.originalPrice > product.discountedPrice && (
-                    <span className="text-xl text-gray-500 line-through font-light">
-                      ${product.originalPrice}
-                    </span>
-                  )}
                 </div>
+              </div>
+
+              {/* Wholesale Pricing */}
+              <div className={`bg-gradient-to-r ${getBrandColor(product.brand)} bg-opacity-10 rounded-2xl p-6 border-2 ${
+                product.brand?.toLowerCase() === 'saffron' ? 'border-orange-200' :
+                product.brand?.toLowerCase() === 'cornells' ? 'border-purple-200' :
+                'border-blue-200'
+              }`}>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Wholesale Pricing</h3>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Price per Unit</p>
+                    <p className="text-3xl font-bold text-gray-900">
+                      {formatPrice(product.wholesalePrice)}
+                    </p>
+                    <p className="text-xs text-gray-500">per {product.unit || 'piece'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">Minimum Order</p>
+                    <p className="text-3xl font-bold text-gray-900">
+                      {product.wholesaleMinimumQuantity}
+                    </p>
+                    <p className="text-xs text-gray-500">{product.unit || 'pieces'}</p>
+                  </div>
+                </div>
+                
+                {product.brand?.toLowerCase() === 'cornells' && (
+                  <div className="pt-4 border-t border-purple-200">
+                    <p className="text-sm text-purple-600 font-medium">
+                      ✨ Exclusively distributed by Rekker in Kenya
+                    </p>
+                  </div>
+                )}
+                {product.brand?.toLowerCase() === 'saffron' && (
+                  <div className="pt-4 border-t border-orange-200">
+                    <p className="text-sm text-orange-600 font-medium">
+                      🏭 Manufactured by Rekker - Quality Guaranteed
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Description */}
               <div className="space-y-4">
-                <h3 className="text-xl font-light text-gray-900 tracking-wide">About This Product</h3>
-                <div className="text-gray-600 font-light leading-relaxed">
+                <h3 className="text-xl font-bold text-gray-900">Product Description</h3>
+                <div className="text-gray-600 leading-relaxed">
                   {showFullDescription ? product.desc : `${product.desc?.slice(0, 200)}...`}
                   {product.desc?.length > 200 && (
                     <button 
                       onClick={() => setShowFullDescription(!showFullDescription)}
-                      className="text-purple-600 hover:text-purple-700 ml-2 font-normal"
+                      className={`text-blue-600 hover:text-blue-700 ml-2 font-semibold`}
                     >
                       {showFullDescription ? 'Show Less' : 'Read More'}
                     </button>
@@ -234,65 +273,81 @@ const Product = () => {
                 </div>
               </div>
 
-              {/* Wholesale Information */}
-              {product.wholesalePrice && (
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
-                  <h4 className="text-lg font-light text-gray-900 mb-2">Wholesale Available</h4>
-                  <p className="text-gray-600 font-light">
-                    Special price of <span className="font-normal text-purple-600">${product.wholesalePrice}</span> for orders of {product?.wholesaleMinimumQuantity}+ items
-                  </p>
+              {/* Quantity Selector */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-gray-700 font-bold mb-3">Order Quantity</label>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center bg-white rounded-full shadow-lg border-2 border-gray-200">
+                      <button
+                        onClick={() => handleQuantity("dec")}
+                        className="p-4 hover:bg-gray-50 rounded-l-full transition-colors duration-200"
+                      >
+                        <FaMinus className="w-4 h-4 text-gray-600" />
+                      </button>
+                      <span className="px-8 py-4 text-xl font-bold min-w-[80px] text-center">
+                        {quantity}
+                      </span>
+                      <button
+                        onClick={() => handleQuantity("inc")}
+                        className="p-4 hover:bg-gray-50 rounded-r-full transition-colors duration-200"
+                      >
+                        <FaPlus className="w-4 h-4 text-gray-600" />
+                      </button>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm text-gray-600">Total Amount</div>
+                      <div className="text-2xl font-bold text-gray-900">
+                        {calculateTotal()}
+                      </div>
+                    </div>
+                  </div>
+                  {quantity < product.wholesaleMinimumQuantity && (
+                    <p className="text-sm text-orange-600 mt-2">
+                      ⚠️ Minimum order quantity is {product.wholesaleMinimumQuantity} {product.unit}
+                    </p>
+                  )}
                 </div>
-              )}
 
-              {/* What's in the Box */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                <h4 className="text-lg font-light text-gray-900 mb-4 text-center tracking-wide">
-                  WHAT'S INCLUDED
-                </h4>
-                <div className="w-16 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent mx-auto mb-4"></div>
-                <p className="text-gray-600 font-light leading-relaxed">
-                  1 × {product.title} - Premium formulation with authentic ingredients and luxury packaging
-                </p>
+                {/* Action Buttons */}
+                <div className="space-y-3">
+                  <Link
+                    to="/wholesale-request"
+                    className={`w-full bg-gradient-to-r ${getBrandColor(product.brand)} text-white py-4 rounded-2xl font-bold tracking-wide uppercase transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center gap-3`}
+                  >
+                    <FaShoppingCart className="w-5 h-5" />
+                    <span>Request Wholesale Quote</span>
+                  </Link>
+
+                  <Link
+                    to="/contact"
+                    className="w-full border-2 border-gray-300 text-gray-700 py-4 rounded-2xl font-bold tracking-wide uppercase hover:border-blue-500 hover:text-blue-600 transition-all duration-300 flex items-center justify-center gap-3"
+                  >
+                    <FaPhone className="w-5 h-5" />
+                    <span>Contact Sales</span>
+                  </Link>
+                </div>
               </div>
 
-              {/* Quantity and Add to Cart */}
-              <div className="space-y-6">
-                <div className="flex items-center space-x-6">
-                  <span className="text-gray-700 font-light tracking-wide">QUANTITY</span>
-                  <div className="flex items-center bg-white rounded-full shadow-lg border border-gray-200">
-                    <button
-                      onClick={() => handleQuantity("dec")}
-                      className="p-4 hover:bg-gray-50 rounded-l-full transition-colors duration-200"
-                    >
-                      <FaMinus className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <span className="px-6 py-4 text-lg font-light min-w-[60px] text-center">
-                      {quantity}
-                    </span>
-                    <button
-                      onClick={() => handleQuantity("inc")}
-                      className="p-4 hover:bg-gray-50 rounded-r-full transition-colors duration-200"
-                    >
-                      <FaPlus className="w-4 h-4 text-gray-600" />
-                    </button>
+              {/* Benefits */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <FaTruck className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Fast Delivery</p>
+                    <p className="text-xs text-gray-600">Nationwide shipping</p>
                   </div>
                 </div>
-
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-2xl font-light tracking-wider uppercase transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 flex items-center justify-center space-x-3"
-                >
-                  <FaShoppingBag className="w-5 h-5" />
-                  <span>Add to Collection</span>
-                </button>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <button className="py-3 border-2 border-gray-300 text-gray-700 rounded-2xl font-light tracking-wide uppercase hover:border-purple-400 hover:text-purple-600 transition-all duration-300">
-                    Buy Now
-                  </button>
-                  <button className="py-3 border-2 border-gray-300 text-gray-700 rounded-2xl font-light tracking-wide uppercase hover:border-purple-400 hover:text-purple-600 transition-all duration-300">
-                    Find in Store
-                  </button>
+                <div className="flex items-center gap-3 p-4 bg-white rounded-xl shadow-sm">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <FaCheck className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Quality Assured</p>
+                    <p className="text-xs text-gray-600">Premium products</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -301,34 +356,34 @@ const Product = () => {
           {/* Reviews Section */}
           <div className="mt-20">
             <div className="text-center mb-12">
-              <h3 className="text-3xl font-light text-gray-900 mb-4 tracking-wider">
-                CUSTOMER REVIEWS
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                Customer Reviews
               </h3>
-              <div className="w-16 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent mx-auto"></div>
+              <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto"></div>
             </div>
 
-            <div className="max-w-4xl mx-auto space-y-8">
+            <div className="max-w-4xl mx-auto space-y-6">
               {product.ratings?.length > 0 ? (
                 product.ratings.map((rating, index) => (
-                  <div key={index} className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                    <div className="flex items-start space-x-6">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                        <span className="text-purple-600 font-medium">
+                  <div key={index} className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                    <div className="flex items-start gap-6">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-blue-600 font-bold text-lg">
                           {rating.name?.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center space-x-4 mb-3">
-                          <h4 className="font-medium text-gray-900">{rating.name}</h4>
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="font-bold text-gray-900">{rating.name}</h4>
                           <StarRatings
                             numberOfStars={5}
                             rating={rating.star}
-                            starRatedColor="#9333ea"
+                            starRatedColor="#3b82f6"
                             starDimension="18px"
                             starSpacing="2px"
                           />
                         </div>
-                        <p className="text-gray-600 font-light leading-relaxed">
+                        <p className="text-gray-600 leading-relaxed">
                           {rating.comment}
                         </p>
                       </div>
@@ -340,11 +395,35 @@ const Product = () => {
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <FaStar className="w-8 h-8 text-gray-400" />
                   </div>
-                  <p className="text-gray-600 font-light text-lg">
-                    Be the first to share your experience with this product
+                  <p className="text-gray-600 text-lg">
+                    No reviews yet. Be the first to review this product!
                   </p>
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Contact CTA */}
+          <div className="mt-16 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 rounded-3xl p-12 text-center text-white">
+            <h3 className="text-3xl font-bold mb-4">Have Questions About This Product?</h3>
+            <p className="text-blue-100 mb-8 max-w-2xl mx-auto text-lg">
+              Our sales team is ready to help you with pricing, availability, and bulk order inquiries.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-blue-900 rounded-xl font-bold hover:bg-blue-50 transition-all transform hover:scale-105"
+              >
+                <FaPhone className="w-5 h-5" />
+                <span>Contact Sales Team</span>
+              </Link>
+              <Link
+                to="/wholesale-request"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-white text-white rounded-xl font-bold hover:bg-white hover:text-blue-900 transition-all"
+              >
+                <FaShoppingCart className="w-5 h-5" />
+                <span>Request Quote</span>
+              </Link>
             </div>
           </div>
         </div>

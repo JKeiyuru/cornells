@@ -19,6 +19,7 @@ import ProductList from "./pages/ProductList";
 // import Checkout from "./pages/Checkout";
 // import Account from "./pages/Account";
 
+
 // New Rekker Pages
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -28,6 +29,7 @@ import SaffronBrand from "./pages/brands/SaffronBrand";
 import CornellsBrand from "./pages/brands/CornellsBrand";
 import BrandsOverview from "./pages/BrandsOverview";
 import WholesaleRequest from "./pages/WholesaleRequest";
+import RetailPartnership from "./pages/RetailPartnership";
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -273,6 +275,10 @@ function App() {
           path: "/wholesale-request",
           element: <WholesaleRequest />,
         },
+        {
+        path: "/retail-partnership",  // NEW ROUTE
+        element: <RetailPartnership />,
+      },
         {
           path: "/product/:id",
           element: <Product />,
